@@ -401,6 +401,10 @@ fn main() {
             }
             Err(_) => std::process::exit(25),
         };
+        // macOS copies the listener's O_NONBLOCK onto the accepted socket, which
+        // would leave the read timeout below inert. Separate compilation unit, so
+        // this cannot share the harness helper.
+        stream.set_nonblocking(false).unwrap_or_else(|_| std::process::exit(29));
         stream.set_read_timeout(Some(Duration::from_secs(2))).unwrap();
         let mut request = Vec::new();
         let mut buffer = [0u8; 1024];
@@ -514,6 +518,7 @@ impl HotplugWdaServer {
                 }
                 match listener.as_ref().expect("hot-plug listener").accept() {
                     Ok((mut stream, _)) => {
+                        clear_inherited_nonblocking(&stream);
                         read_http_head(&mut stream);
                         stream
                             .write_all(
@@ -621,7 +626,10 @@ impl OneShotWda {
                     return;
                 }
                 match listener.accept() {
-                    Ok((stream, _)) => break stream,
+                    Ok((stream, _)) => {
+                        clear_inherited_nonblocking(&stream);
+                        break stream;
+                    }
                     Err(error) if error.kind() == std::io::ErrorKind::WouldBlock => {
                         assert!(
                             Instant::now() < deadline,
@@ -717,6 +725,7 @@ impl FakeAppiumServer {
                     }
                     Err(error) => panic!("accept fake Appium connection: {error}"),
                 };
+                clear_inherited_nonblocking(&stream);
                 let request = read_http_request(&mut stream);
                 let response = match (request.method.as_str(), request.path.as_str()) {
                     ("GET", "/status") => json!({
@@ -873,6 +882,66 @@ fn read_http_request(stream: &mut TcpStream) -> CapturedHttpRequest {
         path,
         body: request[header_end + 4..total_length].to_vec(),
     }
+}
+
+/// Drops the non-blocking flag that macOS copies from a listening socket onto
+/// every socket `accept` returns; Linux and Windows do not inherit it, so there
+/// this only re-asserts what is already true.
+///
+/// The fixtures below need non-blocking *listeners* so their accept loops can
+/// poll a stop channel, but they need blocking *connections*: `SO_RCVTIMEO`,
+/// which `set_read_timeout` sets, is inert while `O_NONBLOCK` is set, and
+/// `write_all` retries `Interrupted` but never `WouldBlock`. Without this reset
+/// a fixture fails in microseconds instead of waiting for its peer.
+fn clear_inherited_nonblocking(stream: &TcpStream) {
+    stream
+        .set_nonblocking(false)
+        .expect("clear inherited non-blocking mode on an accepted fixture socket");
+}
+
+/// Guards [`clear_inherited_nonblocking`]. The peer connects and never writes, so
+/// a correctly blocking socket must consume its whole read timeout, while one that
+/// still carries the listener's `O_NONBLOCK` gives up in microseconds. On macOS
+/// both outcomes report errno 35, so the elapsed time — not the error kind — is
+/// what discriminates them. Delete the reset below and this must go red on macOS
+/// and stay green on Linux and Windows; that asymmetry is the whole defect.
+#[test]
+fn accepted_fixture_sockets_honour_their_read_timeout() {
+    const PROBE_READ_BOUND: Duration = Duration::from_millis(250);
+
+    let listener = TcpListener::bind("127.0.0.1:0").expect("bind probe listener");
+    listener
+        .set_nonblocking(true)
+        .expect("set probe listener nonblocking");
+    let address = listener.local_addr().expect("probe listener address");
+    let client = TcpStream::connect(address).expect("probe client connects");
+    let deadline = Instant::now() + SERVER_TIMEOUT;
+    let mut stream = loop {
+        match listener.accept() {
+            Ok((stream, _)) => break stream,
+            Err(error) if error.kind() == std::io::ErrorKind::WouldBlock => {
+                assert!(Instant::now() < deadline, "probe client never arrived");
+                thread::sleep(Duration::from_millis(5));
+            }
+            Err(error) => panic!("accept probe connection: {error}"),
+        }
+    };
+
+    clear_inherited_nonblocking(&stream);
+    stream
+        .set_read_timeout(Some(PROBE_READ_BOUND))
+        .expect("bound probe read");
+
+    let started = Instant::now();
+    stream
+        .read(&mut [0_u8; 16])
+        .expect_err("the probe client never writes");
+    let elapsed = started.elapsed();
+    assert!(
+        elapsed >= PROBE_READ_BOUND / 2,
+        "read gave up after {elapsed:?}: the accepted socket is still non-blocking"
+    );
+    drop(client);
 }
 
 fn read_http_head(stream: &mut TcpStream) {
