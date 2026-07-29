@@ -176,11 +176,11 @@ python packages/python-client/scripts/check_distribution.py packages/python-clie
 
 ## Driving a release
 
-`scripts/release.mjs` drives a release end to end. Releases are never numbered
+`scripts/release.sh` drives a release end to end. Releases are never numbered
 by hand; the next version is derived from the current one and the kind of bump.
 
 ```bash
-node scripts/release.mjs publish
+scripts/release.sh publish
 ```
 
 That prints the three candidate versions and releases the one chosen:
