@@ -16,8 +16,8 @@ import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 
 const workspace = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const NODE_TYPES_VERSION = "26.1.1";
-const JS_YAML_VERSION = "5.2.1";
+const NODE_TYPES_VERSION = "26.1.2";
+const JS_YAML_VERSION = "5.2.2";
 
 function run(command, args, cwd = workspace) {
   const result = spawnSync(command, args, {

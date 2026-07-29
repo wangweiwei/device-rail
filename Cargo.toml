@@ -56,7 +56,7 @@ license = "Apache-2.0"
 
 [workspace.dependencies]
 async-trait = "0.1"
-base64 = "0.22"
+base64 = "0.23"
 fs2 = "0.4"
 futures-util = { version = "0.3", default-features = false, features = ["sink", "std"] }
 getrandom = "0.4"
@@ -68,7 +68,7 @@ png = "=0.18.1"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 sha2 = "0.11"
-schemars = { version = "=1.2.1", default-features = false }
+schemars = { version = "=1.2.2", default-features = false }
 tempfile = "3"
 thiserror = "2"
 tokio = { version = "1", features = ["fs", "io-std", "io-util", "macros", "net", "process", "rt-multi-thread", "signal", "sync", "time"] }
