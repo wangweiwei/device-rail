@@ -121,8 +121,39 @@ impl AuditError {
     }
 }
 
+/// The exclusively locked audit file, releasing its `flock` with an explicit
+/// `LOCK_UN` on drop instead of relying on close. The lock lives on the open
+/// file description, and spawning any child process briefly duplicates this
+/// process's descriptor table (fork/`posix_spawn` close close-on-exec
+/// descriptors only at exec), so close alone releases the lock only once that
+/// transient reference is also gone. An explicit unlock frees it immediately,
+/// so dropping the log and reopening it right away cannot spuriously report
+/// `Busy` while an unrelated thread is spawning a command.
+struct LockedFile(File);
+
+impl Drop for LockedFile {
+    fn drop(&mut self) {
+        #[cfg(unix)]
+        let _ = fs2::FileExt::unlock(&self.0);
+    }
+}
+
+impl std::ops::Deref for LockedFile {
+    type Target = File;
+
+    fn deref(&self) -> &File {
+        &self.0
+    }
+}
+
+impl std::ops::DerefMut for LockedFile {
+    fn deref_mut(&mut self) -> &mut File {
+        &mut self.0
+    }
+}
+
 struct AuditState {
-    file: File,
+    file: LockedFile,
     next_sequence: u64,
     previous_hash: String,
     bytes: u64,
@@ -178,12 +209,13 @@ impl AuditLog {
                 Err(error) if error.kind() == std::io::ErrorKind::NotFound => None,
                 Err(_) => return Err(AuditError::UnsafeFile),
             };
-            let mut file = open_owner_only(path)?;
+            let file = open_owner_only(path)?;
             file.try_lock_exclusive()
                 .map_err(|error| match error.kind() {
                     std::io::ErrorKind::WouldBlock => AuditError::Busy,
                     _ => AuditError::Io,
                 })?;
+            let mut file = LockedFile(file);
             let metadata = file.metadata().map_err(|_| AuditError::UnsafeFile)?;
             if !metadata.is_file() {
                 return Err(AuditError::UnsafeFile);

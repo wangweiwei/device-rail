@@ -70,7 +70,24 @@ pub struct FileEvidenceStore {
     session_gates: Vec<Mutex<()>>,
     reference_index: StdRwLock<Option<ReferenceIndex>>,
     write_slots: Semaphore,
-    _lock_file: File,
+    _lock_file: StoreLockFile,
+}
+
+/// The exclusively locked store-lock file, releasing its `flock` with an
+/// explicit `LOCK_UN` on drop instead of relying on close. The lock lives on
+/// the open file description, and spawning any child process briefly
+/// duplicates this process's descriptor table (fork/`posix_spawn` close
+/// close-on-exec descriptors only at exec), so close alone releases the lock
+/// only once that transient reference is also gone. An explicit unlock frees
+/// it immediately, so dropping a store and reopening its root right away
+/// cannot spuriously report `StoreBusy` while an unrelated thread is spawning
+/// a command.
+struct StoreLockFile(File);
+
+impl Drop for StoreLockFile {
+    fn drop(&mut self) {
+        let _ = fs2::FileExt::unlock(&self.0);
+    }
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -190,7 +207,7 @@ impl FileEvidenceStore {
             session_gates: (0..MUTATION_LOCK_STRIPES).map(|_| Mutex::new(())).collect(),
             reference_index: StdRwLock::new(None),
             write_slots: Semaphore::new(max_concurrent_writes),
-            _lock_file: lock_file,
+            _lock_file: StoreLockFile(lock_file),
         };
         store.cleanup_atomic_temporaries(&version_root)?;
         store.initialize_header(&version_root)?;
