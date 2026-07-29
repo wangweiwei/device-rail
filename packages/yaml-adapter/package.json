@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@devicerail/client": "workspace:*",
-    "js-yaml": "5.2.1"
+    "js-yaml": "5.2.2"
   },
   "devDependencies": {
     "@types/node": "26.1.1",
