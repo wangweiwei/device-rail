@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "@devicerail/protocol": "workspace:*",
-    "@types/node": "26.1.1",
+    "@types/node": "26.1.2",
     "ajv": "8.20.0"
   },
   "devDependencies": {

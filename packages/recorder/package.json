@@ -31,7 +31,7 @@
   "dependencies": {
     "@devicerail/client": "workspace:*",
     "@devicerail/protocol": "workspace:*",
-    "@types/node": "26.1.1"
+    "@types/node": "26.1.2"
   },
   "devDependencies": {
     "typescript": "7.0.2"
