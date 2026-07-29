@@ -1,10 +1,12 @@
 import { spawnSync } from "node:child_process";
 import { readFile, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
+import { createInterface } from "node:readline/promises";
 import { fileURLToPath } from "node:url";
 
 const workspace = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const stableVersion = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/u;
+const bumps = ["major", "minor", "patch"];
 
 const packageManifests = [
   "package.json",
@@ -50,19 +52,15 @@ function run(command, args, cwd = workspace) {
   return result.stdout;
 }
 
-function ordered(version) {
-  return version.split(".").map((part) => Number(part));
-}
-
-function increases(next, current) {
-  const left = ordered(next);
-  const right = ordered(current);
-  for (let index = 0; index < 3; index += 1) {
-    if (left[index] !== right[index]) {
-      return left[index] > right[index];
-    }
+function bumped(version, bump) {
+  const [major, minor, patch] = version.split(".").map((part) => Number(part));
+  if (bump === "major") {
+    return `${String(major + 1)}.0.0`;
   }
-  return false;
+  if (bump === "minor") {
+    return `${String(major)}.${String(minor + 1)}.0`;
+  }
+  return `${String(major)}.${String(minor)}.${String(patch + 1)}`;
 }
 
 function replaceOnce(source, pattern, replacement, label) {
@@ -96,8 +94,8 @@ async function rewrite(path, rewriter) {
 
 async function currentVersion() {
   const manifest = JSON.parse(await readFile(resolve(workspace, "package.json"), "utf8"));
-  if (typeof manifest.version !== "string") {
-    throw new Error("package.json is missing a string version");
+  if (typeof manifest.version !== "string" || !stableVersion.test(manifest.version)) {
+    throw new Error("package.json is missing a stable semantic version");
   }
   return manifest.version;
 }
@@ -152,46 +150,41 @@ async function published(version) {
   return results;
 }
 
-function report(results, version) {
-  for (const result of results) {
-    process.stdout.write(
-      `  ${result.present ? "published" : "missing  "}  ${result.registry.padEnd(9)}  ${result.name}\n`,
-    );
-  }
-  const missing = new Set(
-    results.filter((result) => !result.present).map((result) => result.registry),
-  );
-  if (missing.size === 0) {
-    console.log(`every public package is published at ${version}`);
-    return;
-  }
-  const ecosystems = {
-    npm: "publish_npm",
-    PyPI: "publish_pypi",
-    "crates.io": "publish_crates",
-  };
-  process.stdout.write("\nretry the missing ecosystems against the release tag:\n");
-  const flags = Object.entries(ecosystems)
-    .map(([registry, input]) => `-f ${input}=${missing.has(registry) ? "true" : "false"}`)
-    .join(" ");
-  console.log(
-    `  gh workflow run publish-packages.yml --ref v${version} -f release_tag=v${version} ${flags}`,
-  );
-}
-
-async function prepare(version) {
-  requireCleanTree();
-  requireAbsentTag(`v${version}`);
-  const previous = await currentVersion();
-  if (!increases(version, previous)) {
-    throw new Error(`${version} must be greater than the current version ${previous}`);
-  }
-  const alreadyPublished = (await published(version)).filter((result) => result.present);
-  if (alreadyPublished.length > 0) {
-    const names = alreadyPublished.map((result) => result.name).join(", ");
+async function requireUnpublished(version) {
+  const taken = (await published(version)).filter((result) => result.present);
+  if (taken.length > 0) {
+    const names = taken.map((result) => result.name).join(", ");
     throw new Error(`${version} is already published and immutable for ${names}`);
   }
+}
 
+async function chooseBump(current) {
+  if (!process.stdin.isTTY) {
+    throw new Error("bump must be major, minor, or patch when stdin is not a terminal");
+  }
+  process.stdout.write(`current release ${current}\n\n`);
+  bumps.forEach((bump, index) => {
+    process.stdout.write(
+      `  ${String(index + 1)}  ${bump.padEnd(5)}  ${bumped(current, bump)}\n`,
+    );
+  });
+  const terminal = createInterface({ input: process.stdin, output: process.stdout });
+  let answer;
+  try {
+    answer = await terminal.question("\nrelease [1-3]: ");
+  } catch {
+    throw new Error("release selection was cancelled");
+  } finally {
+    terminal.close();
+  }
+  const chosen = bumps[Number(answer.trim()) - 1];
+  if (!chosen) {
+    throw new Error("release must be 1, 2, or 3");
+  }
+  return chosen;
+}
+
+async function applyVersion(version) {
   for (const path of packageManifests) {
     await rewrite(path, (source) =>
       replaceOnce(
@@ -249,52 +242,81 @@ async function prepare(version) {
 
   run("cargo", ["metadata", "--format-version", "1", "--quiet"]);
   run("node", ["scripts/check-release-version.mjs", `v${version}`]);
+  return run("git", ["diff", "--name-only"]).trim().split("\n");
+}
 
-  const changed = run("git", ["diff", "--name-only"]).trim().split("\n");
+async function resolveRelease(bump) {
+  requireCleanTree();
+  const current = await currentVersion();
+  const chosen = bump ?? (await chooseBump(current));
+  if (!bumps.includes(chosen)) {
+    throw new Error("bump must be major, minor, or patch");
+  }
+  const version = bumped(current, chosen);
+  requireAbsentTag(`v${version}`);
+  await requireUnpublished(version);
+  return version;
+}
+
+async function prepare(bump) {
+  const version = await resolveRelease(bump);
+  const changed = await applyVersion(version);
   process.stdout.write(`${changed.map((path) => `  ${path}`).join("\n")}\n`);
   console.log(
-    `prepared ${version} across ${String(changed.length)} files; describe the release in CHANGELOG.md, commit, then run: node scripts/release.mjs publish ${version}`,
+    `prepared ${version} across ${String(changed.length)} files; review, commit, then push tag v${version}`,
   );
 }
 
-async function publish(version) {
-  requireCleanTree();
-  requireAbsentTag(`v${version}`);
-  const current = await currentVersion();
-  if (current !== version) {
-    throw new Error(`the committed version is ${current}, not ${version}`);
-  }
-  run("node", ["scripts/check-release-version.mjs", `v${version}`]);
-  const alreadyPublished = (await published(version)).filter((result) => result.present);
-  if (alreadyPublished.length > 0) {
-    const names = alreadyPublished.map((result) => result.name).join(", ");
-    throw new Error(`${version} is already published and immutable for ${names}`);
-  }
+async function publish(bump) {
+  const version = await resolveRelease(bump);
+  const branch = run("git", ["rev-parse", "--abbrev-ref", "HEAD"]).trim();
+  const changed = await applyVersion(version);
+  run("git", ["commit", "--all", "--message", `release: v${version}`]);
+  run("git", ["push", "origin", branch]);
   run("git", ["tag", "--annotate", `v${version}`, "--message", `v${version}`]);
   run("git", ["push", "origin", `v${version}`]);
   console.log(
-    `pushed v${version}; publish-packages.yml now needs an approval on each of the crates-io, npm, and pypi environments`,
+    `released ${version} across ${String(changed.length)} files; publish-packages.yml now needs an approval on each of the crates-io, npm, and pypi environments`,
   );
 }
 
 async function status(version) {
   const results = await published(version);
-  report(results, version);
+  for (const result of results) {
+    process.stdout.write(
+      `  ${result.present ? "published" : "missing  "}  ${result.registry.padEnd(9)}  ${result.name}\n`,
+    );
+  }
+  const missing = new Set(
+    results.filter((result) => !result.present).map((result) => result.registry),
+  );
+  if (missing.size === 0) {
+    console.log(`every public package is published at ${version}`);
+    return;
+  }
+  const ecosystems = {
+    npm: "publish_npm",
+    PyPI: "publish_pypi",
+    "crates.io": "publish_crates",
+  };
+  const flags = Object.entries(ecosystems)
+    .map(([registry, input]) => `-f ${input}=${missing.has(registry) ? "true" : "false"}`)
+    .join(" ");
+  process.stdout.write("\nretry the missing ecosystems against the release tag:\n");
+  console.log(
+    `  gh workflow run publish-packages.yml --ref v${version} -f release_tag=v${version} ${flags}`,
+  );
 }
 
 const command = process.argv[2];
-const version = process.argv[3] ?? (await currentVersion());
+const argument = process.argv[3];
 
-if (!stableVersion.test(version)) {
-  throw new Error("release version must be a stable semantic version such as 0.1.0");
-}
-
-if (command === "prepare") {
-  await prepare(version);
-} else if (command === "publish") {
-  await publish(version);
+if (command === "publish") {
+  await publish(argument);
+} else if (command === "prepare") {
+  await prepare(argument);
 } else if (command === "status") {
-  await status(version);
+  await status(argument ?? (await currentVersion()));
 } else {
-  throw new Error("command must be prepare, publish, or status");
+  throw new Error("command must be publish, prepare, or status");
 }

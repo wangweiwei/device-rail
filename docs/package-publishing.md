@@ -176,34 +176,47 @@ python packages/python-client/scripts/check_distribution.py packages/python-clie
 
 ## Driving a release
 
-`scripts/release.mjs` performs the mechanical half of a release. It has three
-commands and no options.
+`scripts/release.mjs` drives a release end to end. Releases are never numbered
+by hand; the next version is derived from the current one and the kind of bump.
 
 ```bash
-node scripts/release.mjs prepare 0.3.1
-node scripts/release.mjs publish 0.3.1
-node scripts/release.mjs status 0.3.1
+node scripts/release.mjs publish
 ```
 
-`prepare` refuses to start unless the working tree is clean, the tag is absent
-both locally and on the remote, the requested version is greater than the
-current one, and no registry already carries it. It then rewrites every version
-touchpoint — nine `package.json` files including the two private ones, the
-workspace `Cargo.toml`, both `devicerail-protocol` pins in
-`crates/client/Cargo.toml`, `pyproject.toml`, the Python `__version__` and the
-`default_hello` client version, and a new `CHANGELOG.md` section — refreshes
-`Cargo.lock` through `cargo metadata`, and finishes by running
-`check-release-version.mjs`. It leaves the result uncommitted so the diff can be
-read. `pnpm-lock.yaml` records no workspace versions and is deliberately left
-alone.
+That prints the three candidate versions and releases the one chosen:
 
-Describe the release under the new `CHANGELOG.md` heading, run the gates above,
-and commit. `publish` then re-checks the same preconditions against the
-committed tree and pushes the annotated tag that starts `publish-packages.yml`.
+```
+current release 0.3.2
 
-`status` reports what each registry actually holds for a version and, when
-something is missing, prints the exact dispatch command to republish only the
-missing ecosystems.
+  1  major  1.0.0
+  2  minor  0.4.0
+  3  patch  0.3.3
+
+release [1-3]:
+```
+
+`publish major`, `publish minor`, and `publish patch` skip the prompt, which is
+also the only form that works when stdin is not a terminal.
+
+`publish` refuses to start unless the working tree is clean, the derived tag is
+absent both locally and on the remote, and no registry already carries that
+version. It then rewrites every version touchpoint — nine `package.json` files
+including the two private ones, the workspace `Cargo.toml`, both
+`devicerail-protocol` pins in `crates/client/Cargo.toml`, `pyproject.toml`, the
+Python `__version__` and the `default_hello` client version, and a new
+`CHANGELOG.md` section — refreshes `Cargo.lock` through `cargo metadata`, runs
+`check-release-version.mjs`, commits, pushes the branch, and finally pushes an
+annotated tag. Tagging last is what guarantees a release tag can never name a
+version its own tree does not carry. `pnpm-lock.yaml` records no workspace
+versions and is deliberately left alone.
+
+`prepare` takes the same argument and stops after the rewrite, leaving
+everything uncommitted, for a release whose diff should be read first or whose
+`CHANGELOG.md` section should be filled in before the commit.
+
+`status` reports what each registry actually holds for a version — the current
+one by default — and, when something is missing, prints the exact dispatch
+command to republish only the missing ecosystems.
 
 Two touchpoints are outside `check-release-version.mjs`: the private
 `playwright-driver` and `live-visualizer` app manifests, whose versions it never
