@@ -1,6 +1,6 @@
 {
   "name": "@devicerail/tool-adapter",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "Provider-neutral AI tool adapter for DeviceRail device capabilities",
   "license": "Apache-2.0",
   "keywords": ["ai-agent", "ai-tools", "device-automation", "test-automation"],

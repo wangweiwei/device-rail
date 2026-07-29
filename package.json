@@ -1,6 +1,6 @@
 {
   "name": "devicerail",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "Language-neutral device automation and test-evidence runtime for Android, iOS, HarmonyOS, desktop, RDP, and Playwright",
   "license": "Apache-2.0",
   "keywords": [
