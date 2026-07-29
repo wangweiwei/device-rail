@@ -17,17 +17,24 @@ artifacts; they are not public crates.io packages.
 ## GitHub repository setup
 
 Create three protected GitHub environments named `crates-io`, `npm`, and
-`pypi`. Configure at least one required reviewer for each environment. Add a
-crates.io API token as the `CARGO_REGISTRY_TOKEN` secret on the `crates-io`
-environment. For the first `0.1.0` publication, neither crate exists yet, so
-use a short-lived bootstrap token that is allowed to create new crates; it
-cannot yet be restricted to those two existing crate records. Revoke that
-token immediately after both crates are published, add the project team as
-owners, and configure crates.io Trusted Publishing for
-`publish-packages.yml` and the `crates-io` environment. Future releases should
-then replace the long-lived secret with crates.io's short-lived OIDC
-credentials. Protect stable tags matching `v*` so that only maintainers can
-create or move them.
+`pypi`. Configure at least one required reviewer for each environment. Protect
+stable tags matching `v*` so that only maintainers can create or move them.
+
+crates.io publishing uses Trusted Publishing and needs no stored secret. The
+`crates-publish` job declares `id-token: write` and exchanges its GitHub OIDC
+identity for a token that expires after thirty minutes. Configure Trusted
+Publishing **once per crate** — the configuration is owned by the crate, not by
+the repository — at `https://crates.io/crates/<crate>/settings`, naming
+repository owner, repository name, workflow filename `publish-packages.yml`,
+and environment `crates-io`. A single exchange mints one token covering every
+crate whose configuration matches, so both crates publish from one step.
+
+A crate must already exist before Trusted Publishing can be configured for it;
+crates.io has no pending-publisher equivalent. Bootstrap a brand new crate with
+a short-lived API token scoped to allow creating new crates, supplied as the
+`CARGO_REGISTRY_TOKEN` secret on the `crates-io` environment, then revoke that
+token, configure Trusted Publishing, and delete the secret. Both public crates
+were bootstrapped this way for `0.3.0`.
 
 The workflow normally starts when a stable `v*.*.*` tag is pushed. A maintainer
 can also dispatch it manually for an existing tag and independently select
@@ -130,6 +137,33 @@ release tag: it checksum-verifies an already-published protocol or client and
 continues with the missing dependent crate. It fails closed if an existing
 version does not match the release archive. Other registry jobs may still
 require selecting only the unpublished ecosystem through manual dispatch.
+
+Dispatch such a retry against the release tag, not against a branch. Each
+publishing environment may restrict which refs are allowed to deploy to it, and
+a tag that already reached the publish step is proven to be allowed while
+`main` is not; the web dispatch form defaults to `main`, which is the wrong
+ref. The workflow file is identical on both, so nothing is lost:
+
+```bash
+gh workflow run publish-packages.yml --ref v0.1.0 \
+  -f release_tag=v0.1.0 -f publish_npm=false -f publish_pypi=false \
+  -f publish_crates=true
+```
+
+Confirm first that the earlier run has finished. The concurrency group is keyed
+on the release tag alone, so a retry for the same tag joins the failed run's
+group, and `cancel-in-progress` is disabled. If any job of that run is still
+waiting on an environment reviewer, the new dispatch queues silently with no
+log output rather than reporting an error. Cancel the stalled run first.
+
+Treat each registry's public API as the source of truth when confirming what a
+release actually published; a green workflow proves only that no job failed.
+
+```bash
+curl -s https://pypi.org/pypi/devicerail-client/json
+curl -s https://registry.npmjs.org/@devicerail/protocol
+curl -s https://crates.io/api/v1/crates/devicerail-protocol
+```
 
 Before pushing a release tag, run the normal CI gates and:
 
