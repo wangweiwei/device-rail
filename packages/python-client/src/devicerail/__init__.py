@@ -17,7 +17,7 @@ from .errors import (
 from .protocol.v1 import METHOD_SPECS, RpcMethod, RpcMethodMap, StdioRpcMethod
 from .types import RequestHandle
 
-__version__ = "0.3.0"
+__version__ = "0.3.2"
 
 __all__ = [
     "ClientState",

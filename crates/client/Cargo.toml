@@ -17,7 +17,7 @@ publish = ["crates-io"]
 all-features = true
 
 [dependencies]
-devicerail-protocol = { path = "../protocol", version = "0.3.0" }
+devicerail-protocol = { path = "../protocol", version = "0.3.2" }
 futures-util.workspace = true
 serde.workspace = true
 serde_json.workspace = true
@@ -28,4 +28,4 @@ url.workspace = true
 uuid.workspace = true
 
 [dev-dependencies]
-devicerail-protocol = { path = "../protocol", version = "0.3.0", features = ["fixtures"] }
+devicerail-protocol = { path = "../protocol", version = "0.3.2", features = ["fixtures"] }

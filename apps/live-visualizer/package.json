@@ -1,6 +1,6 @@
 {
   "name": "@devicerail/live-visualizer-app",
-  "version": "0.3.0",
+  "version": "0.3.2",
   "description": "Private loopback live session visualizer for DeviceRail",
   "license": "Apache-2.0",
   "private": true,

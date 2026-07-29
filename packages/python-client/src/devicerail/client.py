@@ -92,7 +92,7 @@ _RpcKey = tuple[type[str] | type[int], RpcId]
 
 
 def default_hello(
-    *, client_name: str = "devicerail-python", client_version: str = "0.3.0"
+    *, client_name: str = "devicerail-python", client_version: str = "0.3.2"
 ) -> HelloParams:
     """Return the default Protocol 1.0-1.5 offer for this package."""
 
