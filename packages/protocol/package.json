@@ -1,6 +1,6 @@
 {
   "name": "@devicerail/protocol",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Generated TypeScript types for the DeviceRail JSON-RPC device automation protocol",
   "license": "Apache-2.0",
   "keywords": ["device-automation", "json-rpc", "json-schema", "typescript"],

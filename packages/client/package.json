@@ -1,6 +1,6 @@
 {
   "name": "@devicerail/client",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Typed Node.js client for the DeviceRail device automation protocol",
   "license": "Apache-2.0",
   "keywords": ["device-automation", "test-automation", "json-rpc", "typescript"],
