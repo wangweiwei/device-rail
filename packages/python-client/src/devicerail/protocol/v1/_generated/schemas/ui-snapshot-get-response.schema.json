@@ -1,0 +1,312 @@
+{
+  "$defs": {
+    "ErrorInfo": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "details": true,
+        "message": {
+          "type": "string"
+        },
+        "retryable": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "code",
+        "message",
+        "retryable"
+      ],
+      "type": "object"
+    },
+    "JsonRpcVersion": {
+      "enum": [
+        "2.0"
+      ],
+      "type": "string"
+    },
+    "NullableRpcIdSchema": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/RpcIdSchema"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "RpcError": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "format": "int32",
+          "maximum": 2147483647,
+          "minimum": -2147483648,
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/$defs/ErrorInfo"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "message",
+        "data"
+      ],
+      "type": "object"
+    },
+    "RpcIdSchema": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "format": "uint64",
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "type": "integer"
+        }
+      ]
+    },
+    "SystemHelloFailureSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "error": {
+          "$ref": "#/$defs/RpcError"
+        },
+        "id": {
+          "$ref": "#/$defs/NullableRpcIdSchema"
+        },
+        "jsonrpc": {
+          "$ref": "#/$defs/JsonRpcVersion"
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "id",
+        "error"
+      ],
+      "type": "object"
+    },
+    "UiContextKind": {
+      "enum": [
+        "native",
+        "web"
+      ],
+      "type": "string"
+    },
+    "UiContextRef": {
+      "additionalProperties": false,
+      "description": "Full identity of one native accessibility or web-document context.\n`documentEpoch` is required for both channels and changes after reconnect,\nnavigation, or any replacement that invalidates prior node references.",
+      "properties": {
+        "contextId": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "type": "string"
+        },
+        "contextKind": {
+          "$ref": "#/$defs/UiContextKind"
+        },
+        "documentEpoch": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "contextKind",
+        "contextId",
+        "documentEpoch"
+      ],
+      "type": "object"
+    },
+    "UiNode": {
+      "additionalProperties": false,
+      "description": "One node in the normalized preorder list. Unknown platform values remain\n`null`; Drivers must not manufacture optimistic enabled/hittable states.",
+      "properties": {
+        "bounds": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/UiRect"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "hittable": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "identifier": {
+          "maxLength": 4096,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "name": {
+          "maxLength": 65536,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "parentStableNodeId": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "role": {
+          "maxLength": 256,
+          "minLength": 1,
+          "type": "string"
+        },
+        "stableNodeId": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "type": "string"
+        },
+        "text": {
+          "maxLength": 65536,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "value": {
+          "maxLength": 65536,
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "stableNodeId",
+        "role"
+      ],
+      "type": "object"
+    },
+    "UiRect": {
+      "additionalProperties": false,
+      "properties": {
+        "height": {
+          "format": "double",
+          "minimum": 0.0,
+          "type": "number"
+        },
+        "width": {
+          "format": "double",
+          "minimum": 0.0,
+          "type": "number"
+        },
+        "x": {
+          "format": "double",
+          "type": "number"
+        },
+        "y": {
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "x",
+        "y",
+        "width",
+        "height"
+      ],
+      "type": "object"
+    },
+    "UiSnapshot": {
+      "additionalProperties": false,
+      "description": "Canonical UI Tree. `nodes` is preorder and every parent must precede its\ncontiguous descendants. The serialized payload is bounded to 768 KiB.",
+      "properties": {
+        "context": {
+          "$ref": "#/$defs/UiContextRef"
+        },
+        "formatVersion": {
+          "format": "uint16",
+          "maximum": 1,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "nodes": {
+          "items": {
+            "$ref": "#/$defs/UiNode"
+          },
+          "maxItems": 10000,
+          "minItems": 1,
+          "type": "array"
+        },
+        "observationId": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "rootStableNodeIds": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 10000,
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": [
+        "formatVersion",
+        "observationId",
+        "context",
+        "rootStableNodeIds",
+        "nodes"
+      ],
+      "type": "object"
+    },
+    "UiSnapshotGetSuccessSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/RpcIdSchema"
+        },
+        "jsonrpc": {
+          "$ref": "#/$defs/JsonRpcVersion"
+        },
+        "result": {
+          "$ref": "#/$defs/UiSnapshot"
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "id",
+        "result"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "urn:devicerail:schema:protocol:v1:ui-snapshot-get-response",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "anyOf": [
+    {
+      "$ref": "#/$defs/UiSnapshotGetSuccessSchema"
+    },
+    {
+      "$ref": "#/$defs/SystemHelloFailureSchema"
+    }
+  ],
+  "title": "UiSnapshotGetResponse"
+}

@@ -1,0 +1,17 @@
+{
+  "$id": "urn:devicerail:schema:protocol:v1:media-stream-end-params",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Parameters accepted by `media.stream.end`.",
+  "properties": {
+    "streamId": {
+      "format": "uuid",
+      "type": "string"
+    }
+  },
+  "required": [
+    "streamId"
+  ],
+  "title": "MediaStreamEndParams",
+  "type": "object"
+}

@@ -1,0 +1,9 @@
+{
+  "$id": "urn:devicerail:schema:protocol:v1:json-rpc-version",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "enum": [
+    "2.0"
+  ],
+  "title": "JsonRpcVersion",
+  "type": "string"
+}

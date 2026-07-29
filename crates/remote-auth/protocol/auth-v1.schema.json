@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://devicerail.dev/schema/remote-auth-v1.json",
+  "title": "DeviceRail remote authentication v1",
+  "oneOf": [
+    { "$ref": "#/$defs/challengeRequest" },
+    { "$ref": "#/$defs/challenge" },
+    { "$ref": "#/$defs/proofRequest" },
+    { "$ref": "#/$defs/success" }
+  ],
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "nonce32": {
+      "type": "string",
+      "minLength": 43,
+      "maxLength": 43,
+      "pattern": "^[A-Za-z0-9_-]{43}$"
+    },
+    "nonce16": {
+      "type": "string",
+      "minLength": 22,
+      "maxLength": 22,
+      "pattern": "^[A-Za-z0-9_-]{22}$"
+    },
+    "challengeRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authProtocolVersion", "principalId", "keyId", "clientNonce"],
+      "properties": {
+        "authProtocolVersion": { "const": "1" },
+        "principalId": { "$ref": "#/$defs/identifier" },
+        "keyId": { "$ref": "#/$defs/identifier" },
+        "clientNonce": { "$ref": "#/$defs/nonce32" }
+      }
+    },
+    "challenge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authProtocolVersion", "algorithm", "challengeId", "serverNonce", "expiresInMs"],
+      "properties": {
+        "authProtocolVersion": { "const": "1" },
+        "algorithm": { "const": "HMAC-SHA256" },
+        "challengeId": { "$ref": "#/$defs/nonce16" },
+        "serverNonce": { "$ref": "#/$defs/nonce32" },
+        "expiresInMs": { "type": "integer", "minimum": 100, "maximum": 30000 }
+      }
+    },
+    "proofRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authProtocolVersion", "challengeId", "proof"],
+      "properties": {
+        "authProtocolVersion": { "const": "1" },
+        "challengeId": { "$ref": "#/$defs/nonce16" },
+        "proof": { "$ref": "#/$defs/nonce32" }
+      }
+    },
+    "success": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authProtocolVersion", "authenticated", "principalId", "permissions"],
+      "properties": {
+        "authProtocolVersion": { "const": "1" },
+        "authenticated": { "const": true },
+        "principalId": { "$ref": "#/$defs/identifier" },
+        "permissions": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "uniqueItems": true,
+          "items": { "enum": ["read", "control", "admin"] }
+        }
+      }
+    }
+  }
+}

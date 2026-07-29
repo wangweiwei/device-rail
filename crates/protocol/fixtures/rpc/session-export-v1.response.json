@@ -1,0 +1,27 @@
+{
+  "jsonrpc": "2.0",
+  "id": "session-export-1",
+  "result": {
+    "session": {
+      "id": "33333333-3333-4333-8333-333333333333",
+      "state": "ended",
+      "startedAtMs": 1720000000000,
+      "endedAtMs": 1720000002000,
+      "eventCount": 2,
+      "lastSequence": 2
+    },
+    "events": [
+      {
+        "eventId": "66666666-6666-4666-8666-666666666661",
+        "sessionId": "33333333-3333-4333-8333-333333333333",
+        "sequence": 1,
+        "requestId": "session-start-1",
+        "atMs": 1720000000000,
+        "payload": {
+          "type": "sessionStarted"
+        }
+      }
+    ],
+    "nextAfterSequence": 1
+  }
+}

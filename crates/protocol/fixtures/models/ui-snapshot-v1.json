@@ -1,0 +1,48 @@
+{
+  "formatVersion": 1,
+  "observationId": "55555555-5555-4555-8555-555555555555",
+  "context": {
+    "contextKind": "native",
+    "contextId": "NATIVE_APP",
+    "documentEpoch": "native-epoch-1"
+  },
+  "rootStableNodeIds": [
+    "root"
+  ],
+  "nodes": [
+    {
+      "stableNodeId": "root",
+      "parentStableNodeId": null,
+      "role": "application",
+      "name": "Safari",
+      "value": null,
+      "identifier": null,
+      "text": null,
+      "bounds": {
+        "x": 0.0,
+        "y": 0.0,
+        "width": 393.0,
+        "height": 852.0
+      },
+      "enabled": true,
+      "hittable": null
+    },
+    {
+      "stableNodeId": "search-button",
+      "parentStableNodeId": "root",
+      "role": "button",
+      "name": "百度一下",
+      "value": null,
+      "identifier": "search-button",
+      "text": "百度一下",
+      "bounds": {
+        "x": 290.0,
+        "y": 210.0,
+        "width": 88.0,
+        "height": 44.0
+      },
+      "enabled": true,
+      "hittable": true
+    }
+  ]
+}

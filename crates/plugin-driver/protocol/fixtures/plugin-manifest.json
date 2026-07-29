@@ -1,0 +1,19 @@
+{
+  "manifestVersion": 1,
+  "abiVersion": 1,
+  "pluginId": "fixture-plugin",
+  "pluginVersion": "1.0.0",
+  "executable": "fixture-plugin",
+  "protocol": { "major": 1, "minMinor": 0, "maxMinor": 4 },
+  "device": {
+    "key": "fixture-device",
+    "name": "Fixture plugin device",
+    "platform": { "kind": "other", "value": "fixture" },
+    "osVersion": "1"
+  },
+  "capabilities": [
+    { "name": "tap", "protection": "standard" },
+    { "name": "inputSecret", "protection": "protected" },
+    { "name": "wait", "protection": "standard" }
+  ]
+}

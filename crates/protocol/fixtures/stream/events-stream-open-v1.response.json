@@ -1,0 +1,9 @@
+{
+  "jsonrpc": "2.0",
+  "id": "stream-open-1",
+  "result": {
+    "endpoint": "ws://127.0.0.1:43123/v/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "streamEpoch": "66666666-6666-4666-8666-666666666666",
+    "expiresAtMs": 1720000005000
+  }
+}

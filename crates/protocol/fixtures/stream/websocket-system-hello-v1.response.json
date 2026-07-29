@@ -1,0 +1,26 @@
+{
+  "jsonrpc": "2.0",
+  "id": "ws-hello-1",
+  "result": {
+    "connectionId": "55555555-5555-4555-8555-555555555555",
+    "protocol": {
+      "selected": {
+        "major": 1,
+        "minor": 3
+      }
+    },
+    "server": {
+      "name": "devicerail-daemon",
+      "version": "0.1.0"
+    },
+    "transport": {
+      "kind": "webSocket",
+      "framing": "jsonMessage"
+    },
+    "features": {
+      "enabled": [
+        "events.stream.v1"
+      ]
+    }
+  }
+}

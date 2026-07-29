@@ -1,0 +1,70 @@
+{
+  "$defs": {
+    "AssetRef": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "mediaType": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "uri": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "mediaType",
+        "uri"
+      ],
+      "type": "object"
+    },
+    "EventSequence": {
+      "description": "A one-based sequence number within one session.\n\nThe wire value is capped at JavaScript's maximum safe integer so generated\nclients can sort and resume event streams without losing precision.",
+      "format": "uint64",
+      "maximum": 9007199254740991,
+      "minimum": 1,
+      "type": "integer"
+    }
+  },
+  "$id": "urn:devicerail:schema:protocol:v1:media-frame",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "durationMs": {
+      "format": "uint64",
+      "maximum": 9007199254740991,
+      "minimum": 0,
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "evidence": {
+      "$ref": "#/$defs/AssetRef"
+    },
+    "frameIndex": {
+      "$ref": "#/$defs/EventSequence"
+    },
+    "keyFrame": {
+      "type": "boolean"
+    },
+    "streamId": {
+      "format": "uuid",
+      "type": "string"
+    }
+  },
+  "required": [
+    "streamId",
+    "frameIndex",
+    "evidence"
+  ],
+  "title": "MediaFrame",
+  "type": "object"
+}

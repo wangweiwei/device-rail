@@ -1,0 +1,17 @@
+{
+  "$id": "urn:devicerail:schema:protocol:v1:session-target-params",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Optional session selector accepted by `events.clear`.",
+  "properties": {
+    "sessionId": {
+      "format": "uuid",
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "title": "SessionTargetParams",
+  "type": "object"
+}

@@ -1,0 +1,29 @@
+{
+  "jsonrpc": "2.0",
+  "method": "events.stream.event",
+  "params": {
+    "subscriptionId": "77777777-7777-4777-8777-777777777777",
+    "cursor": {
+      "streamEpoch": "66666666-6666-4666-8666-666666666666",
+      "sessionId": "33333333-3333-4333-8333-333333333333",
+      "sequence": 5
+    },
+    "event": {
+      "eventId": "44444444-4444-4444-8444-000000000005",
+      "sessionId": "33333333-3333-4333-8333-333333333333",
+      "sequence": 5,
+      "requestId": "request-failure",
+      "deviceId": "android-emulator-5554",
+      "atMs": 1720000002000,
+      "payload": {
+        "type": "actionStarted",
+        "call": {
+          "id": "22222222-2222-4222-8222-222222222223",
+          "name": "inputSecret",
+          "arguments": null,
+          "argumentsRedacted": true
+        }
+      }
+    }
+  }
+}

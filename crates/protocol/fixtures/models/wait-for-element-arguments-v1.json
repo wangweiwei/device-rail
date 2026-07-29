@@ -1,0 +1,15 @@
+{
+  "selector": {
+    "context": {
+      "contextKind": "web",
+      "contextId": "WEBVIEW_com.apple.mobilesafari"
+    },
+    "role": null,
+    "name": null,
+    "value": null,
+    "identifier": null,
+    "text": null,
+    "css": "#loading"
+  },
+  "condition": "absent"
+}

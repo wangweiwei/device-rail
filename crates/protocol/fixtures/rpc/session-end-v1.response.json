@@ -1,0 +1,12 @@
+{
+  "jsonrpc": "2.0",
+  "id": "session-end-1",
+  "result": {
+    "id": "33333333-3333-4333-8333-333333333333",
+    "state": "ended",
+    "startedAtMs": 1720000000000,
+    "endedAtMs": 1720000002000,
+    "eventCount": 2,
+    "lastSequence": 2
+  }
+}

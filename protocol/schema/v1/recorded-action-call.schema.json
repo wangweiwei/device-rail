@@ -1,0 +1,26 @@
+{
+  "$id": "urn:devicerail:schema:protocol:v1:recorded-action-call",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Durable representation of an Action invocation.\n\nStandard calls preserve the historical wire shape. Protected and unknown\ncalls retain only correlation fields and serialize `arguments` as `null`\nwith an explicit `argumentsRedacted` marker.",
+  "properties": {
+    "arguments": {
+      "default": null
+    },
+    "argumentsRedacted": {
+      "type": "boolean"
+    },
+    "id": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "name"
+  ],
+  "title": "RecordedActionCall",
+  "type": "object"
+}

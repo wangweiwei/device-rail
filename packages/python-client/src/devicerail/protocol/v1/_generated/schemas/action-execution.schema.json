@@ -1,0 +1,103 @@
+{
+  "$defs": {
+    "CoordinateFallbackReason": {
+      "enum": [
+        "semanticInteractionUnavailable",
+        "platformLimitation"
+      ],
+      "type": "string"
+    },
+    "UiContextKind": {
+      "enum": [
+        "native",
+        "web"
+      ],
+      "type": "string"
+    },
+    "UiContextRef": {
+      "additionalProperties": false,
+      "description": "Full identity of one native accessibility or web-document context.\n`documentEpoch` is required for both channels and changes after reconnect,\nnavigation, or any replacement that invalidates prior node references.",
+      "properties": {
+        "contextId": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "type": "string"
+        },
+        "contextKind": {
+          "$ref": "#/$defs/UiContextKind"
+        },
+        "documentEpoch": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "contextKind",
+        "contextId",
+        "documentEpoch"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "urn:devicerail:schema:protocol:v1:action-execution",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "oneOf": [
+    {
+      "additionalProperties": false,
+      "properties": {
+        "context": {
+          "$ref": "#/$defs/UiContextRef"
+        },
+        "mode": {
+          "const": "nativeSemantic",
+          "type": "string"
+        }
+      },
+      "required": [
+        "mode",
+        "context"
+      ],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "properties": {
+        "context": {
+          "$ref": "#/$defs/UiContextRef"
+        },
+        "mode": {
+          "const": "webSemantic",
+          "type": "string"
+        }
+      },
+      "required": [
+        "mode",
+        "context"
+      ],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "properties": {
+        "context": {
+          "$ref": "#/$defs/UiContextRef"
+        },
+        "fallbackReason": {
+          "$ref": "#/$defs/CoordinateFallbackReason"
+        },
+        "mode": {
+          "const": "coordinateFallback",
+          "type": "string"
+        }
+      },
+      "required": [
+        "mode",
+        "context",
+        "fallbackReason"
+      ],
+      "type": "object"
+    }
+  ],
+  "title": "ActionExecution"
+}

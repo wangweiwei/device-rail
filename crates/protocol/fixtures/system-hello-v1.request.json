@@ -1,0 +1,40 @@
+{
+  "jsonrpc": "2.0",
+  "id": "hello-1",
+  "method": "system.hello",
+  "params": {
+    "client": {
+      "name": "fixture-client",
+      "version": "0.1.0"
+    },
+    "protocol": {
+      "ranges": [
+        {
+          "major": 1,
+          "minMinor": 0,
+          "maxMinor": 5
+        },
+        {
+          "major": 3,
+          "minMinor": 0,
+          "maxMinor": 0
+        }
+      ]
+    },
+    "features": {
+      "required": [],
+      "optional": [
+        "action.protected.v1",
+        "device.routing.v1",
+        "device.semanticActions.v1",
+        "events.snapshot.v1",
+        "events.stream.v1",
+        "media.stream.v1",
+        "observation.uiSnapshot.v1",
+        "request.control.v1",
+        "session.export.page.v1",
+        "verdict.record.v1"
+      ]
+    }
+  }
+}

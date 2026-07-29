@@ -1,0 +1,172 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  performance-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+      - name: Run concurrent Event Store load smoke
+        env:
+          DEVICERAIL_PERF_OUTPUT: target/event-store-load.json
+        run: cargo bench -p devicerail-core --bench event_store_load -- --smoke
+      - name: Enforce broad performance regression guardrails
+        run: python3 scripts/check-performance.py target/event-store-load.json
+      - name: Upload raw performance result
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: event-store-load-${{ runner.os }}-${{ runner.arch }}
+          path: target/event-store-load.json
+          if-no-files-found: error
+
+  release-packager:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.12"
+      - name: Test deterministic release packaging and verification
+        run: python -W error -m unittest discover -s packaging/tests -v
+
+  python-client:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            python: "3.11"
+          - os: windows-latest
+            python: "3.13"
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+          cache-dependency-path: packages/python-client/pyproject.toml
+      - name: Install Python client and development gates
+        run: python -m pip install -e "packages/python-client[dev]"
+      - name: Check generated Python protocol types
+        run: python packages/python-client/scripts/generate.py --check
+      - name: Type-check Python public API
+        run: python -m mypy --config-file packages/python-client/pyproject.toml packages/python-client/typing/contract.py
+      - name: Test Python client and Golden Fixtures
+        run: python -W error -m unittest discover -s packages/python-client/tests -v
+      - name: Build Python wheel and source distribution
+        run: python -m build --outdir packages/python-client/dist packages/python-client
+      - name: Verify Python distributions
+        run: python packages/python-client/scripts/check_distribution.py packages/python-client/dist
+
+  rust:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+      - name: Check formatting
+        run: cargo fmt --all -- --check
+      - name: Check generated protocol schemas
+        run: cargo run -p devicerail-schema-gen -- --check
+      - name: Check workspace
+        run: cargo check --workspace
+      - name: Test workspace
+        run: cargo test --workspace
+      - name: Lint workspace
+        run: cargo clippy --workspace --all-targets -- -D warnings
+
+  rust-public-packages:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+      - name: Package the public protocol crate
+        run: cargo package --locked -p devicerail-protocol
+      - name: Package the public client crate
+        run: |
+          cargo package --locked -p devicerail-client \
+            --config 'patch.crates-io.devicerail-protocol.path="crates/protocol"'
+          package_dir="$(
+            find target/package -maxdepth 1 -type d \
+              -name 'devicerail-client-*' -print -quit
+          )"
+          test -n "$package_dir"
+          cargo test --locked --manifest-path "$package_dir/Cargo.toml" \
+            --config 'patch.crates-io.devicerail-protocol.path="crates/protocol"'
+
+  typescript:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - name: Install TypeScript dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Check generated protocol types
+        run: pnpm protocol:types:check
+      - name: Type-check protocol fixtures
+        run: pnpm protocol:types:test
+      - name: Build protocol declarations
+        run: pnpm protocol:types:build
+      - name: Type-check TypeScript client
+        run: pnpm client:typecheck
+      - name: Build Mock daemon and Session Bundle CLI for E2E
+        run: cargo build -p devicerail-daemon -p devicerail-bundle-cli
+      - name: Test TypeScript client and event stream
+        run: pnpm --filter @devicerail/client test
+      - name: Build TypeScript client
+        run: pnpm client:build
+      - name: Type-check Execution Recorder
+        run: pnpm recorder:typecheck
+      - name: Test Execution Recorder
+        run: pnpm --filter @devicerail/recorder test
+      - name: Build Execution Recorder
+        run: pnpm recorder:build
+      - name: Type-check Live Visualizer
+        run: pnpm --filter @devicerail/live-visualizer typecheck && pnpm --filter @devicerail/live-visualizer build && pnpm --filter @devicerail/live-visualizer-app typecheck
+      - name: Test Live Visualizer
+        run: pnpm --filter @devicerail/live-visualizer test && pnpm --filter @devicerail/live-visualizer-app test
+      - name: Build Live Visualizer app
+        run: pnpm --filter @devicerail/live-visualizer-app build
+      - name: Check Playwright Remote Driver helper
+        run: pnpm playwright-driver:typecheck && pnpm playwright-driver:test && pnpm playwright-driver:build
+      - name: Type-check Tool Adapter
+        run: pnpm tool-adapter:typecheck
+      - name: Test Tool Adapter
+        run: pnpm tool-adapter:test
+      - name: Build Tool Adapter
+        run: pnpm tool-adapter:build
+      - name: Check optional YAML compatibility adapter
+        run: pnpm yaml-adapter:typecheck && pnpm yaml-adapter:test && pnpm yaml-adapter:build
+      - name: Check packed TypeScript packages
+        run: pnpm packages:check
+      - name: Check release version and repository-stamped npm artifacts
+        if: runner.os == 'Linux'
+        shell: bash
+        env:
+          REPOSITORY_URL: git+${{ github.server_url }}/${{ github.repository }}.git
+        run: |
+          version=$(node -p 'JSON.parse(require("node:fs").readFileSync("package.json", "utf8")).version')
+          node scripts/check-release-version.mjs "v${version}"
+          node scripts/pack-npm-release.mjs \
+            --repository-url "$REPOSITORY_URL" \
+            --output target/npm-release-check
+          git diff --exit-code

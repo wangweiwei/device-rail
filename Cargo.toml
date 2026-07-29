@@ -1,0 +1,78 @@
+[workspace]
+resolver = "2"
+members = [
+  "crates/protocol",
+  "crates/client",
+  "crates/core",
+  "crates/android-adb",
+  "crates/ios-host",
+  "crates/ios-webdriver",
+  "crates/harmony-hdc",
+  "crates/desktop-driver",
+  "crates/playwright-remote",
+  "crates/rdp-remote",
+  "crates/plugin-driver",
+  "crates/remote-auth",
+  "crates/distributed-router",
+  "crates/manual-recording",
+  "crates/driver-mock",
+  "crates/evidence-fs",
+  "crates/session-bundle",
+  "crates/bundle-cli",
+  "crates/visualizer",
+  "crates/websocket-transport",
+  "crates/daemon",
+  "crates/schema-gen",
+]
+default-members = [
+  "crates/protocol",
+  "crates/client",
+  "crates/core",
+  "crates/android-adb",
+  "crates/ios-host",
+  "crates/ios-webdriver",
+  "crates/harmony-hdc",
+  "crates/desktop-driver",
+  "crates/playwright-remote",
+  "crates/rdp-remote",
+  "crates/plugin-driver",
+  "crates/remote-auth",
+  "crates/distributed-router",
+  "crates/manual-recording",
+  "crates/driver-mock",
+  "crates/evidence-fs",
+  "crates/session-bundle",
+  "crates/bundle-cli",
+  "crates/visualizer",
+  "crates/websocket-transport",
+  "crates/daemon",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.85"
+license = "Apache-2.0"
+
+[workspace.dependencies]
+async-trait = "0.1"
+base64 = "0.22"
+fs2 = "0.4"
+futures-util = { version = "0.3", default-features = false, features = ["sink", "std"] }
+getrandom = "0.4"
+hex = "0.4"
+hmac = "0.13"
+jsonschema = { version = "=0.47.0", default-features = false }
+libc = "0.2"
+png = "=0.18.1"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.11"
+schemars = { version = "=1.2.1", default-features = false }
+tempfile = "3"
+thiserror = "2"
+tokio = { version = "1", features = ["fs", "io-std", "io-util", "macros", "net", "process", "rt-multi-thread", "signal", "sync", "time"] }
+tokio-tungstenite = { version = "=0.30.0", default-features = false, features = ["handshake"] }
+uuid = { version = "1", features = ["serde", "v4"] }
+url = "2"
+zeroize = "1"

@@ -1,0 +1,27 @@
+{
+  "jsonrpc": "2.0",
+  "id": "devices-list-1",
+  "result": {
+    "devices": [
+      {
+        "id": "android-emulator-5554",
+        "name": "Pixel 9 API 35",
+        "platform": {
+          "kind": "android"
+        },
+        "osVersion": "15",
+        "connected": true
+      },
+      {
+        "id": "mock-device-1",
+        "name": "Mock Device",
+        "platform": {
+          "kind": "mock"
+        },
+        "osVersion": "1.0",
+        "connected": true
+      }
+    ],
+    "selectedDeviceId": "android-emulator-5554"
+  }
+}

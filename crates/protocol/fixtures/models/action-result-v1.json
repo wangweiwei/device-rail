@@ -1,0 +1,39 @@
+{
+  "callId": "22222222-2222-4222-8222-222222222222",
+  "startedAtMs": 1720000001000,
+  "finishedAtMs": 1720000001500,
+  "output": {
+    "accepted": true
+  },
+  "before": null,
+  "after": {
+    "id": "44444444-4444-4444-8444-444444444444",
+    "deviceId": "android-emulator-5554",
+    "capturedAtMs": 1720000001500,
+    "viewport": {
+      "width": 1080,
+      "height": 2400,
+      "scaleFactor": 2.5
+    },
+    "screenshot": null,
+    "metadata": {
+      "phase": "after"
+    }
+  },
+  "evidence": [
+    {
+      "id": "asset-action-001",
+      "mediaType": "image/png",
+      "uri": "devicerail://assets/asset-action-001",
+      "sha256": null
+    }
+  ],
+  "execution": {
+    "mode": "nativeSemantic",
+    "context": {
+      "contextKind": "native",
+      "contextId": "NATIVE_APP",
+      "documentEpoch": "action-result-1"
+    }
+  }
+}

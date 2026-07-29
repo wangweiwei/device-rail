@@ -1,0 +1,18 @@
+{
+  "jsonrpc": "2.0",
+  "id": "media-capture-1",
+  "result": {
+    "frame": {
+      "streamId": "77777777-7777-4777-8777-777777777777",
+      "frameIndex": 1,
+      "keyFrame": true,
+      "durationMs": 100,
+      "evidence": {
+        "id": "sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+        "mediaType": "image/png",
+        "uri": "devicerail://assets/sha256/0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+        "sha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+      }
+    }
+  }
+}

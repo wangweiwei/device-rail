@@ -1,0 +1,7 @@
+{
+  "jsonrpc": "2.0",
+  "id": "session-current-1",
+  "result": {
+    "sessionId": "33333333-3333-4333-8333-333333333333"
+  }
+}

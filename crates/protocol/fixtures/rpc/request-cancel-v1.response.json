@@ -1,0 +1,8 @@
+{
+  "jsonrpc": "2.0",
+  "id": "cancel-1",
+  "result": {
+    "requestId": "execute-timeout-1",
+    "status": "requested"
+  }
+}

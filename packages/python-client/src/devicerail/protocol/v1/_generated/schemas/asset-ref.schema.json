@@ -1,0 +1,28 @@
+{
+  "$id": "urn:devicerail:schema:protocol:v1:asset-ref",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "mediaType": {
+      "type": "string"
+    },
+    "sha256": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "uri": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "mediaType",
+    "uri"
+  ],
+  "title": "AssetRef",
+  "type": "object"
+}

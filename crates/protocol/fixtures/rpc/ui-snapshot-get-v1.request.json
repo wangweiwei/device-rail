@@ -1,0 +1,8 @@
+{
+  "jsonrpc": "2.0",
+  "id": "ui-snapshot-1",
+  "method": "ui.snapshot.get",
+  "params": {
+    "observationId": "55555555-5555-4555-8555-555555555555"
+  }
+}

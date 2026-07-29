@@ -1,0 +1,40 @@
+{
+  "$id": "urn:devicerail:schema:protocol:v1:event-stream-origin-policy",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Browser Origin policy bound to a single-use stream capability.",
+  "oneOf": [
+    {
+      "additionalProperties": false,
+      "description": "Node and other non-browser clients must omit Origin entirely.",
+      "properties": {
+        "kind": {
+          "const": "absent",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "description": "Browser clients must send exactly this Origin value.",
+      "properties": {
+        "kind": {
+          "const": "exact",
+          "type": "string"
+        },
+        "origin": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "origin"
+      ],
+      "type": "object"
+    }
+  ],
+  "title": "EventStreamOriginPolicy"
+}

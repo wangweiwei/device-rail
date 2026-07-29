@@ -1,0 +1,620 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://devicerail.dev/schema/distributed/peer-v2.schema.json",
+  "title": "DeviceRail distributed peer protocol v2",
+  "oneOf": [
+    { "$ref": "#/$defs/request" },
+    { "$ref": "#/$defs/response" }
+  ],
+  "$defs": {
+    "uuid": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "wireInteger": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "nodeId": {
+      "allOf": [
+        { "$ref": "#/$defs/identifier" },
+        { "maxLength": 64 }
+      ]
+    },
+    "lease": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["leaseId", "deviceKey", "ownerId", "nodeEpoch", "expiresAtMs"],
+      "properties": {
+        "leaseId": { "$ref": "#/$defs/uuid" },
+        "deviceKey": { "$ref": "#/$defs/identifier" },
+        "ownerId": {
+          "allOf": [
+            { "$ref": "#/$defs/identifier" },
+            { "maxLength": 64 }
+          ]
+        },
+        "nodeEpoch": { "$ref": "#/$defs/wireInteger" },
+        "expiresAtMs": { "$ref": "#/$defs/wireInteger" }
+      }
+    },
+    "platform": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind"],
+          "properties": {
+            "kind": {
+              "enum": ["web", "android", "ios", "harmonyOs", "macOs", "windows", "linux", "rdp", "mock"]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "value"],
+          "properties": {
+            "kind": { "const": "other" },
+            "value": { "type": "string", "minLength": 1, "maxLength": 64 }
+          }
+        }
+      ]
+    },
+    "deviceDescriptor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["deviceKey", "name", "platform", "osVersion"],
+      "properties": {
+        "deviceKey": { "$ref": "#/$defs/identifier" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "platform": { "$ref": "#/$defs/platform" },
+        "osVersion": { "type": ["string", "null"], "minLength": 1, "maxLength": 128 }
+      }
+    },
+    "inventory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nodeId", "epoch", "revision", "generatedAtMs", "devices"],
+      "properties": {
+        "nodeId": { "$ref": "#/$defs/nodeId" },
+        "epoch": { "$ref": "#/$defs/wireInteger" },
+        "revision": { "$ref": "#/$defs/wireInteger" },
+        "generatedAtMs": { "$ref": "#/$defs/wireInteger" },
+        "devices": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 256,
+          "items": { "$ref": "#/$defs/deviceDescriptor" }
+        }
+      }
+    },
+    "actionCall": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "arguments"],
+      "properties": {
+        "id": { "$ref": "#/$defs/uuid" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "arguments": { "type": "object" }
+      }
+    },
+    "actionDefinition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "description", "inputSchema"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "description": { "type": "string", "minLength": 1, "maxLength": 1024 },
+        "inputSchema": { "type": "object" },
+        "protection": { "enum": ["standard", "protected"] }
+      }
+    },
+    "assetRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "mediaType", "uri", "sha256"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "mediaType": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "uri": { "type": "string", "minLength": 1, "maxLength": 2048 },
+        "sha256": {
+          "type": ["string", "null"],
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "uiContextRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contextKind", "contextId", "documentEpoch"],
+      "properties": {
+        "contextKind": { "enum": ["native", "web"] },
+        "contextId": { "type": "string", "minLength": 1, "maxLength": 4096 },
+        "documentEpoch": { "type": "string", "minLength": 1, "maxLength": 4096 }
+      }
+    },
+    "uiSnapshotRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["formatVersion", "context", "nodeCount", "byteLength", "evidence"],
+      "properties": {
+        "formatVersion": { "const": 1 },
+        "context": { "$ref": "#/$defs/uiContextRef" },
+        "nodeCount": { "type": "integer", "minimum": 1, "maximum": 10000 },
+        "byteLength": { "type": "integer", "minimum": 1, "maximum": 786432 },
+        "evidence": { "$ref": "#/$defs/assetRef" }
+      }
+    },
+    "actionExecution": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode", "context"],
+          "properties": {
+            "mode": { "const": "nativeSemantic" },
+            "context": {
+              "allOf": [
+                { "$ref": "#/$defs/uiContextRef" },
+                { "properties": { "contextKind": { "const": "native" } } }
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode", "context"],
+          "properties": {
+            "mode": { "const": "webSemantic" },
+            "context": {
+              "allOf": [
+                { "$ref": "#/$defs/uiContextRef" },
+                { "properties": { "contextKind": { "const": "web" } } }
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode", "context", "fallbackReason"],
+          "properties": {
+            "mode": { "const": "coordinateFallback" },
+            "context": { "$ref": "#/$defs/uiContextRef" },
+            "fallbackReason": { "enum": ["semanticInteractionUnavailable", "platformLimitation"] }
+          }
+        }
+      ]
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "deviceId", "capturedAtMs", "viewport", "screenshot", "metadata"],
+      "properties": {
+        "id": { "$ref": "#/$defs/uuid" },
+        "deviceId": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "capturedAtMs": { "$ref": "#/$defs/wireInteger" },
+        "viewport": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["width", "height", "scaleFactor"],
+          "properties": {
+            "width": { "type": "integer", "minimum": 1, "maximum": 8192 },
+            "height": { "type": "integer", "minimum": 1, "maximum": 8192 },
+            "scaleFactor": { "type": "number", "exclusiveMinimum": 0 }
+          }
+        },
+        "screenshot": {
+          "anyOf": [
+            { "$ref": "#/$defs/assetRef" },
+            { "type": "null" }
+          ]
+        },
+        "screenshotOmission": { "type": ["string", "null"], "enum": ["policy", "protectedAction", null] },
+        "uiSnapshot": {
+          "anyOf": [
+            { "$ref": "#/$defs/uiSnapshotRef" },
+            { "type": "null" }
+          ]
+        },
+        "uiSnapshotOmission": { "type": ["string", "null"], "enum": ["driverUnsupported", "policy", "protectedAction", null] },
+        "metadata": { "type": "object" }
+      },
+      "not": {
+        "required": ["uiSnapshot", "uiSnapshotOmission"],
+        "properties": {
+          "uiSnapshot": { "not": { "type": "null" } },
+          "uiSnapshotOmission": { "not": { "type": "null" } }
+        }
+      }
+    },
+    "actionResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["callId", "startedAtMs", "finishedAtMs", "output", "before", "after", "evidence"],
+      "properties": {
+        "callId": { "$ref": "#/$defs/uuid" },
+        "startedAtMs": { "$ref": "#/$defs/wireInteger" },
+        "finishedAtMs": { "$ref": "#/$defs/wireInteger" },
+        "output": true,
+        "before": {
+          "anyOf": [
+            { "$ref": "#/$defs/observation" },
+            { "type": "null" }
+          ]
+        },
+        "after": {
+          "anyOf": [
+            { "$ref": "#/$defs/observation" },
+            { "type": "null" }
+          ]
+        },
+        "evidence": {
+          "type": "array",
+          "maxItems": 128,
+          "items": { "$ref": "#/$defs/assetRef" }
+        },
+        "execution": {
+          "anyOf": [
+            { "$ref": "#/$defs/actionExecution" },
+            { "type": "null" }
+          ]
+        }
+      }
+    },
+    "deviceInfo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "platform", "osVersion", "connected"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "name": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "platform": { "$ref": "#/$defs/platform" },
+        "osVersion": { "type": ["string", "null"], "minLength": 1, "maxLength": 128 },
+        "connected": { "type": "boolean" }
+      }
+    },
+    "helloOperation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method"],
+      "properties": { "method": { "const": "hello" } }
+    },
+    "inventoryOperation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method"],
+      "properties": { "method": { "const": "inventory" } }
+    },
+    "healthOperation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method"],
+      "properties": { "method": { "const": "health" } }
+    },
+    "deviceKeyOperation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "deviceKey"],
+      "properties": {
+        "method": { "enum": ["capabilities", "connect", "disconnect"] },
+        "deviceKey": { "$ref": "#/$defs/identifier" }
+      }
+    },
+    "leaseAcquireOperation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "deviceKey", "ownerId", "ttlMs"],
+      "properties": {
+        "method": { "const": "leaseAcquire" },
+        "deviceKey": { "$ref": "#/$defs/identifier" },
+        "ownerId": { "$ref": "#/$defs/identifier" },
+        "ttlMs": { "type": "integer", "minimum": 1000, "maximum": 300000 }
+      }
+    },
+    "leaseRenewOperation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "lease", "ttlMs"],
+      "properties": {
+        "method": { "const": "leaseRenew" },
+        "lease": { "$ref": "#/$defs/lease" },
+        "ttlMs": { "type": "integer", "minimum": 1000, "maximum": 300000 }
+      }
+    },
+    "leaseReleaseOperation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "lease"],
+      "properties": {
+        "method": { "const": "leaseRelease" },
+        "lease": { "$ref": "#/$defs/lease" }
+      }
+    },
+    "observeOperation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "deviceKey", "screenshotOmission", "uiSnapshotsEnabled", "semanticActionsEnabled"],
+      "properties": {
+        "method": { "const": "observe" },
+        "deviceKey": { "$ref": "#/$defs/identifier" },
+        "screenshotOmission": { "type": ["string", "null"], "enum": ["policy", "protectedAction", null] },
+        "uiSnapshotsEnabled": { "type": "boolean" },
+        "semanticActionsEnabled": { "type": "boolean" }
+      }
+    },
+    "executeOperation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "deviceKey", "call", "screenshotOmission", "uiSnapshotsEnabled", "semanticActionsEnabled"],
+      "properties": {
+        "method": { "const": "execute" },
+        "deviceKey": { "$ref": "#/$defs/identifier" },
+        "call": { "$ref": "#/$defs/actionCall" },
+        "screenshotOmission": { "type": ["string", "null"], "enum": ["policy", "protectedAction", null] },
+        "uiSnapshotsEnabled": { "type": "boolean" },
+        "semanticActionsEnabled": { "type": "boolean" }
+      }
+    },
+    "evidenceReadOperation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "deviceKey", "evidenceId", "offset", "maxBytes"],
+      "properties": {
+        "method": { "const": "evidenceRead" },
+        "deviceKey": { "$ref": "#/$defs/identifier" },
+        "evidenceId": {
+          "anyOf": [
+            { "$ref": "#/$defs/identifier" },
+            { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+          ]
+        },
+        "offset": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+        "maxBytes": { "type": "integer", "minimum": 1, "maximum": 262144 }
+      }
+    },
+    "cancelOperation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "targetRequestId", "callId"],
+      "properties": {
+        "method": { "const": "cancel" },
+        "targetRequestId": { "$ref": "#/$defs/uuid" },
+        "callId": {
+          "anyOf": [
+            { "$ref": "#/$defs/uuid" },
+            { "type": "null" }
+          ]
+        }
+      }
+    },
+    "operation": {
+      "oneOf": [
+        { "$ref": "#/$defs/helloOperation" },
+        { "$ref": "#/$defs/inventoryOperation" },
+        { "$ref": "#/$defs/healthOperation" },
+        { "$ref": "#/$defs/deviceKeyOperation" },
+        { "$ref": "#/$defs/leaseAcquireOperation" },
+        { "$ref": "#/$defs/leaseRenewOperation" },
+        { "$ref": "#/$defs/leaseReleaseOperation" },
+        { "$ref": "#/$defs/observeOperation" },
+        { "$ref": "#/$defs/executeOperation" },
+        { "$ref": "#/$defs/evidenceReadOperation" },
+        { "$ref": "#/$defs/cancelOperation" }
+      ]
+    },
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["protocolVersion", "requestId", "traceId", "nodeId", "nodeEpoch", "timeoutMs", "callId", "lease", "operation"],
+      "properties": {
+        "protocolVersion": { "const": 2 },
+        "requestId": { "$ref": "#/$defs/uuid" },
+        "traceId": { "$ref": "#/$defs/uuid" },
+        "nodeId": { "$ref": "#/$defs/nodeId" },
+        "nodeEpoch": {
+          "anyOf": [
+            { "$ref": "#/$defs/wireInteger" },
+            { "type": "null" }
+          ]
+        },
+        "timeoutMs": {
+          "anyOf": [
+            { "type": "integer", "minimum": 1, "maximum": 300000 },
+            { "type": "null" }
+          ]
+        },
+        "callId": {
+          "anyOf": [
+            { "$ref": "#/$defs/uuid" },
+            { "type": "null" }
+          ]
+        },
+        "lease": {
+          "anyOf": [
+            { "$ref": "#/$defs/lease" },
+            { "type": "null" }
+          ]
+        },
+        "operation": { "$ref": "#/$defs/operation" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "operation": { "properties": { "method": { "enum": ["hello", "inventory"] } } } } },
+          "then": { "properties": { "nodeEpoch": { "type": "null" }, "lease": { "type": "null" }, "callId": { "type": "null" } } }
+        },
+        {
+          "if": { "properties": { "operation": { "properties": { "method": { "enum": ["health", "capabilities", "leaseAcquire", "cancel"] } } } } },
+          "then": { "properties": { "nodeEpoch": { "$ref": "#/$defs/wireInteger" }, "lease": { "type": "null" }, "callId": { "type": "null" } } }
+        },
+        {
+          "if": { "properties": { "operation": { "properties": { "method": { "enum": ["leaseRenew", "leaseRelease", "connect", "disconnect", "observe", "evidenceRead"] } } } } },
+          "then": { "properties": { "nodeEpoch": { "$ref": "#/$defs/wireInteger" }, "lease": { "$ref": "#/$defs/lease" }, "callId": { "type": "null" } } }
+        },
+        {
+          "if": { "properties": { "operation": { "properties": { "method": { "const": "execute" } } } } },
+          "then": { "properties": { "nodeEpoch": { "$ref": "#/$defs/wireInteger" }, "lease": { "$ref": "#/$defs/lease" }, "callId": { "$ref": "#/$defs/uuid" } } }
+        }
+      ]
+    },
+    "peerError": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "retryable", "outcomeUnknown"],
+      "properties": {
+        "code": { "type": "string", "minLength": 1, "maxLength": 64, "pattern": "^[a-z][a-z0-9_.-]*$" },
+        "retryable": { "type": "boolean" },
+        "outcomeUnknown": { "type": "boolean" }
+      }
+    },
+    "peerProtocolCapabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["uiSnapshotsV1", "semanticActionsV1"],
+      "properties": {
+        "uiSnapshotsV1": { "type": "boolean" },
+        "semanticActionsV1": { "type": "boolean" }
+      }
+    },
+    "result": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "nodeId", "epoch", "maxFrameBytes", "capabilities"],
+          "properties": {
+            "kind": { "const": "hello" },
+            "nodeId": { "$ref": "#/$defs/nodeId" },
+            "epoch": { "$ref": "#/$defs/wireInteger" },
+            "maxFrameBytes": { "type": "integer", "minimum": 1, "maximum": 1048576 },
+            "capabilities": { "$ref": "#/$defs/peerProtocolCapabilities" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "inventory"],
+          "properties": { "kind": { "const": "inventory" }, "inventory": { "$ref": "#/$defs/inventory" } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "state", "checkedAtMs"],
+          "properties": {
+            "kind": { "const": "health" },
+            "state": { "enum": ["healthy", "degraded", "unavailable"] },
+            "checkedAtMs": { "$ref": "#/$defs/wireInteger" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "actions"],
+          "properties": {
+            "kind": { "const": "capabilities" },
+            "actions": { "type": "array", "minItems": 1, "maxItems": 128, "items": { "$ref": "#/$defs/actionDefinition" } }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "lease"],
+          "properties": { "kind": { "const": "lease" }, "lease": { "$ref": "#/$defs/lease" } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "device"],
+          "properties": { "kind": { "const": "device" }, "device": { "$ref": "#/$defs/deviceInfo" } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "observation"],
+          "properties": { "kind": { "const": "observation" }, "observation": { "$ref": "#/$defs/observation" } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "result"],
+          "properties": { "kind": { "const": "action" }, "result": { "$ref": "#/$defs/actionResult" } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "evidenceId", "mediaType", "totalSize", "offset", "dataBase64", "sha256", "done"],
+          "properties": {
+            "kind": { "const": "evidenceChunk" },
+            "evidenceId": {
+              "anyOf": [
+                { "$ref": "#/$defs/identifier" },
+                { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+              ]
+            },
+            "mediaType": { "type": "string", "minLength": 1, "maxLength": 128 },
+            "totalSize": { "type": "integer", "minimum": 1, "maximum": 16777216 },
+            "offset": { "type": "integer", "minimum": 0, "maximum": 16777215 },
+            "dataBase64": { "type": "string", "minLength": 4, "maxLength": 349528 },
+            "sha256": { "type": ["string", "null"], "pattern": "^[0-9a-f]{64}$" },
+            "done": { "type": "boolean" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind"],
+          "properties": { "kind": { "const": "ack" } }
+        }
+      ]
+    },
+    "response": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["protocolVersion", "requestId", "nodeId", "nodeEpoch", "ok", "result", "error"],
+      "properties": {
+        "protocolVersion": { "const": 2 },
+        "requestId": { "$ref": "#/$defs/uuid" },
+        "nodeId": { "$ref": "#/$defs/nodeId" },
+        "nodeEpoch": { "$ref": "#/$defs/wireInteger" },
+        "ok": { "type": "boolean" },
+        "result": {
+          "anyOf": [
+            { "$ref": "#/$defs/result" },
+            { "type": "null" }
+          ]
+        },
+        "error": {
+          "anyOf": [
+            { "$ref": "#/$defs/peerError" },
+            { "type": "null" }
+          ]
+        }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "ok": { "const": true },
+            "result": { "$ref": "#/$defs/result" },
+            "error": { "type": "null" }
+          }
+        },
+        {
+          "properties": {
+            "ok": { "const": false },
+            "result": { "type": "null" },
+            "error": { "$ref": "#/$defs/peerError" }
+          }
+        }
+      ]
+    }
+  }
+}

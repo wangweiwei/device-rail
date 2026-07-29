@@ -1,0 +1,52 @@
+{
+  "$defs": {
+    "ProtocolRange": {
+      "additionalProperties": false,
+      "description": "A contiguous minor-version range within one protocol major version.",
+      "properties": {
+        "major": {
+          "format": "uint16",
+          "maximum": 65535,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "maxMinor": {
+          "format": "uint16",
+          "maximum": 65535,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "minMinor": {
+          "format": "uint16",
+          "maximum": 65535,
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "major",
+        "minMinor",
+        "maxMinor"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "urn:devicerail:schema:protocol:v1:protocol-offer",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "An explicit set of supported ranges. Multiple entries avoid implying support\nfor major versions that a peer intentionally skipped.",
+  "properties": {
+    "ranges": {
+      "items": {
+        "$ref": "#/$defs/ProtocolRange"
+      },
+      "minItems": 1,
+      "type": "array"
+    }
+  },
+  "required": [
+    "ranges"
+  ],
+  "title": "ProtocolOffer",
+  "type": "object"
+}

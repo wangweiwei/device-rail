@@ -1,0 +1,25 @@
+{
+  "$id": "urn:devicerail:schema:protocol:v1:protocol-version",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "major": {
+      "format": "uint16",
+      "maximum": 65535,
+      "minimum": 0,
+      "type": "integer"
+    },
+    "minor": {
+      "format": "uint16",
+      "maximum": 65535,
+      "minimum": 0,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "major",
+    "minor"
+  ],
+  "title": "ProtocolVersion",
+  "type": "object"
+}

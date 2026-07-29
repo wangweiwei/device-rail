@@ -1,0 +1,263 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://devicerail.dev/schema/plugin-abi-v1.schema.json",
+  "title": "DeviceRail process plugin ABI v1 envelope",
+  "oneOf": [
+    { "$ref": "#/$defs/request" },
+    { "$ref": "#/$defs/successResponse" },
+    { "$ref": "#/$defs/errorResponse" }
+  ],
+  "$defs": {
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["abiVersion", "requestId", "protocol", "operation"],
+      "properties": {
+        "abiVersion": { "const": 1 },
+        "requestId": { "type": "string", "format": "uuid" },
+        "protocol": { "$ref": "#/$defs/protocolVersion" },
+        "operation": { "$ref": "#/$defs/operation" }
+      }
+    },
+    "successResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["abiVersion", "requestId", "ok", "result"],
+      "properties": {
+        "abiVersion": { "const": 1 },
+        "requestId": { "type": "string", "format": "uuid" },
+        "ok": { "const": true },
+        "result": { "$ref": "#/$defs/result" }
+      }
+    },
+    "errorResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["abiVersion", "requestId", "ok", "error"],
+      "properties": {
+        "abiVersion": { "const": 1 },
+        "requestId": { "type": "string", "format": "uuid" },
+        "ok": { "const": false },
+        "error": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["code", "retryable"],
+          "properties": {
+            "code": { "type": "string", "pattern": "^[a-z][a-z0-9_]{0,56}$" },
+            "retryable": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "operation": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "pluginId"],
+          "properties": {
+            "kind": { "const": "hello" },
+            "pluginId": { "$ref": "#/$defs/slug" }
+          }
+        },
+        { "$ref": "#/$defs/healthOperation" },
+        { "$ref": "#/$defs/connectOperation" },
+        { "$ref": "#/$defs/disconnectOperation" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "captureScreenshot"],
+          "properties": {
+            "kind": { "const": "observe" },
+            "captureScreenshot": { "type": "boolean" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "callId", "name", "arguments"],
+          "properties": {
+            "kind": { "const": "execute" },
+            "callId": { "type": "string", "format": "uuid" },
+            "name": { "$ref": "#/$defs/actionName" },
+            "arguments": true
+          }
+        }
+      ]
+    },
+    "healthOperation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": { "kind": { "const": "health" } }
+    },
+    "connectOperation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": { "kind": { "const": "connect" } }
+    },
+    "disconnectOperation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": { "kind": { "const": "disconnect" } }
+    },
+    "result": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "hello"],
+          "properties": {
+            "kind": { "const": "hello" },
+            "hello": { "$ref": "#/$defs/hello" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind"],
+          "properties": { "kind": { "const": "ack" } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "frame"],
+          "properties": {
+            "kind": { "const": "frame" },
+            "frame": { "$ref": "#/$defs/frame" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "output"],
+          "properties": {
+            "kind": { "const": "action" },
+            "output": true
+          }
+        }
+      ]
+    },
+    "hello": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pluginId", "pluginVersion", "protocol", "device", "capabilities"],
+      "properties": {
+        "pluginId": { "$ref": "#/$defs/slug" },
+        "pluginVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[0-9A-Za-z][0-9A-Za-z.+_-]*$"
+        },
+        "protocol": { "$ref": "#/$defs/protocolVersion" },
+        "device": { "$ref": "#/$defs/device" },
+        "capabilities": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 128,
+          "items": { "$ref": "#/$defs/actionDefinition" }
+        }
+      }
+    },
+    "actionDefinition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "description", "inputSchema"],
+      "properties": {
+        "name": { "$ref": "#/$defs/actionName" },
+        "description": { "type": "string", "minLength": 1, "maxLength": 1024 },
+        "inputSchema": {
+          "type": "object",
+          "required": ["type"],
+          "properties": { "type": { "const": "object" } }
+        },
+        "protection": { "enum": ["standard", "protected"] }
+      }
+    },
+    "frame": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["viewport", "screenshotBase64"],
+      "properties": {
+        "viewport": { "$ref": "#/$defs/viewport" },
+        "screenshotBase64": {
+          "type": ["string", "null"],
+          "maxLength": 23068672
+        },
+        "metadata": {
+          "type": "object",
+          "maxProperties": 64,
+          "additionalProperties": true
+        }
+      }
+    },
+    "viewport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["width", "height", "scaleFactor"],
+      "properties": {
+        "width": { "type": "integer", "minimum": 1, "maximum": 8192 },
+        "height": { "type": "integer", "minimum": 1, "maximum": 8192 },
+        "scaleFactor": { "type": "number", "exclusiveMinimum": 0, "maximum": 16 }
+      }
+    },
+    "device": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "name", "platform", "osVersion"],
+      "properties": {
+        "key": { "$ref": "#/$defs/slug" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "platform": { "$ref": "#/$defs/platform" },
+        "osVersion": { "type": ["string", "null"], "minLength": 1, "maxLength": 128 }
+      }
+    },
+    "platform": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind"],
+          "properties": {
+            "kind": {
+              "enum": ["web", "android", "ios", "harmonyOs", "macOs", "windows", "linux", "rdp", "mock"]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "value"],
+          "properties": {
+            "kind": { "const": "other" },
+            "value": { "type": "string", "minLength": 1, "maxLength": 64 }
+          }
+        }
+      ]
+    },
+    "protocolVersion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["major", "minor"],
+      "properties": {
+        "major": { "type": "integer", "minimum": 0, "maximum": 65535 },
+        "minor": { "type": "integer", "minimum": 0, "maximum": 65535 }
+      }
+    },
+    "slug": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[a-z0-9][a-z0-9._-]*$"
+    },
+    "actionName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[A-Za-z][A-Za-z0-9._-]*$"
+    }
+  }
+}

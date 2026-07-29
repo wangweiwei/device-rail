@@ -1,0 +1,298 @@
+{
+  "$defs": {
+    "DeviceInfo": {
+      "properties": {
+        "connected": {
+          "type": "boolean"
+        },
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "osVersion": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "platform": {
+          "$ref": "#/$defs/Platform"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "platform",
+        "connected"
+      ],
+      "type": "object"
+    },
+    "DeviceSelectResult": {
+      "additionalProperties": false,
+      "description": "Result returned by `device.select`.",
+      "properties": {
+        "device": {
+          "$ref": "#/$defs/DeviceInfo"
+        }
+      },
+      "required": [
+        "device"
+      ],
+      "type": "object"
+    },
+    "DeviceSelectSuccessSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/RpcIdSchema"
+        },
+        "jsonrpc": {
+          "$ref": "#/$defs/JsonRpcVersion"
+        },
+        "result": {
+          "$ref": "#/$defs/DeviceSelectResult"
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "id",
+        "result"
+      ],
+      "type": "object"
+    },
+    "ErrorInfo": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "details": true,
+        "message": {
+          "type": "string"
+        },
+        "retryable": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "code",
+        "message",
+        "retryable"
+      ],
+      "type": "object"
+    },
+    "JsonRpcVersion": {
+      "enum": [
+        "2.0"
+      ],
+      "type": "string"
+    },
+    "NullableRpcIdSchema": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/RpcIdSchema"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "Platform": {
+      "oneOf": [
+        {
+          "properties": {
+            "kind": {
+              "const": "web",
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "kind": {
+              "const": "android",
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "kind": {
+              "const": "ios",
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "kind": {
+              "const": "harmonyOs",
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "kind": {
+              "const": "macOs",
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "kind": {
+              "const": "windows",
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "kind": {
+              "const": "linux",
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "kind": {
+              "const": "rdp",
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "kind": {
+              "const": "mock",
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "kind": {
+              "const": "other",
+              "type": "string"
+            },
+            "value": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind",
+            "value"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "RpcError": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "format": "int32",
+          "maximum": 2147483647,
+          "minimum": -2147483648,
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/$defs/ErrorInfo"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "message",
+        "data"
+      ],
+      "type": "object"
+    },
+    "RpcIdSchema": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "format": "uint64",
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "type": "integer"
+        }
+      ]
+    },
+    "SystemHelloFailureSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "error": {
+          "$ref": "#/$defs/RpcError"
+        },
+        "id": {
+          "$ref": "#/$defs/NullableRpcIdSchema"
+        },
+        "jsonrpc": {
+          "$ref": "#/$defs/JsonRpcVersion"
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "id",
+        "error"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "urn:devicerail:schema:protocol:v1:device-select-response",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "anyOf": [
+    {
+      "$ref": "#/$defs/DeviceSelectSuccessSchema"
+    },
+    {
+      "$ref": "#/$defs/SystemHelloFailureSchema"
+    }
+  ],
+  "title": "DeviceSelectResponse"
+}

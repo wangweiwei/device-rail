@@ -1,0 +1,19 @@
+{
+  "$id": "urn:devicerail:schema:protocol:v1:peer-info",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "version"
+  ],
+  "title": "PeerInfo",
+  "type": "object"
+}

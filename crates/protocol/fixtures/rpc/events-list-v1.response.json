@@ -1,0 +1,18 @@
+{
+  "jsonrpc": "2.0",
+  "id": "events-list-1",
+  "result": [
+    {
+      "eventId": "66666666-6666-4666-8666-666666666662",
+      "sessionId": "33333333-3333-4333-8333-333333333333",
+      "sequence": 2,
+      "requestId": "session-end-1",
+      "atMs": 1720000002000,
+      "payload": {
+        "type": "sessionEnded",
+        "outcome": "completed",
+        "reason": "golden baseline complete"
+      }
+    }
+  ]
+}

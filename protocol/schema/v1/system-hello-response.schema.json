@@ -1,0 +1,239 @@
+{
+  "$defs": {
+    "ErrorInfo": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "details": true,
+        "message": {
+          "type": "string"
+        },
+        "retryable": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "code",
+        "message",
+        "retryable"
+      ],
+      "type": "object"
+    },
+    "FeatureSelection": {
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "enabled"
+      ],
+      "type": "object"
+    },
+    "HelloResult": {
+      "additionalProperties": false,
+      "properties": {
+        "connectionId": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "features": {
+          "$ref": "#/$defs/FeatureSelection"
+        },
+        "protocol": {
+          "$ref": "#/$defs/ProtocolSelection"
+        },
+        "server": {
+          "$ref": "#/$defs/PeerInfo"
+        },
+        "transport": {
+          "$ref": "#/$defs/TransportInfo"
+        }
+      },
+      "required": [
+        "connectionId",
+        "protocol",
+        "server",
+        "transport",
+        "features"
+      ],
+      "type": "object"
+    },
+    "JsonRpcVersion": {
+      "enum": [
+        "2.0"
+      ],
+      "type": "string"
+    },
+    "NullableRpcIdSchema": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/RpcIdSchema"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "PeerInfo": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "version"
+      ],
+      "type": "object"
+    },
+    "ProtocolSelection": {
+      "additionalProperties": false,
+      "properties": {
+        "selected": {
+          "$ref": "#/$defs/ProtocolVersion"
+        }
+      },
+      "required": [
+        "selected"
+      ],
+      "type": "object"
+    },
+    "ProtocolVersion": {
+      "additionalProperties": false,
+      "properties": {
+        "major": {
+          "format": "uint16",
+          "maximum": 65535,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "minor": {
+          "format": "uint16",
+          "maximum": 65535,
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "major",
+        "minor"
+      ],
+      "type": "object"
+    },
+    "RpcError": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "format": "int32",
+          "maximum": 2147483647,
+          "minimum": -2147483648,
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/$defs/ErrorInfo"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "message",
+        "data"
+      ],
+      "type": "object"
+    },
+    "RpcIdSchema": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "format": "uint64",
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "type": "integer"
+        }
+      ]
+    },
+    "SystemHelloFailureSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "error": {
+          "$ref": "#/$defs/RpcError"
+        },
+        "id": {
+          "$ref": "#/$defs/NullableRpcIdSchema"
+        },
+        "jsonrpc": {
+          "$ref": "#/$defs/JsonRpcVersion"
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "id",
+        "error"
+      ],
+      "type": "object"
+    },
+    "SystemHelloSuccessSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/RpcIdSchema"
+        },
+        "jsonrpc": {
+          "$ref": "#/$defs/JsonRpcVersion"
+        },
+        "result": {
+          "$ref": "#/$defs/HelloResult"
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "id",
+        "result"
+      ],
+      "type": "object"
+    },
+    "TransportInfo": {
+      "additionalProperties": false,
+      "properties": {
+        "framing": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "framing"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "urn:devicerail:schema:protocol:v1:system-hello-response",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "anyOf": [
+    {
+      "$ref": "#/$defs/SystemHelloSuccessSchema"
+    },
+    {
+      "$ref": "#/$defs/SystemHelloFailureSchema"
+    }
+  ],
+  "title": "SystemHelloResponse"
+}

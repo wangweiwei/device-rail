@@ -1,0 +1,9 @@
+{
+  "jsonrpc": "2.0",
+  "id": "session-export-1",
+  "method": "session.export",
+  "params": {
+    "sessionId": "33333333-3333-4333-8333-333333333333",
+    "limit": 1
+  }
+}

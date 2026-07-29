@@ -1,0 +1,8 @@
+{
+  "jsonrpc": "2.0",
+  "id": "device-select-1",
+  "method": "device.select",
+  "params": {
+    "deviceId": "mock-device-1"
+  }
+}

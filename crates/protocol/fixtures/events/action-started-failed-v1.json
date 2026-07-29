@@ -1,0 +1,17 @@
+{
+  "eventId": "44444444-4444-4444-8444-000000000005",
+  "sessionId": "33333333-3333-4333-8333-333333333333",
+  "sequence": 5,
+  "requestId": "request-failure",
+  "deviceId": "android-emulator-5554",
+  "atMs": 1720000002000,
+  "payload": {
+    "type": "actionStarted",
+    "call": {
+      "id": "22222222-2222-4222-8222-222222222223",
+      "name": "inputSecret",
+      "arguments": null,
+      "argumentsRedacted": true
+    }
+  }
+}

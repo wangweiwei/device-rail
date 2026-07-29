@@ -1,0 +1,24 @@
+{
+  "name": "inputSecret",
+  "description": "Type a protected printable-ASCII value without durable argument or screenshot capture",
+  "inputSchema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "secret"
+    ],
+    "properties": {
+      "secret": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1024,
+        "pattern": "^[\\u0020-\\u007e]+$",
+        "not": {
+          "pattern": "%s"
+        }
+      }
+    }
+  },
+  "protection": "protected"
+}

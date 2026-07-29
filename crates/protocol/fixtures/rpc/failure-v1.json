@@ -1,0 +1,17 @@
+{
+  "jsonrpc": "2.0",
+  "id": "connect-1",
+  "error": {
+    "code": -32000,
+    "message": "Device unavailable",
+    "data": {
+      "code": "device_unavailable",
+      "message": "Device android-emulator-5554 is unavailable",
+      "retryable": true,
+      "details": {
+        "deviceId": "android-emulator-5554",
+        "reason": "offline"
+      }
+    }
+  }
+}

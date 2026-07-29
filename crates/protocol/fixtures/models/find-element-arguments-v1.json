@@ -1,0 +1,14 @@
+{
+  "selector": {
+    "context": {
+      "contextKind": "native",
+      "contextId": "NATIVE_APP"
+    },
+    "role": "button",
+    "name": "百度一下",
+    "value": null,
+    "identifier": "search-button",
+    "text": null,
+    "css": null
+  }
+}

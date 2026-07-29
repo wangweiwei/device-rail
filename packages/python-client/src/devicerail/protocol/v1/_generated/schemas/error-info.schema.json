@@ -1,0 +1,24 @@
+{
+  "$id": "urn:devicerail:schema:protocol:v1:error-info",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "code": {
+      "type": "string"
+    },
+    "details": true,
+    "message": {
+      "type": "string"
+    },
+    "retryable": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "code",
+    "message",
+    "retryable"
+  ],
+  "title": "ErrorInfo",
+  "type": "object"
+}

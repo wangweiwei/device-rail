@@ -1,0 +1,11 @@
+{
+  "$id": "urn:devicerail:schema:protocol:v1:ui-snapshot-omission-reason",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "enum": [
+    "driverUnsupported",
+    "policy",
+    "protectedAction"
+  ],
+  "title": "UiSnapshotOmissionReason",
+  "type": "string"
+}

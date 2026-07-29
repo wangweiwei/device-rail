@@ -1,0 +1,325 @@
+name: Publish packages
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Existing stable release tag to publish, for example v0.1.0
+        required: true
+        type: string
+      publish_npm:
+        description: Publish the six public TypeScript packages to npm
+        required: true
+        default: true
+        type: boolean
+      publish_pypi:
+        description: Publish devicerail-client to PyPI
+        required: true
+        default: true
+        type: boolean
+      publish_crates:
+        description: Publish devicerail-protocol and devicerail-client to crates.io
+        required: true
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-packages-${{ github.event_name == 'push' && github.ref_name || inputs.release_tag }}
+  cancel-in-progress: false
+
+env:
+  RELEASE_TAG: ${{ github.event_name == 'push' && github.ref_name || inputs.release_tag }}
+
+jobs:
+  release-metadata:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          ref: ${{ env.RELEASE_TAG }}
+          persist-credentials: false
+      - name: Refuse mismatched package versions
+        id: version
+        shell: bash
+        run: |
+          node scripts/check-release-version.mjs "$RELEASE_TAG"
+          printf 'version=%s\n' "${RELEASE_TAG#v}" >> "$GITHUB_OUTPUT"
+
+  npm-build:
+    if: github.event_name == 'push' || inputs.publish_npm
+    needs: release-metadata
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          ref: ${{ env.RELEASE_TAG }}
+          persist-credentials: false
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version-file: .nvmrc
+          package-manager-cache: false
+      - name: Install locked TypeScript dependencies without lifecycle scripts
+        run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Build and verify isolated npm consumers
+        run: pnpm packages:check
+      - name: Pack immutable npm release artifacts
+        env:
+          REPOSITORY_URL: git+${{ github.server_url }}/${{ github.repository }}.git
+        run: |
+          node scripts/pack-npm-release.mjs \
+            --repository-url "$REPOSITORY_URL" \
+            --output dist/npm
+          git diff --exit-code
+      - name: Upload npm release artifacts
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: npm-packages-${{ needs.release-metadata.outputs.version }}
+          path: dist/npm/*.tgz
+          if-no-files-found: error
+          retention-days: 7
+
+  python-build:
+    if: github.event_name == 'push' || inputs.publish_pypi
+    needs: release-metadata
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          ref: ${{ env.RELEASE_TAG }}
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: packages/python-client/pyproject.toml
+      - name: Install Python build and validation dependencies
+        run: python -m pip install "packages/python-client[dev]"
+      - name: Check generated Python protocol types
+        run: python packages/python-client/scripts/generate.py --check
+      - name: Type-check Python public API
+        run: python -m mypy --config-file packages/python-client/pyproject.toml packages/python-client/typing/contract.py
+      - name: Test Python client and Golden Fixtures
+        run: python -W error -m unittest discover -s packages/python-client/tests -v
+      - name: Build and verify Python distributions
+        run: |
+          python -m build --outdir dist/python packages/python-client
+          python packages/python-client/scripts/check_distribution.py dist/python
+      - name: Upload Python release artifacts
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: python-package-${{ needs.release-metadata.outputs.version }}
+          path: dist/python/*
+          if-no-files-found: error
+          retention-days: 7
+
+  rust-build:
+    if: github.event_name == 'push' || inputs.publish_crates
+    needs: release-metadata
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          ref: ${{ env.RELEASE_TAG }}
+          persist-credentials: false
+      - name: Test the public Rust protocol and client
+        run: cargo test --locked -p devicerail-protocol -p devicerail-client
+      - name: Test the Rust client against the stock daemon
+        run: cargo test --locked -p devicerail-daemon --test rust_client_e2e
+      - name: Package the public Rust crates
+        run: |
+          cargo package --locked -p devicerail-protocol
+          # First-release CI verifies the client archive against the exact
+          # workspace protocol source. The protected publish job verifies it
+          # again against crates.io after publishing that protocol version.
+          cargo package --locked -p devicerail-client \
+            --config 'patch.crates-io.devicerail-protocol.path="crates/protocol"'
+          cargo test --locked \
+            --manifest-path "target/package/devicerail-client-${{ needs.release-metadata.outputs.version }}/Cargo.toml" \
+            --config 'patch.crates-io.devicerail-protocol.path="crates/protocol"'
+      - name: Upload Rust crate archives
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: rust-crates-preflight-${{ needs.release-metadata.outputs.version }}
+          path: |
+            target/package/devicerail-protocol-${{ needs.release-metadata.outputs.version }}.crate
+            target/package/devicerail-client-${{ needs.release-metadata.outputs.version }}.crate
+          if-no-files-found: error
+          retention-days: 7
+
+  npm-publish:
+    if: github.event_name == 'push' || inputs.publish_npm
+    needs: [release-metadata, npm-build]
+    runs-on: ubuntu-latest
+    environment: npm
+    permissions:
+      contents: read
+    steps:
+      - name: Download verified npm artifacts
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: npm-packages-${{ needs.release-metadata.outputs.version }}
+          path: dist/npm
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: "22.22.3"
+          registry-url: https://registry.npmjs.org/
+          package-manager-cache: false
+      - name: Verify npmjs.org authentication
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm whoami --registry https://registry.npmjs.org/
+      - name: Publish npm packages in dependency order
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          VERSION: ${{ needs.release-metadata.outputs.version }}
+        run: |
+          npm publish "dist/npm/devicerail-protocol-${VERSION}.tgz" --access public --registry https://registry.npmjs.org/
+          npm publish "dist/npm/devicerail-client-${VERSION}.tgz" --access public --registry https://registry.npmjs.org/
+          npm publish "dist/npm/devicerail-live-visualizer-${VERSION}.tgz" --access public --registry https://registry.npmjs.org/
+          npm publish "dist/npm/devicerail-tool-adapter-${VERSION}.tgz" --access public --registry https://registry.npmjs.org/
+          npm publish "dist/npm/devicerail-recorder-${VERSION}.tgz" --access public --registry https://registry.npmjs.org/
+          npm publish "dist/npm/devicerail-yaml-adapter-${VERSION}.tgz" --access public --registry https://registry.npmjs.org/
+
+  pypi-publish:
+    if: github.event_name == 'push' || inputs.publish_pypi
+    needs: [release-metadata, python-build]
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Download verified Python artifacts
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: python-package-${{ needs.release-metadata.outputs.version }}
+          path: dist/python
+      - name: Publish distributions to PyPI with attestations
+        uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b # release/v1.14
+        with:
+          packages-dir: dist/python
+          attestations: true
+
+  crates-publish:
+    if: github.event_name == 'push' || inputs.publish_crates
+    needs: [release-metadata, rust-build]
+    runs-on: ubuntu-latest
+    environment: crates-io
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          ref: ${{ env.RELEASE_TAG }}
+          persist-credentials: false
+      - name: Publish or verify Rust crates in dependency order
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+          VERSION: ${{ needs.release-metadata.outputs.version }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          crate_checksum() {
+            local crate_name="$1"
+            local version="$2"
+            local checksum
+            local response
+            local status
+            response="$(mktemp)"
+            status="$(
+              curl --silent --show-error --location \
+                --header 'User-Agent: DeviceRail release workflow' \
+                --output "$response" \
+                --write-out '%{http_code}' \
+                "https://crates.io/api/v1/crates/${crate_name}/${version}"
+            )"
+            case "$status" in
+              200)
+                if ! checksum="$(node -e '
+                  const fs = require("node:fs");
+                  const body = JSON.parse(fs.readFileSync(process.argv[1], "utf8"));
+                  if (typeof body.version?.checksum !== "string") process.exit(2);
+                  process.stdout.write(body.version.checksum);
+                ' "$response")"; then
+                  rm -f "$response"
+                  return 2
+                fi
+                rm -f "$response"
+                printf '%s' "$checksum"
+                return 0
+                ;;
+              404)
+                rm -f "$response"
+                return 1
+                ;;
+              *)
+                echo "crates.io returned HTTP ${status} for ${crate_name} ${version}" >&2
+                rm -f "$response"
+                return 2
+                ;;
+            esac
+          }
+
+          publish_or_verify() {
+            local package="$1"
+            local archive="target/package/${package}-${VERSION}.crate"
+            local local_checksum
+            local lookup_status=0
+            local remote_checksum
+
+            local_checksum="$(sha256sum "$archive" | cut -d ' ' -f 1)"
+            remote_checksum="$(crate_checksum "$package" "$VERSION")" ||
+              lookup_status=$?
+            if [[ "$lookup_status" == 0 ]]; then
+              if [[ "$remote_checksum" == "$local_checksum" ]]; then
+                echo "${package} ${VERSION} already exists with the verified checksum"
+                return 0
+              fi
+              echo "${package} ${VERSION} already exists with a different checksum" >&2
+              exit 1
+            fi
+            if [[ "$lookup_status" != 1 ]]; then
+              echo "could not verify crates.io state for ${package} ${VERSION}" >&2
+              exit 1
+            fi
+
+            cargo publish --locked -p "$package"
+          }
+
+          cargo package --locked -p devicerail-protocol
+          publish_or_verify devicerail-protocol
+
+          # Cargo must resolve the just-published protocol from the public
+          # index before the client archive can be verified without a patch.
+          for attempt in 1 2 3 4 5 6; do
+            if cargo package --locked -p devicerail-client; then
+              break
+            fi
+            if [[ "$attempt" == 6 ]]; then
+              exit 1
+            fi
+            sleep $((attempt * 10))
+          done
+
+          cargo test --locked \
+            --manifest-path "target/package/devicerail-client-${VERSION}/Cargo.toml"
+          publish_or_verify devicerail-client
+      - name: Archive the exact crates.io-resolved Rust packages
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: rust-crates-crates-io-${{ needs.release-metadata.outputs.version }}
+          path: |
+            target/package/devicerail-protocol-${{ needs.release-metadata.outputs.version }}.crate
+            target/package/devicerail-client-${{ needs.release-metadata.outputs.version }}.crate
+          if-no-files-found: error
+          retention-days: 30

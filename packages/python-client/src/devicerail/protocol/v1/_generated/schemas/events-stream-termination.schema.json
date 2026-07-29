@@ -1,0 +1,159 @@
+{
+  "$defs": {
+    "ErrorInfo": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "details": true,
+        "message": {
+          "type": "string"
+        },
+        "retryable": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "code",
+        "message",
+        "retryable"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "urn:devicerail:schema:protocol:v1:events-stream-termination",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "The terminal reason is a closed tagged union so reason/error combinations\ncannot become ambiguous on the wire.",
+  "oneOf": [
+    {
+      "additionalProperties": false,
+      "properties": {
+        "reason": {
+          "const": "sessionEnded",
+          "type": "string"
+        }
+      },
+      "required": [
+        "reason"
+      ],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "properties": {
+        "reason": {
+          "const": "cancelled",
+          "type": "string"
+        }
+      },
+      "required": [
+        "reason"
+      ],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "properties": {
+        "error": {
+          "$ref": "#/$defs/ErrorInfo"
+        },
+        "reason": {
+          "const": "slowConsumer",
+          "type": "string"
+        }
+      },
+      "required": [
+        "reason",
+        "error"
+      ],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "properties": {
+        "error": {
+          "$ref": "#/$defs/ErrorInfo"
+        },
+        "reason": {
+          "const": "sessionDeleted",
+          "type": "string"
+        }
+      },
+      "required": [
+        "reason",
+        "error"
+      ],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "properties": {
+        "error": {
+          "$ref": "#/$defs/ErrorInfo"
+        },
+        "reason": {
+          "const": "serverShutdown",
+          "type": "string"
+        }
+      },
+      "required": [
+        "reason",
+        "error"
+      ],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "properties": {
+        "error": {
+          "$ref": "#/$defs/ErrorInfo"
+        },
+        "reason": {
+          "const": "sequenceGap",
+          "type": "string"
+        }
+      },
+      "required": [
+        "reason",
+        "error"
+      ],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "properties": {
+        "error": {
+          "$ref": "#/$defs/ErrorInfo"
+        },
+        "reason": {
+          "const": "eventTooLarge",
+          "type": "string"
+        }
+      },
+      "required": [
+        "reason",
+        "error"
+      ],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "properties": {
+        "error": {
+          "$ref": "#/$defs/ErrorInfo"
+        },
+        "reason": {
+          "const": "internalError",
+          "type": "string"
+        }
+      },
+      "required": [
+        "reason",
+        "error"
+      ],
+      "type": "object"
+    }
+  ],
+  "title": "EventsStreamTermination"
+}

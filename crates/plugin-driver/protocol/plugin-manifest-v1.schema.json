@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://devicerail.dev/schema/plugin-manifest-v1.schema.json",
+  "title": "DeviceRail Driver plugin manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["manifestVersion", "abiVersion", "pluginId", "pluginVersion", "executable", "protocol", "device", "capabilities"],
+  "properties": {
+    "manifestVersion": { "const": 1 },
+    "abiVersion": { "const": 1 },
+    "pluginId": { "$ref": "#/$defs/slug" },
+    "pluginVersion": { "type": "string", "minLength": 1, "maxLength": 64, "pattern": "^[0-9A-Za-z][0-9A-Za-z.+_-]*$" },
+    "executable": { "type": "string", "minLength": 1, "maxLength": 255 },
+    "protocol": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["major", "minMinor", "maxMinor"],
+      "properties": {
+        "major": { "type": "integer", "minimum": 0, "maximum": 65535 },
+        "minMinor": { "type": "integer", "minimum": 0, "maximum": 65535 },
+        "maxMinor": { "type": "integer", "minimum": 0, "maximum": 65535 }
+      }
+    },
+    "device": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "name", "platform", "osVersion"],
+      "properties": {
+        "key": { "$ref": "#/$defs/slug" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "platform": { "$ref": "#/$defs/platform" },
+        "osVersion": { "type": ["string", "null"], "minLength": 1, "maxLength": 128 }
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name"],
+        "properties": {
+          "name": { "$ref": "#/$defs/actionName" },
+          "protection": { "enum": ["standard", "protected"] }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "slug": { "type": "string", "minLength": 1, "maxLength": 64, "pattern": "^[a-z0-9][a-z0-9._-]*$" },
+    "actionName": { "type": "string", "minLength": 1, "maxLength": 64, "pattern": "^[A-Za-z][A-Za-z0-9._-]*$" },
+    "platform": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind"],
+          "properties": { "kind": { "enum": ["web", "android", "ios", "harmonyOs", "macOs", "windows", "linux", "rdp", "mock"] } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "value"],
+          "properties": {
+            "kind": { "const": "other" },
+            "value": { "type": "string", "minLength": 1, "maxLength": 64 }
+          }
+        }
+      ]
+    }
+  }
+}

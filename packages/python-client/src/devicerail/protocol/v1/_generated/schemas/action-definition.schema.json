@@ -1,0 +1,32 @@
+{
+  "$defs": {
+    "ActionProtection": {
+      "enum": [
+        "standard",
+        "protected"
+      ],
+      "type": "string"
+    }
+  },
+  "$id": "urn:devicerail:schema:protocol:v1:action-definition",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "description": {
+      "type": "string"
+    },
+    "inputSchema": true,
+    "name": {
+      "type": "string"
+    },
+    "protection": {
+      "$ref": "#/$defs/ActionProtection"
+    }
+  },
+  "required": [
+    "name",
+    "description",
+    "inputSchema"
+  ],
+  "title": "ActionDefinition",
+  "type": "object"
+}

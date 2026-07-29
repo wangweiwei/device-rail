@@ -1,0 +1,7 @@
+{
+  "$id": "urn:devicerail:schema:protocol:v1:media-stream-id",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "format": "uuid",
+  "title": "MediaStreamId",
+  "type": "string"
+}

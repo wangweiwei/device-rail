@@ -1,0 +1,11 @@
+{
+  "eventId": "44444444-4444-4444-8444-000000000013",
+  "sessionId": "33333333-3333-4333-8333-333333333333",
+  "sequence": 16,
+  "atMs": 1720000033000,
+  "payload": {
+    "type": "sessionEnded",
+    "outcome": "failed",
+    "reason": "The golden session exercises every terminal action outcome."
+  }
+}

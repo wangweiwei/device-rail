@@ -1,0 +1,23 @@
+{
+  "eventId": "44444444-4444-4444-8444-000000000006",
+  "sessionId": "33333333-3333-4333-8333-333333333333",
+  "sequence": 6,
+  "requestId": "request-failure",
+  "deviceId": "android-emulator-5554",
+  "atMs": 1720000002100,
+  "payload": {
+    "type": "actionCompleted",
+    "callId": "22222222-2222-4222-8222-222222222223",
+    "outcome": {
+      "outcome": "failed",
+      "error": {
+        "code": "invalid_arguments",
+        "message": "inputSecret arguments are invalid",
+        "retryable": false,
+        "details": {
+          "action": "inputSecret"
+        }
+      }
+    }
+  }
+}

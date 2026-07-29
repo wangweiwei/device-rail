@@ -1,0 +1,146 @@
+{
+  "$defs": {
+    "ErrorInfo": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "details": true,
+        "message": {
+          "type": "string"
+        },
+        "retryable": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "code",
+        "message",
+        "retryable"
+      ],
+      "type": "object"
+    },
+    "EventsClearResult": {
+      "additionalProperties": false,
+      "description": "Result returned by `events.clear`.",
+      "properties": {
+        "deleted": {
+          "type": "boolean"
+        },
+        "sessionId": {
+          "format": "uuid",
+          "type": "string"
+        }
+      },
+      "required": [
+        "deleted",
+        "sessionId"
+      ],
+      "type": "object"
+    },
+    "EventsClearSuccessSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/RpcIdSchema"
+        },
+        "jsonrpc": {
+          "$ref": "#/$defs/JsonRpcVersion"
+        },
+        "result": {
+          "$ref": "#/$defs/EventsClearResult"
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "id",
+        "result"
+      ],
+      "type": "object"
+    },
+    "JsonRpcVersion": {
+      "enum": [
+        "2.0"
+      ],
+      "type": "string"
+    },
+    "NullableRpcIdSchema": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/RpcIdSchema"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "RpcError": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "format": "int32",
+          "maximum": 2147483647,
+          "minimum": -2147483648,
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/$defs/ErrorInfo"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "message",
+        "data"
+      ],
+      "type": "object"
+    },
+    "RpcIdSchema": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "format": "uint64",
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "type": "integer"
+        }
+      ]
+    },
+    "SystemHelloFailureSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "error": {
+          "$ref": "#/$defs/RpcError"
+        },
+        "id": {
+          "$ref": "#/$defs/NullableRpcIdSchema"
+        },
+        "jsonrpc": {
+          "$ref": "#/$defs/JsonRpcVersion"
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "id",
+        "error"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "urn:devicerail:schema:protocol:v1:events-clear-response",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "anyOf": [
+    {
+      "$ref": "#/$defs/EventsClearSuccessSchema"
+    },
+    {
+      "$ref": "#/$defs/SystemHelloFailureSchema"
+    }
+  ],
+  "title": "EventsClearResponse"
+}

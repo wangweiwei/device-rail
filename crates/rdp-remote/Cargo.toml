@@ -1,0 +1,28 @@
+[package]
+name = "devicerail-rdp-remote"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish = false
+
+[dependencies]
+async-trait.workspace = true
+base64.workspace = true
+devicerail-core = { path = "../core" }
+devicerail-protocol = { path = "../protocol" }
+hex.workspace = true
+png.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+sha2.workspace = true
+thiserror.workspace = true
+tokio.workspace = true
+url.workspace = true
+uuid.workspace = true
+
+[dev-dependencies]
+devicerail-core = { path = "../core", features = ["conformance-json-schema"] }
+devicerail-evidence-fs = { path = "../evidence-fs" }
+jsonschema.workspace = true
+tempfile.workspace = true

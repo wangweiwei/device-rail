@@ -1,0 +1,10 @@
+{
+  "jsonrpc": "2.0",
+  "id": "events-list-1",
+  "method": "events.list",
+  "params": {
+    "sessionId": "33333333-3333-4333-8333-333333333333",
+    "afterSequence": 1,
+    "limit": 1
+  }
+}

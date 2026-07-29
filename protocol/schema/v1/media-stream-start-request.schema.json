@@ -1,0 +1,79 @@
+{
+  "$defs": {
+    "JsonRpcVersion": {
+      "enum": [
+        "2.0"
+      ],
+      "type": "string"
+    },
+    "MediaStreamKind": {
+      "enum": [
+        "screenshot",
+        "video"
+      ],
+      "type": "string"
+    },
+    "MediaStreamStartMethodSchema": {
+      "enum": [
+        "media.stream.start"
+      ],
+      "type": "string"
+    },
+    "MediaStreamStartParams": {
+      "additionalProperties": false,
+      "description": "Parameters accepted by `media.stream.start`.\n\nThe caller chooses only a lifetime-unique stream identifier and the logical\nstream kind. The daemon assigns the media type from its selected, leased\ndevice producer; viewport metadata may be absent. This control method never\naccepts frame bytes, Evidence references, or filesystem paths.",
+      "properties": {
+        "kind": {
+          "$ref": "#/$defs/MediaStreamKind"
+        },
+        "streamId": {
+          "format": "uuid",
+          "type": "string"
+        }
+      },
+      "required": [
+        "streamId",
+        "kind"
+      ],
+      "type": "object"
+    },
+    "RpcIdSchema": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "format": "uint64",
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "type": "integer"
+        }
+      ]
+    }
+  },
+  "$id": "urn:devicerail:schema:protocol:v1:media-stream-start-request",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "$ref": "#/$defs/RpcIdSchema"
+    },
+    "jsonrpc": {
+      "$ref": "#/$defs/JsonRpcVersion"
+    },
+    "method": {
+      "$ref": "#/$defs/MediaStreamStartMethodSchema"
+    },
+    "params": {
+      "$ref": "#/$defs/MediaStreamStartParams"
+    }
+  },
+  "required": [
+    "jsonrpc",
+    "id",
+    "method",
+    "params"
+  ],
+  "title": "MediaStreamStartRequest",
+  "type": "object"
+}

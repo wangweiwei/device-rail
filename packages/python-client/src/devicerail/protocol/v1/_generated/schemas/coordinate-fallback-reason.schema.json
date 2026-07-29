@@ -1,0 +1,10 @@
+{
+  "$id": "urn:devicerail:schema:protocol:v1:coordinate-fallback-reason",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "enum": [
+    "semanticInteractionUnavailable",
+    "platformLimitation"
+  ],
+  "title": "CoordinateFallbackReason",
+  "type": "string"
+}

@@ -1,0 +1,195 @@
+{
+  "$defs": {
+    "ErrorInfo": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "details": true,
+        "message": {
+          "type": "string"
+        },
+        "retryable": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "code",
+        "message",
+        "retryable"
+      ],
+      "type": "object"
+    },
+    "EventSequence": {
+      "description": "A one-based sequence number within one session.\n\nThe wire value is capped at JavaScript's maximum safe integer so generated\nclients can sort and resume event streams without losing precision.",
+      "format": "uint64",
+      "maximum": 9007199254740991,
+      "minimum": 1,
+      "type": "integer"
+    },
+    "EventStreamCursor": {
+      "additionalProperties": false,
+      "description": "A Session-scoped, daemon-epoch-scoped application acknowledgement.",
+      "properties": {
+        "sequence": {
+          "$ref": "#/$defs/EventSequence"
+        },
+        "sessionId": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "streamEpoch": {
+          "$ref": "#/$defs/EventStreamEpoch"
+        }
+      },
+      "required": [
+        "streamEpoch",
+        "sessionId",
+        "sequence"
+      ],
+      "type": "object"
+    },
+    "EventStreamEpoch": {
+      "description": "Identifies one daemon process lifetime. A cursor from another epoch must\nnever be accepted as a resumable position.",
+      "format": "uuid",
+      "type": "string"
+    },
+    "EventsSubscribeResult": {
+      "additionalProperties": false,
+      "properties": {
+        "replayThrough": {
+          "$ref": "#/$defs/EventStreamCursor"
+        },
+        "sessionId": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "sessionState": {
+          "$ref": "#/$defs/SessionState"
+        },
+        "subscriptionId": {
+          "format": "uuid",
+          "type": "string"
+        }
+      },
+      "required": [
+        "subscriptionId",
+        "sessionId",
+        "replayThrough",
+        "sessionState"
+      ],
+      "type": "object"
+    },
+    "EventsSubscribeSuccessSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/RpcIdSchema"
+        },
+        "jsonrpc": {
+          "$ref": "#/$defs/JsonRpcVersion"
+        },
+        "result": {
+          "$ref": "#/$defs/EventsSubscribeResult"
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "id",
+        "result"
+      ],
+      "type": "object"
+    },
+    "JsonRpcVersion": {
+      "enum": [
+        "2.0"
+      ],
+      "type": "string"
+    },
+    "NullableRpcIdSchema": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/RpcIdSchema"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "RpcError": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "format": "int32",
+          "maximum": 2147483647,
+          "minimum": -2147483648,
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/$defs/ErrorInfo"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "message",
+        "data"
+      ],
+      "type": "object"
+    },
+    "RpcIdSchema": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "format": "uint64",
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "type": "integer"
+        }
+      ]
+    },
+    "SessionState": {
+      "enum": [
+        "active",
+        "ended"
+      ],
+      "type": "string"
+    },
+    "SystemHelloFailureSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "error": {
+          "$ref": "#/$defs/RpcError"
+        },
+        "id": {
+          "$ref": "#/$defs/NullableRpcIdSchema"
+        },
+        "jsonrpc": {
+          "$ref": "#/$defs/JsonRpcVersion"
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "id",
+        "error"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "urn:devicerail:schema:protocol:v1:events-subscribe-response",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "anyOf": [
+    {
+      "$ref": "#/$defs/EventsSubscribeSuccessSchema"
+    },
+    {
+      "$ref": "#/$defs/SystemHelloFailureSchema"
+    }
+  ],
+  "title": "EventsSubscribeResponse"
+}

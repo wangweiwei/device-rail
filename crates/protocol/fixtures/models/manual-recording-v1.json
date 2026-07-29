@@ -1,0 +1,32 @@
+{
+  "formatVersion": 1,
+  "recordingId": "44444444-4444-4444-8444-444444444444",
+  "sourceDeviceId": "playwright-chromium-page-1",
+  "actionSpaceSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "startedAtMs": 1700000000000,
+  "endedAtMs": 1700000000250,
+  "steps": [
+    {
+      "sequence": 1,
+      "capturedAtMs": 1700000000100,
+      "callId": "55555555-5555-4555-8555-555555555555",
+      "name": "click",
+      "arguments": {
+        "kind": "captured",
+        "value": {
+          "selector": "#submit"
+        }
+      }
+    },
+    {
+      "sequence": 2,
+      "capturedAtMs": 1700000000200,
+      "callId": "66666666-6666-4666-8666-666666666666",
+      "name": "fillSecret",
+      "arguments": {
+        "kind": "protected",
+        "secretRef": "login.password"
+      }
+    }
+  ]
+}

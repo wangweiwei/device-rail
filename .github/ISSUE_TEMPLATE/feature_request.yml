@@ -1,0 +1,53 @@
+name: Feature request
+description: Propose a DeviceRail capability or improvement
+title: "[Feature]: "
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What user or integration problem should DeviceRail solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+      description: Describe the smallest useful behavior and its explicit boundaries.
+    validations:
+      required: true
+  - type: dropdown
+    id: layer
+    attributes:
+      label: Likely layer
+      options:
+        - Protocol or generated types
+        - Core runtime
+        - Platform Driver
+        - Daemon or transport
+        - TypeScript/Python client
+        - Recorder, visualizer, or application
+        - Packaging, documentation, or repository
+        - Unsure
+    validations:
+      required: true
+  - type: textarea
+    id: compatibility
+    attributes:
+      label: Compatibility and security impact
+      description: Note wire changes, platform dependencies, resource bounds, protected actions, evidence, or remote trust boundaries.
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+  - type: checkboxes
+    id: constraints
+    attributes:
+      label: Architecture checklist
+      options:
+        - label: The proposal keeps AI, prompts, YAML runtimes, and UI dependencies out of the Rust kernel.
+          required: true
+        - label: The proposal does not expose platform-library-specific types on the wire.
+          required: true
+

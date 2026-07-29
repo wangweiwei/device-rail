@@ -1,0 +1,31 @@
+[package]
+name = "devicerail-client"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "Official asynchronous Rust client for DeviceRail"
+documentation = "https://docs.rs/devicerail-client"
+homepage = "https://github.com/wangweiwei/device-rail"
+readme = "README.md"
+repository = "https://github.com/wangweiwei/device-rail"
+keywords = ["device-automation", "json-rpc", "mobile-testing", "testing"]
+categories = ["api-bindings", "asynchronous", "development-tools::testing"]
+publish = ["crates-io"]
+
+[package.metadata.docs.rs]
+all-features = true
+
+[dependencies]
+devicerail-protocol = { path = "../protocol", version = "0.1.0" }
+futures-util.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+tokio = { version = "1", features = ["io-util", "macros", "net", "process", "rt", "sync", "time"] }
+tokio-tungstenite.workspace = true
+url.workspace = true
+uuid.workspace = true
+
+[dev-dependencies]
+devicerail-protocol = { path = "../protocol", version = "0.1.0", features = ["fixtures"] }

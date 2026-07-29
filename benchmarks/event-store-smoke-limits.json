@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "profile": "smoke",
+  "sessions": 8,
+  "eventsPerSession": 500,
+  "minThroughputOpsPerSecond": 500,
+  "maxAppendP99Micros": 100000,
+  "maxListPagesElapsedMs": 5000,
+  "maxPeakRssBytes": 536870912,
+  "purpose": "Portable CI regression guard; not a production SLO or capacity claim"
+}

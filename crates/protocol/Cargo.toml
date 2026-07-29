@@ -1,0 +1,28 @@
+[package]
+name = "devicerail-protocol"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "Canonical wire protocol DTOs for DeviceRail"
+documentation = "https://docs.rs/devicerail-protocol"
+homepage = "https://github.com/wangweiwei/device-rail"
+readme = "README.md"
+repository = "https://github.com/wangweiwei/device-rail"
+keywords = ["device-automation", "json-rpc", "testing", "protocol"]
+categories = ["api-bindings", "development-tools::testing"]
+publish = ["crates-io"]
+
+[package.metadata.docs.rs]
+all-features = true
+
+[features]
+default = []
+fixtures = []
+schema = ["dep:schemars"]
+
+[dependencies]
+schemars = { workspace = true, optional = true, features = ["derive", "std", "uuid1"] }
+serde.workspace = true
+serde_json.workspace = true
+uuid.workspace = true

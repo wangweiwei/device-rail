@@ -1,0 +1,13 @@
+{
+  "eventId": "44444444-4444-4444-8444-000000000016",
+  "sessionId": "33333333-3333-4333-8333-333333333333",
+  "sequence": 13,
+  "requestId": "media-end-1",
+  "deviceId": "playwright-chromium-page-1",
+  "atMs": 1720000032700,
+  "payload": {
+    "type": "mediaStreamEnded",
+    "streamId": "77777777-7777-4777-8777-777777777777",
+    "frameCount": 1
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "$defs": {
+    "DeviceObserveMethodSchema": {
+      "enum": [
+        "device.observe"
+      ],
+      "type": "string"
+    },
+    "EmptyParamsObjectSchema": {
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "JsonRpcVersion": {
+      "enum": [
+        "2.0"
+      ],
+      "type": "string"
+    },
+    "NoParamsSchema": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/EmptyParamsObjectSchema"
+        },
+        {
+          "maxItems": 0,
+          "type": "array"
+        }
+      ]
+    },
+    "RequestTimeoutMs": {
+      "description": "A positive timeout in milliseconds that is safe to represent as a JSON\nnumber in every supported client language.",
+      "format": "uint64",
+      "maximum": 9007199254740991,
+      "minimum": 1,
+      "type": "integer"
+    },
+    "RpcIdSchema": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "format": "uint64",
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "type": "integer"
+        }
+      ]
+    }
+  },
+  "$id": "urn:devicerail:schema:protocol:v1:device-observe-request",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "$ref": "#/$defs/RpcIdSchema"
+    },
+    "jsonrpc": {
+      "$ref": "#/$defs/JsonRpcVersion"
+    },
+    "method": {
+      "$ref": "#/$defs/DeviceObserveMethodSchema"
+    },
+    "params": {
+      "$ref": "#/$defs/NoParamsSchema"
+    },
+    "timeoutMs": {
+      "$ref": "#/$defs/RequestTimeoutMs"
+    }
+  },
+  "required": [
+    "jsonrpc",
+    "id",
+    "method"
+  ],
+  "title": "DeviceObserveRequest",
+  "type": "object"
+}

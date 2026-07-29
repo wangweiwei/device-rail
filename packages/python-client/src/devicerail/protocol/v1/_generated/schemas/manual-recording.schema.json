@@ -1,0 +1,139 @@
+{
+  "$defs": {
+    "EventSequence": {
+      "description": "A one-based sequence number within one session.\n\nThe wire value is capped at JavaScript's maximum safe integer so generated\nclients can sort and resume event streams without losing precision.",
+      "format": "uint64",
+      "maximum": 9007199254740991,
+      "minimum": 1,
+      "type": "integer"
+    },
+    "ManualActionArguments": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "description": "Arguments safe to persist in the recording document.",
+          "properties": {
+            "kind": {
+              "const": "captured",
+              "type": "string"
+            },
+            "value": true
+          },
+          "required": [
+            "kind",
+            "value"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "description": "Complete arguments supplied by the replay host at execution time.",
+          "properties": {
+            "kind": {
+              "const": "protected",
+              "type": "string"
+            },
+            "secretRef": {
+              "maxLength": 128,
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind",
+            "secretRef"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "ManualActionStep": {
+      "additionalProperties": false,
+      "properties": {
+        "arguments": {
+          "$ref": "#/$defs/ManualActionArguments"
+        },
+        "callId": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "capturedAtMs": {
+          "format": "uint64",
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "name": {
+          "maxLength": 128,
+          "minLength": 1,
+          "type": "string"
+        },
+        "sequence": {
+          "$ref": "#/$defs/EventSequence"
+        }
+      },
+      "required": [
+        "sequence",
+        "capturedAtMs",
+        "callId",
+        "name",
+        "arguments"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "urn:devicerail:schema:protocol:v1:manual-recording",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "A bounded, Driver-neutral record of human-selected Actions.\n\nProtected Action arguments are represented only by an opaque host-owned\nsecret reference. The secret value is never part of this durable DTO.",
+  "properties": {
+    "actionSpaceSha256": {
+      "maxLength": 64,
+      "minLength": 64,
+      "type": "string"
+    },
+    "endedAtMs": {
+      "format": "uint64",
+      "maximum": 9007199254740991,
+      "minimum": 0,
+      "type": "integer"
+    },
+    "formatVersion": {
+      "format": "uint16",
+      "maximum": 65535,
+      "minimum": 0,
+      "type": "integer"
+    },
+    "recordingId": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "sourceDeviceId": {
+      "type": "string"
+    },
+    "startedAtMs": {
+      "format": "uint64",
+      "maximum": 9007199254740991,
+      "minimum": 0,
+      "type": "integer"
+    },
+    "steps": {
+      "items": {
+        "$ref": "#/$defs/ManualActionStep"
+      },
+      "maxItems": 10000,
+      "type": "array"
+    }
+  },
+  "required": [
+    "formatVersion",
+    "recordingId",
+    "sourceDeviceId",
+    "actionSpaceSha256",
+    "startedAtMs",
+    "endedAtMs",
+    "steps"
+  ],
+  "title": "ManualRecording",
+  "type": "object"
+}

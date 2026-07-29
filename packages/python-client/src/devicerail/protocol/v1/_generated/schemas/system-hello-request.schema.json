@@ -1,0 +1,162 @@
+{
+  "$defs": {
+    "FeatureOffer": {
+      "additionalProperties": false,
+      "properties": {
+        "optional": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": true
+        },
+        "required": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "type": "object"
+    },
+    "HelloParams": {
+      "additionalProperties": false,
+      "properties": {
+        "client": {
+          "$ref": "#/$defs/PeerInfo"
+        },
+        "features": {
+          "$ref": "#/$defs/FeatureOffer",
+          "default": {
+            "optional": [],
+            "required": []
+          }
+        },
+        "protocol": {
+          "$ref": "#/$defs/ProtocolOffer"
+        }
+      },
+      "required": [
+        "client",
+        "protocol"
+      ],
+      "type": "object"
+    },
+    "JsonRpcVersion": {
+      "enum": [
+        "2.0"
+      ],
+      "type": "string"
+    },
+    "PeerInfo": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "version"
+      ],
+      "type": "object"
+    },
+    "ProtocolOffer": {
+      "additionalProperties": false,
+      "description": "An explicit set of supported ranges. Multiple entries avoid implying support\nfor major versions that a peer intentionally skipped.",
+      "properties": {
+        "ranges": {
+          "items": {
+            "$ref": "#/$defs/ProtocolRange"
+          },
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": [
+        "ranges"
+      ],
+      "type": "object"
+    },
+    "ProtocolRange": {
+      "additionalProperties": false,
+      "description": "A contiguous minor-version range within one protocol major version.",
+      "properties": {
+        "major": {
+          "format": "uint16",
+          "maximum": 65535,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "maxMinor": {
+          "format": "uint16",
+          "maximum": 65535,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "minMinor": {
+          "format": "uint16",
+          "maximum": 65535,
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "major",
+        "minMinor",
+        "maxMinor"
+      ],
+      "type": "object"
+    },
+    "RpcIdSchema": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "format": "uint64",
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "type": "integer"
+        }
+      ]
+    },
+    "SystemHelloMethodSchema": {
+      "enum": [
+        "system.hello"
+      ],
+      "type": "string"
+    }
+  },
+  "$id": "urn:devicerail:schema:protocol:v1:system-hello-request",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "$ref": "#/$defs/RpcIdSchema"
+    },
+    "jsonrpc": {
+      "$ref": "#/$defs/JsonRpcVersion"
+    },
+    "method": {
+      "$ref": "#/$defs/SystemHelloMethodSchema"
+    },
+    "params": {
+      "$ref": "#/$defs/HelloParams"
+    }
+  },
+  "required": [
+    "jsonrpc",
+    "id",
+    "method",
+    "params"
+  ],
+  "title": "SystemHelloRequest",
+  "type": "object"
+}

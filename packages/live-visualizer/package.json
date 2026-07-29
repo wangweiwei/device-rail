@@ -1,0 +1,38 @@
+{
+  "name": "@devicerail/live-visualizer",
+  "version": "0.1.0",
+  "description": "Bounded live session timeline model for DeviceRail test events",
+  "license": "Apache-2.0",
+  "keywords": ["device-automation", "test-reporting", "test-evidence", "visualization"],
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "build": "node scripts/clean.mjs dist && tsc -p tsconfig.build.json && tsc -p tsconfig.package-exports.json && node scripts/check-package-exports.mjs",
+    "test": "node scripts/clean.mjs .test-dist && tsc -p tsconfig.test.json && node scripts/run-tests.mjs"
+  },
+  "dependencies": {
+    "@devicerail/protocol": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "26.1.1",
+    "typescript": "7.0.2"
+  }
+}

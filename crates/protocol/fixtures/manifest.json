@@ -1,0 +1,634 @@
+{
+  "manifestVersion": 1,
+  "protocolVersion": {
+    "major": 1,
+    "minor": 5
+  },
+  "fixturePathsRelativeTo": "manifestDirectory",
+  "schemaPathsRelativeTo": "repositoryRoot",
+  "fixtures": [
+    {
+      "id": "handshake.system-hello.request.v1",
+      "path": "system-hello-v1.request.json",
+      "schema": "protocol/schema/v1/system-hello-request.schema.json",
+      "kind": "helloRequest",
+      "model": "RpcRequest + HelloParams"
+    },
+    {
+      "id": "handshake.system-hello.response.v1",
+      "path": "system-hello-v1.response.json",
+      "schema": "protocol/schema/v1/system-hello-response.schema.json",
+      "kind": "helloResponse",
+      "model": "RpcResponse + HelloResult"
+    },
+    {
+      "id": "rpc.system-describe.request.v1",
+      "path": "rpc/system-describe-v1.request.json",
+      "schema": "protocol/schema/v1/system-describe-request.schema.json",
+      "kind": "systemDescribeRequest",
+      "model": "RpcRequest"
+    },
+    {
+      "id": "rpc.system-describe.response.v1",
+      "path": "rpc/system-describe-v1.response.json",
+      "schema": "protocol/schema/v1/system-describe-response.schema.json",
+      "kind": "systemDescribeResponse",
+      "model": "RpcResponse::Success + SystemDescribeResult"
+    },
+    {
+      "id": "device.device-info.v1",
+      "path": "models/device-info-v1.json",
+      "schema": "protocol/schema/v1/device-info.schema.json",
+      "kind": "deviceInfo",
+      "model": "DeviceInfo"
+    },
+    {
+      "id": "device.observation.v1",
+      "path": "models/observation-v1.json",
+      "schema": "protocol/schema/v1/observation.schema.json",
+      "kind": "observation",
+      "model": "Observation"
+    },
+    {
+      "id": "device.observation.omitted.v1",
+      "path": "models/observation-omitted-v1.json",
+      "schema": "protocol/schema/v1/observation.schema.json",
+      "kind": "observation",
+      "model": "Observation + ScreenshotOmissionReason"
+    },
+    {
+      "id": "action.definition.v1",
+      "path": "models/action-definition-v1.json",
+      "schema": "protocol/schema/v1/action-definition.schema.json",
+      "kind": "actionDefinition",
+      "model": "ActionDefinition"
+    },
+    {
+      "id": "action.definition.protected.v1",
+      "path": "models/action-definition-protected-v1.json",
+      "schema": "protocol/schema/v1/action-definition.schema.json",
+      "kind": "actionDefinition",
+      "model": "ActionDefinition + ActionProtection"
+    },
+    {
+      "id": "action.call.v1",
+      "path": "models/action-call-v1.json",
+      "schema": "protocol/schema/v1/action-call.schema.json",
+      "kind": "actionCall",
+      "model": "ActionCall"
+    },
+    {
+      "id": "manual.recording.v1",
+      "path": "models/manual-recording-v1.json",
+      "schema": "protocol/schema/v1/manual-recording.schema.json",
+      "kind": "manualRecording",
+      "model": "ManualRecording"
+    },
+    {
+      "id": "action.result.v1",
+      "path": "models/action-result-v1.json",
+      "schema": "protocol/schema/v1/action-result.schema.json",
+      "kind": "actionResult",
+      "model": "ActionResult"
+    },
+    {
+      "id": "error.info.v1",
+      "path": "models/error-info-v1.json",
+      "schema": "protocol/schema/v1/error-info.schema.json",
+      "kind": "errorInfo",
+      "model": "ErrorInfo"
+    },
+    {
+      "id": "rpc.device-connect.request.v1",
+      "path": "rpc/device-connect-v1.request.json",
+      "schema": "protocol/schema/v1/device-connect-request.schema.json",
+      "kind": "deviceConnectRequest",
+      "model": "RpcRequest"
+    },
+    {
+      "id": "rpc.device-connect.response.v1",
+      "path": "rpc/device-connect-v1.response.json",
+      "schema": "protocol/schema/v1/device-connect-response.schema.json",
+      "kind": "deviceConnectResponse",
+      "model": "RpcResponse::Success + DeviceConnectResult"
+    },
+    {
+      "id": "rpc.device-disconnect.request.v1",
+      "path": "rpc/device-disconnect-v1.request.json",
+      "schema": "protocol/schema/v1/device-disconnect-request.schema.json",
+      "kind": "deviceDisconnectRequest",
+      "model": "RpcRequest"
+    },
+    {
+      "id": "rpc.device-disconnect.response.v1",
+      "path": "rpc/device-disconnect-v1.response.json",
+      "schema": "protocol/schema/v1/device-disconnect-response.schema.json",
+      "kind": "deviceDisconnectResponse",
+      "model": "RpcResponse::Success + DeviceDisconnectResult"
+    },
+    {
+      "id": "rpc.device-capabilities.request.v1",
+      "path": "rpc/device-capabilities-v1.request.json",
+      "schema": "protocol/schema/v1/device-capabilities-request.schema.json",
+      "kind": "deviceCapabilitiesRequest",
+      "model": "RpcRequest"
+    },
+    {
+      "id": "rpc.device-capabilities.response.v1",
+      "path": "rpc/device-capabilities-v1.response.json",
+      "schema": "protocol/schema/v1/device-capabilities-response.schema.json",
+      "kind": "deviceCapabilitiesResponse",
+      "model": "RpcResponse::Success + DeviceCapabilitiesResult"
+    },
+    {
+      "id": "rpc.device-observe.request.v1",
+      "path": "rpc/device-observe-v1.request.json",
+      "schema": "protocol/schema/v1/device-observe-request.schema.json",
+      "kind": "deviceObserveRequest",
+      "model": "RpcRequest"
+    },
+    {
+      "id": "rpc.device-observe.response.v1",
+      "path": "rpc/device-observe-v1.response.json",
+      "schema": "protocol/schema/v1/device-observe-response.schema.json",
+      "kind": "deviceObserveResponse",
+      "model": "RpcResponse::Success + DeviceObserveResult"
+    },
+    {
+      "id": "rpc.device-execute.timeout.v1",
+      "path": "rpc/device-execute-timeout-v1.json",
+      "schema": "protocol/schema/v1/device-execute-request.schema.json",
+      "kind": "deviceExecuteRequest",
+      "model": "RpcRequest + DeviceExecuteParams"
+    },
+    {
+      "id": "rpc.device-execute.response.v1",
+      "path": "rpc/device-execute-timeout-v1.response.json",
+      "schema": "protocol/schema/v1/device-execute-response.schema.json",
+      "kind": "deviceExecuteResponse",
+      "model": "RpcResponse::Success + DeviceExecuteResult"
+    },
+    {
+      "id": "rpc.device-select.request.v1",
+      "path": "rpc/device-select-v1.request.json",
+      "schema": "protocol/schema/v1/device-select-request.schema.json",
+      "kind": "deviceSelectRequest",
+      "model": "RpcRequest + DeviceSelectParams"
+    },
+    {
+      "id": "rpc.device-select.response.v1",
+      "path": "rpc/device-select-v1.response.json",
+      "schema": "protocol/schema/v1/device-select-response.schema.json",
+      "kind": "deviceSelectResponse",
+      "model": "RpcResponse::Success + DeviceSelectResult"
+    },
+    {
+      "id": "rpc.devices-list.request.v1",
+      "path": "rpc/devices-list-v1.request.json",
+      "schema": "protocol/schema/v1/devices-list-request.schema.json",
+      "kind": "devicesListRequest",
+      "model": "RpcRequest"
+    },
+    {
+      "id": "rpc.devices-list.response.v1",
+      "path": "rpc/devices-list-v1.response.json",
+      "schema": "protocol/schema/v1/devices-list-response.schema.json",
+      "kind": "devicesListResponse",
+      "model": "RpcResponse::Success + DevicesListResult"
+    },
+    {
+      "id": "rpc.request-cancel.request.v1",
+      "path": "rpc/request-cancel-v1.request.json",
+      "schema": "protocol/schema/v1/request-cancel-request.schema.json",
+      "kind": "requestCancelRequest",
+      "model": "RpcRequest + RequestCancelParams"
+    },
+    {
+      "id": "rpc.request-cancel.response.v1",
+      "path": "rpc/request-cancel-v1.response.json",
+      "schema": "protocol/schema/v1/request-cancel-response.schema.json",
+      "kind": "requestCancelResponse",
+      "model": "RpcResponse::Success + RequestCancelResult"
+    },
+    {
+      "id": "rpc.session-start.request.v1",
+      "path": "rpc/session-start-v1.request.json",
+      "schema": "protocol/schema/v1/session-start-request.schema.json",
+      "kind": "sessionStartRequest",
+      "model": "RpcRequest"
+    },
+    {
+      "id": "rpc.session-start.response.v1",
+      "path": "rpc/session-start-v1.response.json",
+      "schema": "protocol/schema/v1/session-start-response.schema.json",
+      "kind": "sessionStartResponse",
+      "model": "RpcResponse::Success + SessionStartResult"
+    },
+    {
+      "id": "rpc.session-current.request.v1",
+      "path": "rpc/session-current-v1.request.json",
+      "schema": "protocol/schema/v1/session-current-request.schema.json",
+      "kind": "sessionCurrentRequest",
+      "model": "RpcRequest"
+    },
+    {
+      "id": "rpc.session-current.response.v1",
+      "path": "rpc/session-current-v1.response.json",
+      "schema": "protocol/schema/v1/session-current-response.schema.json",
+      "kind": "sessionCurrentResponse",
+      "model": "RpcResponse::Success + SessionCurrentResult"
+    },
+    {
+      "id": "rpc.session-end.request.v1",
+      "path": "rpc/session-end-v1.request.json",
+      "schema": "protocol/schema/v1/session-end-request.schema.json",
+      "kind": "sessionEndRequest",
+      "model": "RpcRequest + SessionEndParams"
+    },
+    {
+      "id": "rpc.session-end.response.v1",
+      "path": "rpc/session-end-v1.response.json",
+      "schema": "protocol/schema/v1/session-end-response.schema.json",
+      "kind": "sessionEndResponse",
+      "model": "RpcResponse::Success + SessionEndResult"
+    },
+    {
+      "id": "rpc.sessions-list.request.v1",
+      "path": "rpc/sessions-list-v1.request.json",
+      "schema": "protocol/schema/v1/sessions-list-request.schema.json",
+      "kind": "sessionsListRequest",
+      "model": "RpcRequest"
+    },
+    {
+      "id": "rpc.sessions-list.response.v1",
+      "path": "rpc/sessions-list-v1.response.json",
+      "schema": "protocol/schema/v1/sessions-list-response.schema.json",
+      "kind": "sessionsListResponse",
+      "model": "RpcResponse::Success + SessionsListResult"
+    },
+    {
+      "id": "rpc.session-export.request.v1",
+      "path": "rpc/session-export-v1.request.json",
+      "schema": "protocol/schema/v1/session-export-request.schema.json",
+      "kind": "sessionExportRequest",
+      "model": "RpcRequest + SessionExportParams"
+    },
+    {
+      "id": "rpc.session-export.response.v1",
+      "path": "rpc/session-export-v1.response.json",
+      "schema": "protocol/schema/v1/session-export-response.schema.json",
+      "kind": "sessionExportResponse",
+      "model": "RpcResponse::Success + SessionExportResult"
+    },
+    {
+      "id": "rpc.events-list.request.v1",
+      "path": "rpc/events-list-v1.request.json",
+      "schema": "protocol/schema/v1/events-list-request.schema.json",
+      "kind": "eventsListRequest",
+      "model": "RpcRequest + EventsListParams"
+    },
+    {
+      "id": "rpc.events-list.response.v1",
+      "path": "rpc/events-list-v1.response.json",
+      "schema": "protocol/schema/v1/events-list-response.schema.json",
+      "kind": "eventsListResponse",
+      "model": "RpcResponse::Success + EventsListResult"
+    },
+    {
+      "id": "rpc.events-clear.request.v1",
+      "path": "rpc/events-clear-v1.request.json",
+      "schema": "protocol/schema/v1/events-clear-request.schema.json",
+      "kind": "eventsClearRequest",
+      "model": "RpcRequest + SessionTargetParams"
+    },
+    {
+      "id": "rpc.events-clear.response.v1",
+      "path": "rpc/events-clear-v1.response.json",
+      "schema": "protocol/schema/v1/events-clear-response.schema.json",
+      "kind": "eventsClearResponse",
+      "model": "RpcResponse::Success + EventsClearResult"
+    },
+    {
+      "id": "rpc.media-stream-capture.request.v1",
+      "path": "rpc/media-stream-capture-v1.request.json",
+      "schema": "protocol/schema/v1/media-stream-capture-request.schema.json",
+      "kind": "mediaStreamCaptureRequest",
+      "model": "RpcRequest + MediaStreamCaptureParams"
+    },
+    {
+      "id": "rpc.media-stream-capture.response.v1",
+      "path": "rpc/media-stream-capture-v1.response.json",
+      "schema": "protocol/schema/v1/media-stream-capture-response.schema.json",
+      "kind": "mediaStreamCaptureResponse",
+      "model": "RpcResponse::Success + MediaStreamCaptureResult"
+    },
+    {
+      "id": "rpc.media-stream-end.request.v1",
+      "path": "rpc/media-stream-end-v1.request.json",
+      "schema": "protocol/schema/v1/media-stream-end-request.schema.json",
+      "kind": "mediaStreamEndRequest",
+      "model": "RpcRequest + MediaStreamEndParams"
+    },
+    {
+      "id": "rpc.media-stream-end.response.v1",
+      "path": "rpc/media-stream-end-v1.response.json",
+      "schema": "protocol/schema/v1/media-stream-end-response.schema.json",
+      "kind": "mediaStreamEndResponse",
+      "model": "RpcResponse::Success + MediaStreamEndResult"
+    },
+    {
+      "id": "rpc.media-stream-start.request.v1",
+      "path": "rpc/media-stream-start-v1.request.json",
+      "schema": "protocol/schema/v1/media-stream-start-request.schema.json",
+      "kind": "mediaStreamStartRequest",
+      "model": "RpcRequest + MediaStreamStartParams"
+    },
+    {
+      "id": "rpc.media-stream-start.response.v1",
+      "path": "rpc/media-stream-start-v1.response.json",
+      "schema": "protocol/schema/v1/media-stream-start-response.schema.json",
+      "kind": "mediaStreamStartResponse",
+      "model": "RpcResponse::Success + MediaStreamStartResult"
+    },
+    {
+      "id": "rpc.failure.v1",
+      "path": "rpc/failure-v1.json",
+      "schema": "protocol/schema/v1/rpc-response.schema.json",
+      "kind": "rpcFailure",
+      "model": "RpcResponse::Failure + RpcError"
+    },
+    {
+      "id": "event.session-started.v1",
+      "path": "events/session-started-v1.json",
+      "schema": "protocol/schema/v1/test-event.schema.json",
+      "kind": "testEvent",
+      "model": "TestEvent + TestEventPayload::SessionStarted"
+    },
+    {
+      "id": "event.observation-captured.v1",
+      "path": "events/observation-captured-v1.json",
+      "schema": "protocol/schema/v1/test-event.schema.json",
+      "kind": "testEvent",
+      "model": "TestEvent + TestEventPayload::ObservationCaptured"
+    },
+    {
+      "id": "event.action-started.succeeded.v1",
+      "path": "events/action-started-succeeded-v1.json",
+      "schema": "protocol/schema/v1/test-event.schema.json",
+      "kind": "testEvent",
+      "model": "TestEvent + TestEventPayload::ActionStarted"
+    },
+    {
+      "id": "event.action-completed.succeeded.v1",
+      "path": "events/action-completed-succeeded-v1.json",
+      "schema": "protocol/schema/v1/test-event.schema.json",
+      "kind": "testEvent",
+      "model": "TestEvent + TestEventPayload::ActionCompleted(ActionOutcome::Succeeded)"
+    },
+    {
+      "id": "event.action-started.failed.v1",
+      "path": "events/action-started-failed-v1.json",
+      "schema": "protocol/schema/v1/test-event.schema.json",
+      "kind": "testEvent",
+      "model": "TestEvent + TestEventPayload::ActionStarted"
+    },
+    {
+      "id": "event.action-completed.failed.v1",
+      "path": "events/action-completed-failed-v1.json",
+      "schema": "protocol/schema/v1/test-event.schema.json",
+      "kind": "testEvent",
+      "model": "TestEvent + TestEventPayload::ActionCompleted(ActionOutcome::Failed)"
+    },
+    {
+      "id": "event.action-started.cancelled.v1",
+      "path": "events/action-started-cancelled-v1.json",
+      "schema": "protocol/schema/v1/test-event.schema.json",
+      "kind": "testEvent",
+      "model": "TestEvent + TestEventPayload::ActionStarted"
+    },
+    {
+      "id": "event.action-completed.cancelled.v1",
+      "path": "events/action-completed-cancelled-v1.json",
+      "schema": "protocol/schema/v1/test-event.schema.json",
+      "kind": "testEvent",
+      "model": "TestEvent + TestEventPayload::ActionCompleted(ActionOutcome::Cancelled)"
+    },
+    {
+      "id": "event.action-started.timed-out.v1",
+      "path": "events/action-started-timed-out-v1.json",
+      "schema": "protocol/schema/v1/test-event.schema.json",
+      "kind": "testEvent",
+      "model": "TestEvent + TestEventPayload::ActionStarted"
+    },
+    {
+      "id": "event.action-completed.timed-out.v1",
+      "path": "events/action-completed-timed-out-v1.json",
+      "schema": "protocol/schema/v1/test-event.schema.json",
+      "kind": "testEvent",
+      "model": "TestEvent + TestEventPayload::ActionCompleted(ActionOutcome::TimedOut)"
+    },
+    {
+      "id": "event.media-stream-started.v1",
+      "path": "events/media-stream-started-v1.json",
+      "schema": "protocol/schema/v1/test-event.schema.json",
+      "kind": "testEvent",
+      "model": "TestEvent + TestEventPayload::MediaStreamStarted"
+    },
+    {
+      "id": "event.media-frame-captured.v1",
+      "path": "events/media-frame-captured-v1.json",
+      "schema": "protocol/schema/v1/test-event.schema.json",
+      "kind": "testEvent",
+      "model": "TestEvent + TestEventPayload::MediaFrameCaptured"
+    },
+    {
+      "id": "event.media-stream-ended.v1",
+      "path": "events/media-stream-ended-v1.json",
+      "schema": "protocol/schema/v1/test-event.schema.json",
+      "kind": "testEvent",
+      "model": "TestEvent + TestEventPayload::MediaStreamEnded"
+    },
+    {
+      "id": "event.verdict-recorded.v1",
+      "path": "events/verdict-recorded-v1.json",
+      "schema": "protocol/schema/v1/test-event.schema.json",
+      "kind": "testEvent",
+      "model": "TestEvent + TestEventPayload::VerdictRecorded"
+    },
+    {
+      "id": "event.error.v1",
+      "path": "events/error-v1.json",
+      "schema": "protocol/schema/v1/test-event.schema.json",
+      "kind": "testEvent",
+      "model": "TestEvent + TestEventPayload::Error"
+    },
+    {
+      "id": "stream.events-open.request.v1",
+      "path": "stream/events-stream-open-v1.request.json",
+      "schema": "protocol/schema/v1/events-stream-open-request.schema.json",
+      "kind": "eventsStreamOpenRequest",
+      "model": "RpcRequest + EventsStreamOpenParams"
+    },
+    {
+      "id": "stream.events-open.response.v1",
+      "path": "stream/events-stream-open-v1.response.json",
+      "schema": "protocol/schema/v1/events-stream-open-response.schema.json",
+      "kind": "eventsStreamOpenResponse",
+      "model": "RpcResponse + EventsStreamOpenResult"
+    },
+    {
+      "id": "stream.websocket-hello.request.v1",
+      "path": "stream/websocket-system-hello-v1.request.json",
+      "schema": "protocol/schema/v1/system-hello-request.schema.json",
+      "kind": "webSocketHelloRequest",
+      "model": "RpcRequest + HelloParams"
+    },
+    {
+      "id": "stream.websocket-hello.response.v1",
+      "path": "stream/websocket-system-hello-v1.response.json",
+      "schema": "protocol/schema/v1/system-hello-response.schema.json",
+      "kind": "webSocketHelloResponse",
+      "model": "RpcResponse + HelloResult"
+    },
+    {
+      "id": "stream.events-subscribe.request.v1",
+      "path": "stream/events-subscribe-v1.request.json",
+      "schema": "protocol/schema/v1/events-subscribe-request.schema.json",
+      "kind": "eventsSubscribeRequest",
+      "model": "RpcRequest + EventsSubscribeParams"
+    },
+    {
+      "id": "stream.events-subscribe.response.v1",
+      "path": "stream/events-subscribe-v1.response.json",
+      "schema": "protocol/schema/v1/events-subscribe-response.schema.json",
+      "kind": "eventsSubscribeResponse",
+      "model": "RpcResponse + EventsSubscribeResult"
+    },
+    {
+      "id": "stream.event.notification.v1",
+      "path": "stream/events-stream-event-v1.notification.json",
+      "schema": "protocol/schema/v1/events-stream-event-notification.schema.json",
+      "kind": "eventsStreamEventNotification",
+      "model": "RpcServerNotification + EventsStreamEventNotification"
+    },
+    {
+      "id": "stream.terminal.slow-consumer.notification.v1",
+      "path": "stream/events-stream-terminal-v1.notification.json",
+      "schema": "protocol/schema/v1/events-stream-terminal-notification.schema.json",
+      "kind": "eventsStreamTerminalNotification",
+      "model": "RpcServerNotification + EventsStreamTerminalNotification"
+    },
+    {
+      "id": "event.session-ended.v1",
+      "path": "events/session-ended-v1.json",
+      "schema": "protocol/schema/v1/test-event.schema.json",
+      "kind": "testEvent",
+      "model": "TestEvent + TestEventPayload::SessionEnded"
+    },
+    {
+      "id": "ui.snapshot.v1",
+      "path": "models/ui-snapshot-v1.json",
+      "schema": "protocol/schema/v1/ui-snapshot.schema.json",
+      "kind": "uiSnapshot",
+      "model": "UiSnapshot"
+    },
+    {
+      "id": "action.find-element.arguments.v1",
+      "path": "models/find-element-arguments-v1.json",
+      "schema": "protocol/schema/v1/find-element-arguments.schema.json",
+      "kind": "findElementArguments",
+      "model": "FindElementArguments"
+    },
+    {
+      "id": "action.find-element.result.v1",
+      "path": "models/find-element-result-v1.json",
+      "schema": "protocol/schema/v1/find-element-result.schema.json",
+      "kind": "findElementResult",
+      "model": "FindElementResult"
+    },
+    {
+      "id": "action.tap-element.arguments.v1",
+      "path": "models/tap-element-arguments-v1.json",
+      "schema": "protocol/schema/v1/tap-element-arguments.schema.json",
+      "kind": "tapElementArguments",
+      "model": "TapElementArguments"
+    },
+    {
+      "id": "action.tap-element.result.v1",
+      "path": "models/tap-element-result-v1.json",
+      "schema": "protocol/schema/v1/tap-element-result.schema.json",
+      "kind": "tapElementResult",
+      "model": "TapElementResult"
+    },
+    {
+      "id": "action.clear-element.arguments.v1",
+      "path": "models/clear-element-arguments-v1.json",
+      "schema": "protocol/schema/v1/clear-element-arguments.schema.json",
+      "kind": "clearElementArguments",
+      "model": "ClearElementArguments"
+    },
+    {
+      "id": "action.clear-element.result.v1",
+      "path": "models/clear-element-result-v1.json",
+      "schema": "protocol/schema/v1/clear-element-result.schema.json",
+      "kind": "clearElementResult",
+      "model": "ClearElementResult"
+    },
+    {
+      "id": "action.set-element-value.arguments.v1",
+      "path": "models/set-element-value-arguments-v1.json",
+      "schema": "protocol/schema/v1/set-element-value-arguments.schema.json",
+      "kind": "setElementValueArguments",
+      "model": "SetElementValueArguments"
+    },
+    {
+      "id": "action.set-element-value.result.v1",
+      "path": "models/set-element-value-result-v1.json",
+      "schema": "protocol/schema/v1/set-element-value-result.schema.json",
+      "kind": "setElementValueResult",
+      "model": "SetElementValueResult"
+    },
+    {
+      "id": "action.wait-for-element.arguments.v1",
+      "path": "models/wait-for-element-arguments-v1.json",
+      "schema": "protocol/schema/v1/wait-for-element-arguments.schema.json",
+      "kind": "waitForElementArguments",
+      "model": "WaitForElementArguments"
+    },
+    {
+      "id": "action.wait-for-element.result.v1",
+      "path": "models/wait-for-element-result-v1.json",
+      "schema": "protocol/schema/v1/wait-for-element-result.schema.json",
+      "kind": "waitForElementResult",
+      "model": "WaitForElementResult"
+    },
+    {
+      "id": "rpc.ui-snapshot-get.request.v1",
+      "path": "rpc/ui-snapshot-get-v1.request.json",
+      "schema": "protocol/schema/v1/ui-snapshot-get-request.schema.json",
+      "kind": "uiSnapshotGetRequest",
+      "model": "RpcRequest + UiSnapshotGetParams"
+    },
+    {
+      "id": "rpc.ui-snapshot-get.response.v1",
+      "path": "rpc/ui-snapshot-get-v1.response.json",
+      "schema": "protocol/schema/v1/ui-snapshot-get-response.schema.json",
+      "kind": "uiSnapshotGetResponse",
+      "model": "RpcResponse::Success + UiSnapshotGetResult"
+    },
+    {
+      "id": "rpc.verdict-record.request.v1",
+      "path": "rpc/verdict-record-v1.request.json",
+      "schema": "protocol/schema/v1/verdict-record-request.schema.json",
+      "kind": "verdictRecordRequest",
+      "model": "RpcRequest + VerdictRecordParams"
+    },
+    {
+      "id": "rpc.verdict-record.response.v1",
+      "path": "rpc/verdict-record-v1.response.json",
+      "schema": "protocol/schema/v1/verdict-record-response.schema.json",
+      "kind": "verdictRecordResponse",
+      "model": "RpcResponse::Success + VerdictRecordResult"
+    }
+  ]
+}

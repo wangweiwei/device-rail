@@ -1,0 +1,36 @@
+{
+  "$defs": {
+    "RequestTimeoutMs": {
+      "description": "A positive timeout in milliseconds that is safe to represent as a JSON\nnumber in every supported client language.",
+      "format": "uint64",
+      "maximum": 9007199254740991,
+      "minimum": 1,
+      "type": "integer"
+    }
+  },
+  "$id": "urn:devicerail:schema:protocol:v1:device-execute-params",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Parameters for `device.execute`.\n\nThe action fields intentionally remain flat on the wire. The optional\ntimeout controls only the Driver action, while the request envelope timeout\ncontrols the request-scoped device-operation budget. Durable terminal event\nfinalization is shielded so cancellation cannot leave a half-open Action.",
+  "properties": {
+    "actionTimeoutMs": {
+      "$ref": "#/$defs/RequestTimeoutMs"
+    },
+    "arguments": {
+      "default": null
+    },
+    "id": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "name"
+  ],
+  "title": "DeviceExecuteParams",
+  "type": "object"
+}

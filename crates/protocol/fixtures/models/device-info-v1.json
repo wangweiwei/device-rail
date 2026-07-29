@@ -1,0 +1,9 @@
+{
+  "id": "android-emulator-5554",
+  "name": "Pixel 9 API 35",
+  "platform": {
+    "kind": "android"
+  },
+  "osVersion": "15",
+  "connected": true
+}

@@ -1,0 +1,29 @@
+# Generated from protocol/schema/v1. DO NOT EDIT.
+# Run `python scripts/generate.py` from packages/python-client.
+from __future__ import annotations
+
+from typing import Any, Literal, Never, NotRequired, TypeAlias, TypedDict
+
+# Source: protocol/schema/v1/device-connect-request.schema.json
+
+class DeviceConnectRequest(TypedDict):
+    id: RpcIdSchema
+    jsonrpc: JsonRpcVersion
+    method: DeviceConnectMethodSchema
+    params: NotRequired[NoParamsSchema]
+    timeoutMs: NotRequired[RequestTimeoutMs]
+
+class EmptyParamsObjectSchema(TypedDict):
+    pass
+
+DeviceConnectMethodSchema: TypeAlias = Literal['device.connect']
+
+JsonRpcVersion: TypeAlias = Literal['2.0']
+
+NoParamsSchema: TypeAlias = EmptyParamsObjectSchema | list[Never]
+
+RequestTimeoutMs: TypeAlias = int
+
+RpcIdSchema: TypeAlias = str | int
+
+__all__ = ['DeviceConnectRequest']

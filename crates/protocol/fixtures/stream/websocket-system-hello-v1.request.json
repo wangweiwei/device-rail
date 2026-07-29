@@ -1,0 +1,26 @@
+{
+  "jsonrpc": "2.0",
+  "id": "ws-hello-1",
+  "method": "system.hello",
+  "params": {
+    "client": {
+      "name": "fixture-stream-client",
+      "version": "0.1.0"
+    },
+    "protocol": {
+      "ranges": [
+        {
+          "major": 1,
+          "minMinor": 3,
+          "maxMinor": 3
+        }
+      ]
+    },
+    "features": {
+      "required": [
+        "events.stream.v1"
+      ],
+      "optional": []
+    }
+  }
+}

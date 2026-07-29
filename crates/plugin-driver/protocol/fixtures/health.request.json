@@ -1,0 +1,6 @@
+{
+  "abiVersion": 1,
+  "requestId": "00000000-0000-0000-0000-000000000041",
+  "protocol": { "major": 1, "minor": 4 },
+  "operation": { "kind": "health" }
+}

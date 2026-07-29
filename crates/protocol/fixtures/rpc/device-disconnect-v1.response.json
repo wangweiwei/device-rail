@@ -1,0 +1,7 @@
+{
+  "jsonrpc": "2.0",
+  "id": "device-disconnect-1",
+  "result": {
+    "disconnected": true
+  }
+}

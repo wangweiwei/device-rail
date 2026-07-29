@@ -1,0 +1,36 @@
+{
+  "jsonrpc": "2.0",
+  "id": "system-describe-1",
+  "result": {
+    "connection": {
+      "connectionId": "00000000-0000-0000-0000-000000000000",
+      "protocol": {
+        "selected": {
+          "major": 1,
+          "minor": 2
+        }
+      },
+      "server": {
+        "name": "devicerail-daemon",
+        "version": "0.1.0"
+      },
+      "transport": {
+        "kind": "stdio",
+        "framing": "ndjson"
+      },
+      "features": {
+        "enabled": [
+          "device.routing.v1",
+          "events.snapshot.v1",
+          "request.control.v1"
+        ]
+      }
+    },
+    "client": {
+      "name": "golden-client",
+      "version": "0.1.0"
+    },
+    "deviceId": "mock-device-1",
+    "activeSessionId": "33333333-3333-4333-8333-333333333333"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "events": [
+    { "sequence": 1, "category": "session", "title": "Session started" },
+    { "sequence": 2, "category": "observation", "title": "Observation captured" },
+    { "sequence": 3, "category": "action", "title": "Action started" },
+    { "sequence": 4, "category": "action", "title": "Action completed", "status": "Succeeded" },
+    { "sequence": 5, "category": "action", "title": "Action started" },
+    { "sequence": 6, "category": "action", "title": "Action completed", "status": "Failed" },
+    { "sequence": 7, "category": "action", "title": "Action started" },
+    { "sequence": 8, "category": "action", "title": "Action completed", "status": "Cancelled" },
+    { "sequence": 9, "category": "action", "title": "Action started" },
+    { "sequence": 10, "category": "action", "title": "Action completed", "status": "Timed out" },
+    { "sequence": 11, "category": "verdict", "title": "Verdict recorded", "status": "Fail" },
+    { "sequence": 12, "category": "error", "title": "Error" },
+    { "sequence": 13, "category": "session", "title": "Session ended", "status": "Completed" }
+  ],
+  "filters": {
+    "all": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+    "observations": [2],
+    "actions": [3, 4, 5, 6, 7, 8, 9, 10],
+    "errors": [12],
+    "verdicts": [11]
+  },
+  "protectedOmission": {
+    "startedSequence": 3,
+    "completedSequence": 4,
+    "screenshotCount": 2
+  },
+  "error": {
+    "sequence": 12,
+    "code": "fixture_error",
+    "message": "Fixture error message",
+    "retryable": true
+  },
+  "verdict": {
+    "sequence": 11,
+    "status": "Fail",
+    "summary": "Fixture verdict summary"
+  }
+}

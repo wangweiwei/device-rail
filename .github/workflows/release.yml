@@ -1,0 +1,277 @@
+name: Release packaging
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_mode:
+        description: Build visibly unsigned test artifacts or require every production signature
+        required: true
+        default: unsigned-test-only
+        type: choice
+        options:
+          - unsigned-test-only
+          - signed
+      macos_team_id:
+        description: Expected 10-character Apple Team ID (required for signed macOS)
+        required: false
+        type: string
+      macos_signing_identity:
+        description: Exact leaf certificate Authority/Common Name (required for signed macOS)
+        required: false
+        type: string
+      windows_publisher_subject:
+        description: Exact Authenticode leaf certificate Subject (required for signed Windows)
+        required: false
+        type: string
+      windows_publisher_sha256:
+        description: SHA-256 Authenticode leaf certificate thumbprint (required for signed Windows)
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  portable-release:
+    name: ${{ matrix.platform }}-${{ matrix.architecture }} (${{ inputs.release_mode }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-latest
+            platform: linux
+            architecture: x86_64
+            suffix: ""
+          - runner: macos-15
+            platform: macos
+            architecture: aarch64
+            suffix: ""
+          - runner: windows-latest
+            platform: windows
+            architecture: x86_64
+            suffix: .exe
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.12"
+
+      - name: Test release packager without network tools
+        run: python -W error -m unittest discover -s packaging/tests -v
+
+      - name: Refuse an incorrectly labeled runner architecture
+        shell: bash
+        run: |
+          python -c 'import platform; actual={"amd64":"x86_64","x86_64":"x86_64","arm64":"aarch64","aarch64":"aarch64"}.get(platform.machine().lower()); expected="${{ matrix.architecture }}"; assert actual == expected, f"runner architecture {actual!r} does not match artifact label {expected!r}"'
+
+      - name: Build locked release binaries
+        run: cargo build --locked --release -p devicerail-daemon -p devicerail-bundle-cli
+
+      - name: Require the complete explicit signing identity set
+        if: inputs.release_mode == 'signed'
+        shell: bash
+        env:
+          RELEASE_COSIGN_PRIVATE_KEY: ${{ secrets.RELEASE_COSIGN_PRIVATE_KEY }}
+          RELEASE_COSIGN_PUBLIC_KEY: ${{ secrets.RELEASE_COSIGN_PUBLIC_KEY }}
+          RELEASE_COSIGN_PASSWORD: ${{ secrets.RELEASE_COSIGN_PASSWORD }}
+          MACOS_CERTIFICATE_BASE64: ${{ secrets.MACOS_CERTIFICATE_BASE64 }}
+          MACOS_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_APP_PASSWORD: ${{ secrets.APPLE_APP_PASSWORD }}
+          WINDOWS_PFX_BASE64: ${{ secrets.WINDOWS_PFX_BASE64 }}
+          WINDOWS_PFX_PASSWORD: ${{ secrets.WINDOWS_PFX_PASSWORD }}
+          EXPECTED_MACOS_TEAM_ID: ${{ inputs.macos_team_id }}
+          EXPECTED_MACOS_SIGNING_IDENTITY: ${{ inputs.macos_signing_identity }}
+          EXPECTED_WINDOWS_PUBLISHER_SUBJECT: ${{ inputs.windows_publisher_subject }}
+          EXPECTED_WINDOWS_PUBLISHER_SHA256: ${{ inputs.windows_publisher_sha256 }}
+        run: |
+          required=(RELEASE_COSIGN_PRIVATE_KEY RELEASE_COSIGN_PUBLIC_KEY RELEASE_COSIGN_PASSWORD)
+          case "${{ matrix.platform }}" in
+            macos)
+              required+=(MACOS_CERTIFICATE_BASE64 MACOS_CERTIFICATE_PASSWORD APPLE_ID APPLE_TEAM_ID APPLE_APP_PASSWORD EXPECTED_MACOS_TEAM_ID EXPECTED_MACOS_SIGNING_IDENTITY)
+              ;;
+            windows)
+              required+=(WINDOWS_PFX_BASE64 WINDOWS_PFX_PASSWORD EXPECTED_WINDOWS_PUBLISHER_SUBJECT EXPECTED_WINDOWS_PUBLISHER_SHA256)
+              ;;
+          esac
+          for variable in "${required[@]}"; do
+            if [[ -z "${!variable:-}" ]]; then
+              printf 'signed release requires non-empty setting %s\n' "$variable" >&2
+              exit 1
+            fi
+          done
+          if [[ "${{ matrix.platform }}" == macos && "$APPLE_TEAM_ID" != "$EXPECTED_MACOS_TEAM_ID" ]]; then
+            printf 'APPLE_TEAM_ID does not match the explicit expected macOS Team ID\n' >&2
+            exit 1
+          fi
+
+      - name: Install cosign only for an explicitly signed release
+        if: inputs.release_mode == 'signed'
+        uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
+
+      - name: Persist the explicit release public key
+        if: inputs.release_mode == 'signed'
+        shell: bash
+        env:
+          RELEASE_COSIGN_PUBLIC_KEY: ${{ secrets.RELEASE_COSIGN_PUBLIC_KEY }}
+        run: |
+          python -c 'import os,pathlib; pathlib.Path("target/release/release-cosign.pub").write_text(os.environ["RELEASE_COSIGN_PUBLIC_KEY"], encoding="utf-8")'
+
+      - name: Import and sign macOS payloads
+        if: inputs.release_mode == 'signed' && matrix.platform == 'macos'
+        shell: bash
+        env:
+          MACOS_CERTIFICATE_BASE64: ${{ secrets.MACOS_CERTIFICATE_BASE64 }}
+          MACOS_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
+          MACOS_SIGNING_IDENTITY: ${{ inputs.macos_signing_identity }}
+        run: |
+          python -c 'import base64,os,pathlib; pathlib.Path(os.environ["RUNNER_TEMP"], "devicerail-signing.p12").write_bytes(base64.b64decode(os.environ["MACOS_CERTIFICATE_BASE64"], validate=True))'
+          security create-keychain -p temporary "$RUNNER_TEMP/devicerail-signing.keychain-db"
+          security set-keychain-settings -lut 21600 "$RUNNER_TEMP/devicerail-signing.keychain-db"
+          security unlock-keychain -p temporary "$RUNNER_TEMP/devicerail-signing.keychain-db"
+          security import "$RUNNER_TEMP/devicerail-signing.p12" -P "$MACOS_CERTIFICATE_PASSWORD" -A -t cert -f pkcs12 -k "$RUNNER_TEMP/devicerail-signing.keychain-db"
+          security list-keychain -d user -s "$RUNNER_TEMP/devicerail-signing.keychain-db"
+          security set-key-partition-list -S apple-tool:,apple: -s -k temporary "$RUNNER_TEMP/devicerail-signing.keychain-db"
+          codesign --force --options runtime --timestamp --sign "$MACOS_SIGNING_IDENTITY" target/release/devicerail-daemon
+          codesign --force --options runtime --timestamp --sign "$MACOS_SIGNING_IDENTITY" target/release/devicerail-bundle
+          codesign --verify --strict --verbose=2 target/release/devicerail-daemon
+          codesign --verify --strict --verbose=2 target/release/devicerail-bundle
+
+      - name: Locate and sign Windows payloads
+        if: inputs.release_mode == 'signed' && matrix.platform == 'windows'
+        shell: pwsh
+        env:
+          WINDOWS_PFX_BASE64: ${{ secrets.WINDOWS_PFX_BASE64 }}
+          WINDOWS_PFX_PASSWORD: ${{ secrets.WINDOWS_PFX_PASSWORD }}
+        run: |
+          $pfx = Join-Path $env:RUNNER_TEMP "devicerail-signing.pfx"
+          [IO.File]::WriteAllBytes($pfx, [Convert]::FromBase64String($env:WINDOWS_PFX_BASE64))
+          $signTool = Get-ChildItem "${env:ProgramFiles(x86)}\Windows Kits\10\bin\*\x64\signtool.exe" |
+            Sort-Object FullName | Select-Object -Last 1
+          if (-not $signTool) { throw "signtool.exe is unavailable" }
+          $signTool.DirectoryName | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          & $signTool.FullName sign /fd SHA256 /td SHA256 /tr https://timestamp.digicert.com /f $pfx /p $env:WINDOWS_PFX_PASSWORD target/release/devicerail-daemon.exe
+          & $signTool.FullName sign /fd SHA256 /td SHA256 /tr https://timestamp.digicert.com /f $pfx /p $env:WINDOWS_PFX_PASSWORD target/release/devicerail-bundle.exe
+          & $signTool.FullName verify /pa /all /v target/release/devicerail-daemon.exe
+          & $signTool.FullName verify /pa /all /v target/release/devicerail-bundle.exe
+
+      - name: Sign Linux payloads
+        if: inputs.release_mode == 'signed' && matrix.platform == 'linux'
+        shell: bash
+        env:
+          COSIGN_PASSWORD: ${{ secrets.RELEASE_COSIGN_PASSWORD }}
+          RELEASE_COSIGN_PRIVATE_KEY: ${{ secrets.RELEASE_COSIGN_PRIVATE_KEY }}
+        run: |
+          cosign sign-blob --yes --key env://RELEASE_COSIGN_PRIVATE_KEY --output-signature target/release/devicerail-daemon.sig target/release/devicerail-daemon
+          cosign sign-blob --yes --key env://RELEASE_COSIGN_PRIVATE_KEY --output-signature target/release/devicerail-bundle.sig target/release/devicerail-bundle
+          cosign verify-blob --key target/release/release-cosign.pub --signature target/release/devicerail-daemon.sig target/release/devicerail-daemon
+          cosign verify-blob --key target/release/release-cosign.pub --signature target/release/devicerail-bundle.sig target/release/devicerail-bundle
+
+      - name: Build deterministic installer archive
+        shell: bash
+        env:
+          SOURCE_URI: git+${{ github.server_url }}/${{ github.repository }}.git
+          EXPECTED_MACOS_TEAM_ID: ${{ inputs.macos_team_id }}
+          EXPECTED_MACOS_SIGNING_IDENTITY: ${{ inputs.macos_signing_identity }}
+          EXPECTED_WINDOWS_PUBLISHER_SUBJECT: ${{ inputs.windows_publisher_subject }}
+          EXPECTED_WINDOWS_PUBLISHER_SHA256: ${{ inputs.windows_publisher_sha256 }}
+        run: |
+          mkdir dist
+          source_date_epoch=$(git log -1 --format=%ct)
+          arguments=(
+            package
+            --platform "${{ matrix.platform }}"
+            --architecture "${{ matrix.architecture }}"
+            --daemon "target/release/devicerail-daemon${{ matrix.suffix }}"
+            --bundle "target/release/devicerail-bundle${{ matrix.suffix }}"
+            --output-dir dist
+            --source-date-epoch "$source_date_epoch"
+            --source-uri "$SOURCE_URI"
+            --release-status "${{ inputs.release_mode }}"
+          )
+          if [[ "${{ inputs.release_mode }}" == signed ]]; then
+            arguments+=(--artifact-public-key target/release/release-cosign.pub)
+            if [[ "${{ matrix.platform }}" == linux ]]; then
+              arguments+=(
+                --linux-public-key target/release/release-cosign.pub
+                --linux-daemon-signature target/release/devicerail-daemon.sig
+                --linux-bundle-signature target/release/devicerail-bundle.sig
+              )
+            elif [[ "${{ matrix.platform }}" == macos ]]; then
+              macos_requirement="anchor apple generic and certificate leaf[subject.OU] = \"${EXPECTED_MACOS_TEAM_ID}\""
+              arguments+=(
+                --macos-team-id "$EXPECTED_MACOS_TEAM_ID"
+                --macos-designated-requirement "$macos_requirement"
+                --macos-signing-identity "$EXPECTED_MACOS_SIGNING_IDENTITY"
+              )
+            elif [[ "${{ matrix.platform }}" == windows ]]; then
+              arguments+=(
+                --windows-publisher-subject "$EXPECTED_WINDOWS_PUBLISHER_SUBJECT"
+                --windows-publisher-sha256 "$EXPECTED_WINDOWS_PUBLISHER_SHA256"
+              )
+            fi
+          fi
+          python packaging/devicerail_release.py "${arguments[@]}" > dist/package-summary.json
+
+      - name: Sign the complete installer archive
+        if: inputs.release_mode == 'signed'
+        shell: bash
+        env:
+          COSIGN_PASSWORD: ${{ secrets.RELEASE_COSIGN_PASSWORD }}
+          RELEASE_COSIGN_PRIVATE_KEY: ${{ secrets.RELEASE_COSIGN_PRIVATE_KEY }}
+        run: |
+          artifact=$(python -c 'import json; print(json.load(open("dist/package-summary.json", encoding="utf-8"))["artifact"])')
+          cosign sign-blob --yes --key env://RELEASE_COSIGN_PRIVATE_KEY --output-signature "${artifact}.sig" "$artifact"
+
+      - name: Verify checksums, manifests, SBOM, provenance, and signatures
+        shell: bash
+        env:
+          EXPECTED_MACOS_TEAM_ID: ${{ inputs.macos_team_id }}
+          EXPECTED_MACOS_SIGNING_IDENTITY: ${{ inputs.macos_signing_identity }}
+          EXPECTED_WINDOWS_PUBLISHER_SUBJECT: ${{ inputs.windows_publisher_subject }}
+          EXPECTED_WINDOWS_PUBLISHER_SHA256: ${{ inputs.windows_publisher_sha256 }}
+        run: |
+          artifact=$(python -c 'import json; print(json.load(open("dist/package-summary.json", encoding="utf-8"))["artifact"])')
+          if [[ "${{ inputs.release_mode }}" == signed ]]; then
+            arguments=(verify "$artifact" --trusted-artifact-public-key target/release/release-cosign.pub)
+            if [[ "${{ matrix.platform }}" == macos ]]; then
+              macos_requirement="anchor apple generic and certificate leaf[subject.OU] = \"${EXPECTED_MACOS_TEAM_ID}\""
+              arguments+=(
+                --expected-macos-team-id "$EXPECTED_MACOS_TEAM_ID"
+                --expected-macos-designated-requirement "$macos_requirement"
+                --expected-macos-signing-identity "$EXPECTED_MACOS_SIGNING_IDENTITY"
+              )
+            elif [[ "${{ matrix.platform }}" == windows ]]; then
+              arguments+=(
+                --expected-windows-publisher-subject "$EXPECTED_WINDOWS_PUBLISHER_SUBJECT"
+                --expected-windows-publisher-sha256 "$EXPECTED_WINDOWS_PUBLISHER_SHA256"
+              )
+            fi
+            python packaging/devicerail_release.py "${arguments[@]}" > dist/verification.json
+          else
+            python packaging/devicerail_release.py verify "$artifact" > dist/verification.json
+          fi
+
+      - name: Notarize only the explicitly signed macOS ZIP
+        if: inputs.release_mode == 'signed' && matrix.platform == 'macos'
+        shell: bash
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_APP_PASSWORD: ${{ secrets.APPLE_APP_PASSWORD }}
+        run: |
+          artifact=$(python -c 'import json; print(json.load(open("dist/package-summary.json", encoding="utf-8"))["artifact"])')
+          xcrun notarytool submit "$artifact" --apple-id "$APPLE_ID" --team-id "$APPLE_TEAM_ID" --password "$APPLE_APP_PASSWORD" --wait --output-format json > dist/notarization.json
+          python -c 'import json; result=json.load(open("dist/notarization.json", encoding="utf-8")); assert result.get("status") == "Accepted", result.get("status")'
+
+      - name: Upload verified release outputs
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: devicerail-${{ matrix.platform }}-${{ matrix.architecture }}-${{ inputs.release_mode }}
+          path: dist/*
+          if-no-files-found: error

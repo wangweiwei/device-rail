@@ -1,0 +1,68 @@
+{
+  "$defs": {
+    "EmptyParamsObjectSchema": {
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "JsonRpcVersion": {
+      "enum": [
+        "2.0"
+      ],
+      "type": "string"
+    },
+    "NoParamsSchema": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/EmptyParamsObjectSchema"
+        },
+        {
+          "maxItems": 0,
+          "type": "array"
+        }
+      ]
+    },
+    "RpcIdSchema": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "format": "uint64",
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "type": "integer"
+        }
+      ]
+    },
+    "SessionStartMethodSchema": {
+      "enum": [
+        "session.start"
+      ],
+      "type": "string"
+    }
+  },
+  "$id": "urn:devicerail:schema:protocol:v1:session-start-request",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "$ref": "#/$defs/RpcIdSchema"
+    },
+    "jsonrpc": {
+      "$ref": "#/$defs/JsonRpcVersion"
+    },
+    "method": {
+      "$ref": "#/$defs/SessionStartMethodSchema"
+    },
+    "params": {
+      "$ref": "#/$defs/NoParamsSchema"
+    }
+  },
+  "required": [
+    "jsonrpc",
+    "id",
+    "method"
+  ],
+  "title": "SessionStartRequest",
+  "type": "object"
+}

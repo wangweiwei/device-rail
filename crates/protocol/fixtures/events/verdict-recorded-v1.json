@@ -1,0 +1,22 @@
+{
+  "eventId": "44444444-4444-4444-8444-000000000011",
+  "sessionId": "33333333-3333-4333-8333-333333333333",
+  "sequence": 14,
+  "deviceId": "android-emulator-5554",
+  "atMs": 1720000032800,
+  "payload": {
+    "type": "verdictRecorded",
+    "verdict": {
+      "status": "fail",
+      "summary": "The session includes failed, cancelled, and timed out actions.",
+      "evidence": [
+        {
+          "id": "asset-verdict-001",
+          "mediaType": "image/png",
+          "uri": "devicerail://assets/asset-verdict-001",
+          "sha256": null
+        }
+      ]
+    }
+  }
+}

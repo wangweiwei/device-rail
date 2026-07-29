@@ -1,0 +1,10 @@
+{
+  "$id": "urn:devicerail:schema:protocol:v1:event-sequence",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "A one-based sequence number within one session.\n\nThe wire value is capped at JavaScript's maximum safe integer so generated\nclients can sort and resume event streams without losing precision.",
+  "format": "uint64",
+  "maximum": 9007199254740991,
+  "minimum": 1,
+  "title": "EventSequence",
+  "type": "integer"
+}

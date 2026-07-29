@@ -1,0 +1,30 @@
+# Generated from protocol/schema/v1. DO NOT EDIT.
+# Run `python scripts/generate.py` from packages/python-client.
+from __future__ import annotations
+
+from typing import Any, Literal, Never, NotRequired, TypeAlias, TypedDict
+
+# Source: protocol/schema/v1/hello-params.schema.json
+
+class FeatureOffer(TypedDict):
+    optional: NotRequired[list[str]]
+    required: NotRequired[list[str]]
+
+class HelloParams(TypedDict):
+    client: PeerInfo
+    features: NotRequired[FeatureOffer]
+    protocol: ProtocolOffer
+
+class PeerInfo(TypedDict):
+    name: str
+    version: str
+
+class ProtocolOffer(TypedDict):
+    ranges: list[ProtocolRange]
+
+class ProtocolRange(TypedDict):
+    major: int
+    maxMinor: int
+    minMinor: int
+
+__all__ = ['HelloParams']

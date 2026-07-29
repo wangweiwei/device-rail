@@ -1,0 +1,25 @@
+{
+  "eventId": "44444444-4444-4444-8444-000000000007",
+  "sessionId": "33333333-3333-4333-8333-333333333333",
+  "sequence": 7,
+  "requestId": "request-cancel",
+  "deviceId": "android-emulator-5554",
+  "atMs": 1720000002200,
+  "payload": {
+    "type": "actionStarted",
+    "call": {
+      "id": "22222222-2222-4222-8222-222222222224",
+      "name": "swipe",
+      "arguments": {
+        "from": {
+          "x": 540,
+          "y": 1600
+        },
+        "to": {
+          "x": 540,
+          "y": 600
+        }
+      }
+    }
+  }
+}

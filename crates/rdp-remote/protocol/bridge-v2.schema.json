@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://devicerail.dev/schema/rdp-bridge-v2.schema.json",
+  "title": "DeviceRail RDP Bridge v2 frame",
+  "oneOf": [
+    { "$ref": "#/$defs/request" },
+    { "$ref": "#/$defs/response" }
+  ],
+  "$defs": {
+    "uuid": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+    },
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "operationId", "authenticationToken", "deviceId", "target", "timeoutMs", "operation"],
+      "properties": {
+        "version": { "const": 2 },
+        "operationId": { "$ref": "#/$defs/uuid" },
+        "authenticationToken": { "type": "string", "minLength": 1, "maxLength": 4096 },
+        "deviceId": { "type": "string", "minLength": 1, "maxLength": 512 },
+        "target": { "type": "string", "minLength": 3, "maxLength": 4096 },
+        "timeoutMs": { "type": "integer", "minimum": 1, "maximum": 120000 },
+        "operation": { "enum": ["health", "connect", "disconnect", "probe", "capture", "input"] },
+        "callId": { "$ref": "#/$defs/uuid" },
+        "input": { "$ref": "#/$defs/input" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "operation": { "const": "input" } }, "required": ["operation"] },
+          "then": { "required": ["callId", "input"] },
+          "else": {
+            "not": { "anyOf": [{ "required": ["callId"] }, { "required": ["input"] }] }
+          }
+        }
+      ]
+    },
+    "input": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "x", "y"],
+          "properties": {
+            "kind": { "enum": ["tap", "pointerMove"] },
+            "x": { "type": "integer", "minimum": 0, "maximum": 4294967295 },
+            "y": { "type": "integer", "minimum": 0, "maximum": 4294967295 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "deltaX", "deltaY"],
+          "properties": {
+            "kind": { "const": "scroll" },
+            "deltaX": { "type": "integer", "minimum": -1000000, "maximum": 1000000 },
+            "deltaY": { "type": "integer", "minimum": -1000000, "maximum": 1000000 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "key"],
+          "properties": {
+            "kind": { "const": "keyPress" },
+            "key": { "type": "string", "minLength": 1, "maxLength": 128 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "text"],
+          "properties": {
+            "kind": { "enum": ["typeText", "inputSecret"] },
+            "text": { "type": "string", "minLength": 1, "maxLength": 16384 }
+          }
+        }
+      ]
+    },
+    "response": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "ok"],
+      "properties": {
+        "version": { "const": 2 },
+        "ok": { "type": "boolean" },
+        "payload": { "$ref": "#/$defs/payload" },
+        "error": { "$ref": "#/$defs/error" }
+      },
+      "oneOf": [
+        { "properties": { "ok": { "const": true } }, "required": ["payload"], "not": { "required": ["error"] } },
+        { "properties": { "ok": { "const": false } }, "required": ["error"], "not": { "required": ["payload"] } }
+      ]
+    },
+    "payload": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind"],
+          "properties": { "kind": { "const": "empty" } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "width", "height", "scaleFactor"],
+          "properties": {
+            "kind": { "const": "desktop" },
+            "width": { "type": "integer", "minimum": 1, "maximum": 8192 },
+            "height": { "type": "integer", "minimum": 1, "maximum": 8192 },
+            "scaleFactor": { "type": "number", "exclusiveMinimum": 0, "maximum": 16 },
+            "desktopName": { "type": "string", "minLength": 1, "maxLength": 512 },
+            "serverVersion": { "type": "string", "minLength": 1, "maxLength": 512 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "width", "height", "scaleFactor", "pngBase64"],
+          "properties": {
+            "kind": { "const": "frame" },
+            "width": { "type": "integer", "minimum": 1, "maximum": 8192 },
+            "height": { "type": "integer", "minimum": 1, "maximum": 8192 },
+            "scaleFactor": { "type": "number", "exclusiveMinimum": 0, "maximum": 16 },
+            "pngBase64": { "type": "string", "minLength": 1, "maxLength": 22369624 },
+            "desktopName": { "type": "string", "minLength": 1, "maxLength": 512 },
+            "serverVersion": { "type": "string", "minLength": 1, "maxLength": 512 }
+          }
+        }
+      ]
+    },
+    "error": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "retryable"],
+      "properties": {
+        "code": { "type": "string", "pattern": "^[a-z0-9_.-]{1,60}$" },
+        "retryable": { "type": "boolean" },
+        "diagnostic": { "type": "string", "maxLength": 512, "pattern": "^[^\\r\\n]*$" }
+      }
+    }
+  }
+}

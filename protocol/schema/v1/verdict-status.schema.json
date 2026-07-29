@@ -1,0 +1,11 @@
+{
+  "$id": "urn:devicerail:schema:protocol:v1:verdict-status",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "enum": [
+    "pass",
+    "fail",
+    "unknown"
+  ],
+  "title": "VerdictStatus",
+  "type": "string"
+}

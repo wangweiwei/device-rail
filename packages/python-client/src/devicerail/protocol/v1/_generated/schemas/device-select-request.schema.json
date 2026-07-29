@@ -1,0 +1,67 @@
+{
+  "$defs": {
+    "DeviceSelectMethodSchema": {
+      "enum": [
+        "device.select"
+      ],
+      "type": "string"
+    },
+    "DeviceSelectParams": {
+      "additionalProperties": false,
+      "description": "Parameters accepted by `device.select`.",
+      "properties": {
+        "deviceId": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "deviceId"
+      ],
+      "type": "object"
+    },
+    "JsonRpcVersion": {
+      "enum": [
+        "2.0"
+      ],
+      "type": "string"
+    },
+    "RpcIdSchema": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "format": "uint64",
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "type": "integer"
+        }
+      ]
+    }
+  },
+  "$id": "urn:devicerail:schema:protocol:v1:device-select-request",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "$ref": "#/$defs/RpcIdSchema"
+    },
+    "jsonrpc": {
+      "$ref": "#/$defs/JsonRpcVersion"
+    },
+    "method": {
+      "$ref": "#/$defs/DeviceSelectMethodSchema"
+    },
+    "params": {
+      "$ref": "#/$defs/DeviceSelectParams"
+    }
+  },
+  "required": [
+    "jsonrpc",
+    "id",
+    "method",
+    "params"
+  ],
+  "title": "DeviceSelectRequest",
+  "type": "object"
+}

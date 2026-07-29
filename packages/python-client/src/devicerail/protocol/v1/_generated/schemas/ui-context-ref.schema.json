@@ -1,0 +1,37 @@
+{
+  "$defs": {
+    "UiContextKind": {
+      "enum": [
+        "native",
+        "web"
+      ],
+      "type": "string"
+    }
+  },
+  "$id": "urn:devicerail:schema:protocol:v1:ui-context-ref",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Full identity of one native accessibility or web-document context.\n`documentEpoch` is required for both channels and changes after reconnect,\nnavigation, or any replacement that invalidates prior node references.",
+  "properties": {
+    "contextId": {
+      "maxLength": 4096,
+      "minLength": 1,
+      "type": "string"
+    },
+    "contextKind": {
+      "$ref": "#/$defs/UiContextKind"
+    },
+    "documentEpoch": {
+      "maxLength": 4096,
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "contextKind",
+    "contextId",
+    "documentEpoch"
+  ],
+  "title": "UiContextRef",
+  "type": "object"
+}

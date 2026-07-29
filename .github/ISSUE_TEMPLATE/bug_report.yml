@@ -1,0 +1,72 @@
+name: Bug report
+description: Report a reproducible DeviceRail defect
+title: "[Bug]: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not disclose vulnerabilities, credentials, device identifiers, or private screenshots here. Read SECURITY.md for private reporting.
+  - type: input
+    id: version
+    attributes:
+      label: DeviceRail version
+      description: Release version or commit hash.
+      placeholder: 0.1.0 or be516f5
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Host OS/architecture, target platform, external tool versions, and relevant Rust/Node/Python versions.
+    validations:
+      required: true
+  - type: dropdown
+    id: validation
+    attributes:
+      label: Execution environment
+      options:
+        - Deterministic unit/conformance test
+        - Fake platform tool or fixture
+        - Stock daemon on a real host
+        - Real device or remote system
+        - Release/signing environment
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Minimal reproduction
+      description: Exact sanitized commands, requests, and configuration names. Remove secrets and personal data.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Sanitized logs
+      render: text
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues and pull requests.
+          required: true
+        - label: I removed credentials, device IDs, private endpoints, and personal data.
+          required: true
+        - label: This is not a security vulnerability.
+          required: true
+

@@ -1,0 +1,12 @@
+{
+  "jsonrpc": "2.0",
+  "id": "verdict-1",
+  "method": "verdict.record",
+  "params": {
+    "verdict": {
+      "status": "pass",
+      "summary": "The expected search result is present.",
+      "evidence": []
+    }
+  }
+}

@@ -1,0 +1,467 @@
+{
+  "$defs": {
+    "ActionExecution": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "context": {
+              "$ref": "#/$defs/UiContextRef"
+            },
+            "mode": {
+              "const": "nativeSemantic",
+              "type": "string"
+            }
+          },
+          "required": [
+            "mode",
+            "context"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "context": {
+              "$ref": "#/$defs/UiContextRef"
+            },
+            "mode": {
+              "const": "webSemantic",
+              "type": "string"
+            }
+          },
+          "required": [
+            "mode",
+            "context"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "context": {
+              "$ref": "#/$defs/UiContextRef"
+            },
+            "fallbackReason": {
+              "$ref": "#/$defs/CoordinateFallbackReason"
+            },
+            "mode": {
+              "const": "coordinateFallback",
+              "type": "string"
+            }
+          },
+          "required": [
+            "mode",
+            "context",
+            "fallbackReason"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "ActionResult": {
+      "properties": {
+        "after": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Observation"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "before": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Observation"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "callId": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "evidence": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/AssetRef"
+          },
+          "type": "array"
+        },
+        "execution": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ActionExecution"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "finishedAtMs": {
+          "format": "uint64",
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "output": true,
+        "startedAtMs": {
+          "format": "uint64",
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "callId",
+        "startedAtMs",
+        "finishedAtMs",
+        "output"
+      ],
+      "type": "object"
+    },
+    "AssetRef": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "mediaType": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "uri": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "mediaType",
+        "uri"
+      ],
+      "type": "object"
+    },
+    "CoordinateFallbackReason": {
+      "enum": [
+        "semanticInteractionUnavailable",
+        "platformLimitation"
+      ],
+      "type": "string"
+    },
+    "DeviceExecuteSuccessSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/RpcIdSchema"
+        },
+        "jsonrpc": {
+          "$ref": "#/$defs/JsonRpcVersion"
+        },
+        "result": {
+          "$ref": "#/$defs/ActionResult"
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "id",
+        "result"
+      ],
+      "type": "object"
+    },
+    "ErrorInfo": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "details": true,
+        "message": {
+          "type": "string"
+        },
+        "retryable": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "code",
+        "message",
+        "retryable"
+      ],
+      "type": "object"
+    },
+    "JsonRpcVersion": {
+      "enum": [
+        "2.0"
+      ],
+      "type": "string"
+    },
+    "NullableRpcIdSchema": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/RpcIdSchema"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "Observation": {
+      "properties": {
+        "capturedAtMs": {
+          "format": "uint64",
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "deviceId": {
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "metadata": {
+          "additionalProperties": true,
+          "default": {},
+          "type": "object"
+        },
+        "screenshot": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AssetRef"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "screenshotOmission": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ScreenshotOmissionReason"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "uiSnapshot": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/UiSnapshotRef"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "uiSnapshotOmission": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/UiSnapshotOmissionReason"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "viewport": {
+          "$ref": "#/$defs/Viewport"
+        }
+      },
+      "required": [
+        "id",
+        "deviceId",
+        "capturedAtMs",
+        "viewport"
+      ],
+      "type": "object"
+    },
+    "RpcError": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "format": "int32",
+          "maximum": 2147483647,
+          "minimum": -2147483648,
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/$defs/ErrorInfo"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "message",
+        "data"
+      ],
+      "type": "object"
+    },
+    "RpcIdSchema": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "format": "uint64",
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "type": "integer"
+        }
+      ]
+    },
+    "ScreenshotOmissionReason": {
+      "enum": [
+        "policy",
+        "protectedAction"
+      ],
+      "type": "string"
+    },
+    "SystemHelloFailureSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "error": {
+          "$ref": "#/$defs/RpcError"
+        },
+        "id": {
+          "$ref": "#/$defs/NullableRpcIdSchema"
+        },
+        "jsonrpc": {
+          "$ref": "#/$defs/JsonRpcVersion"
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "id",
+        "error"
+      ],
+      "type": "object"
+    },
+    "UiContextKind": {
+      "enum": [
+        "native",
+        "web"
+      ],
+      "type": "string"
+    },
+    "UiContextRef": {
+      "additionalProperties": false,
+      "description": "Full identity of one native accessibility or web-document context.\n`documentEpoch` is required for both channels and changes after reconnect,\nnavigation, or any replacement that invalidates prior node references.",
+      "properties": {
+        "contextId": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "type": "string"
+        },
+        "contextKind": {
+          "$ref": "#/$defs/UiContextKind"
+        },
+        "documentEpoch": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "contextKind",
+        "contextId",
+        "documentEpoch"
+      ],
+      "type": "object"
+    },
+    "UiSnapshotOmissionReason": {
+      "enum": [
+        "driverUnsupported",
+        "policy",
+        "protectedAction"
+      ],
+      "type": "string"
+    },
+    "UiSnapshotRef": {
+      "additionalProperties": false,
+      "description": "Small Observation-side reference to a UI Tree Evidence object.",
+      "properties": {
+        "byteLength": {
+          "format": "uint64",
+          "maximum": 786432,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "context": {
+          "$ref": "#/$defs/UiContextRef"
+        },
+        "evidence": {
+          "$ref": "#/$defs/AssetRef"
+        },
+        "formatVersion": {
+          "format": "uint16",
+          "maximum": 1,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "nodeCount": {
+          "format": "uint32",
+          "maximum": 10000,
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "formatVersion",
+        "context",
+        "nodeCount",
+        "byteLength",
+        "evidence"
+      ],
+      "type": "object"
+    },
+    "Viewport": {
+      "properties": {
+        "height": {
+          "format": "uint32",
+          "maximum": 4294967295,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "scaleFactor": {
+          "format": "double",
+          "type": "number"
+        },
+        "width": {
+          "format": "uint32",
+          "maximum": 4294967295,
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "width",
+        "height",
+        "scaleFactor"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "urn:devicerail:schema:protocol:v1:device-execute-response",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "anyOf": [
+    {
+      "$ref": "#/$defs/DeviceExecuteSuccessSchema"
+    },
+    {
+      "$ref": "#/$defs/SystemHelloFailureSchema"
+    }
+  ],
+  "title": "DeviceExecuteResponse"
+}

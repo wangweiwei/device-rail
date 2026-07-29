@@ -1,0 +1,100 @@
+{
+  "$defs": {
+    "AssetRef": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "mediaType": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "uri": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "mediaType",
+        "uri"
+      ],
+      "type": "object"
+    },
+    "UiContextKind": {
+      "enum": [
+        "native",
+        "web"
+      ],
+      "type": "string"
+    },
+    "UiContextRef": {
+      "additionalProperties": false,
+      "description": "Full identity of one native accessibility or web-document context.\n`documentEpoch` is required for both channels and changes after reconnect,\nnavigation, or any replacement that invalidates prior node references.",
+      "properties": {
+        "contextId": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "type": "string"
+        },
+        "contextKind": {
+          "$ref": "#/$defs/UiContextKind"
+        },
+        "documentEpoch": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "contextKind",
+        "contextId",
+        "documentEpoch"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "urn:devicerail:schema:protocol:v1:ui-snapshot-ref",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Small Observation-side reference to a UI Tree Evidence object.",
+  "properties": {
+    "byteLength": {
+      "format": "uint64",
+      "maximum": 786432,
+      "minimum": 1,
+      "type": "integer"
+    },
+    "context": {
+      "$ref": "#/$defs/UiContextRef"
+    },
+    "evidence": {
+      "$ref": "#/$defs/AssetRef"
+    },
+    "formatVersion": {
+      "format": "uint16",
+      "maximum": 1,
+      "minimum": 1,
+      "type": "integer"
+    },
+    "nodeCount": {
+      "format": "uint32",
+      "maximum": 10000,
+      "minimum": 1,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "formatVersion",
+    "context",
+    "nodeCount",
+    "byteLength",
+    "evidence"
+  ],
+  "title": "UiSnapshotRef",
+  "type": "object"
+}

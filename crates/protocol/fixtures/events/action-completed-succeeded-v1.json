@@ -1,0 +1,33 @@
+{
+  "eventId": "44444444-4444-4444-8444-000000000004",
+  "sessionId": "33333333-3333-4333-8333-333333333333",
+  "sequence": 4,
+  "requestId": "request-success",
+  "deviceId": "android-emulator-5554",
+  "atMs": 1720000001500,
+  "payload": {
+    "type": "actionCompleted",
+    "callId": "22222222-2222-4222-8222-222222222222",
+    "outcome": {
+      "outcome": "succeeded",
+      "result": {
+        "callId": "22222222-2222-4222-8222-222222222222",
+        "startedAtMs": 1720000001000,
+        "finishedAtMs": 1720000001500,
+        "output": {
+          "accepted": true
+        },
+        "before": null,
+        "after": null,
+        "evidence": [
+          {
+            "id": "asset-action-success-001",
+            "mediaType": "image/png",
+            "uri": "devicerail://assets/asset-action-success-001",
+            "sha256": null
+          }
+        ]
+      }
+    }
+  }
+}

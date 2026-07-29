@@ -1,0 +1,16 @@
+{
+  "$id": "urn:devicerail:schema:protocol:v1:device-select-params",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Parameters accepted by `device.select`.",
+  "properties": {
+    "deviceId": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "deviceId"
+  ],
+  "title": "DeviceSelectParams",
+  "type": "object"
+}

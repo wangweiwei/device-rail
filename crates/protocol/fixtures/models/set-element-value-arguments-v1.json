@@ -1,0 +1,15 @@
+{
+  "target": {
+    "kind": "node",
+    "node": {
+      "observationId": "55555555-5555-4555-8555-555555555555",
+      "context": {
+        "contextKind": "native",
+        "contextId": "NATIVE_APP",
+        "documentEpoch": "native-epoch-1"
+      },
+      "stableNodeId": "search-input"
+    }
+  },
+  "value": "123"
+}

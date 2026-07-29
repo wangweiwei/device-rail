@@ -1,0 +1,13 @@
+{
+  "protocolVersion": 2,
+  "requestId": "00000000-0000-4000-8000-000000000001",
+  "traceId": "10000000-0000-4000-8000-000000000001",
+  "nodeId": "lab-a",
+  "nodeEpoch": null,
+  "timeoutMs": null,
+  "callId": null,
+  "lease": null,
+  "operation": {
+    "method": "hello"
+  }
+}

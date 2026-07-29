@@ -1,0 +1,72 @@
+{
+  "$defs": {
+    "EventSequence": {
+      "description": "A one-based sequence number within one session.\n\nThe wire value is capped at JavaScript's maximum safe integer so generated\nclients can sort and resume event streams without losing precision.",
+      "format": "uint64",
+      "maximum": 9007199254740991,
+      "minimum": 1,
+      "type": "integer"
+    },
+    "EventStreamCursor": {
+      "additionalProperties": false,
+      "description": "A Session-scoped, daemon-epoch-scoped application acknowledgement.",
+      "properties": {
+        "sequence": {
+          "$ref": "#/$defs/EventSequence"
+        },
+        "sessionId": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "streamEpoch": {
+          "$ref": "#/$defs/EventStreamEpoch"
+        }
+      },
+      "required": [
+        "streamEpoch",
+        "sessionId",
+        "sequence"
+      ],
+      "type": "object"
+    },
+    "EventStreamEpoch": {
+      "description": "Identifies one daemon process lifetime. A cursor from another epoch must\nnever be accepted as a resumable position.",
+      "format": "uuid",
+      "type": "string"
+    },
+    "SessionState": {
+      "enum": [
+        "active",
+        "ended"
+      ],
+      "type": "string"
+    }
+  },
+  "$id": "urn:devicerail:schema:protocol:v1:events-subscribe-result",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "replayThrough": {
+      "$ref": "#/$defs/EventStreamCursor"
+    },
+    "sessionId": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "sessionState": {
+      "$ref": "#/$defs/SessionState"
+    },
+    "subscriptionId": {
+      "format": "uuid",
+      "type": "string"
+    }
+  },
+  "required": [
+    "subscriptionId",
+    "sessionId",
+    "replayThrough",
+    "sessionState"
+  ],
+  "title": "EventsSubscribeResult",
+  "type": "object"
+}

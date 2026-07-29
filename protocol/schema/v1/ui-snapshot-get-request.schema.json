@@ -1,0 +1,68 @@
+{
+  "$defs": {
+    "JsonRpcVersion": {
+      "enum": [
+        "2.0"
+      ],
+      "type": "string"
+    },
+    "RpcIdSchema": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "format": "uint64",
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "type": "integer"
+        }
+      ]
+    },
+    "UiSnapshotGetMethodSchema": {
+      "enum": [
+        "ui.snapshot.get"
+      ],
+      "type": "string"
+    },
+    "UiSnapshotGetParams": {
+      "additionalProperties": false,
+      "description": "Parameters accepted by `ui.snapshot.get`.\n\nThe active Session owns the Observation lookup; callers cannot name a\ndifferent Session or provide an arbitrary Evidence reference.",
+      "properties": {
+        "observationId": {
+          "format": "uuid",
+          "type": "string"
+        }
+      },
+      "required": [
+        "observationId"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "urn:devicerail:schema:protocol:v1:ui-snapshot-get-request",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "$ref": "#/$defs/RpcIdSchema"
+    },
+    "jsonrpc": {
+      "$ref": "#/$defs/JsonRpcVersion"
+    },
+    "method": {
+      "$ref": "#/$defs/UiSnapshotGetMethodSchema"
+    },
+    "params": {
+      "$ref": "#/$defs/UiSnapshotGetParams"
+    }
+  },
+  "required": [
+    "jsonrpc",
+    "id",
+    "method",
+    "params"
+  ],
+  "title": "UiSnapshotGetRequest",
+  "type": "object"
+}

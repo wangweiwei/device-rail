@@ -1,0 +1,9 @@
+{
+  "$id": "urn:devicerail:schema:protocol:v1:event-stream-endpoint",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "A short-lived bearer URL. Debug intentionally never exposes its contents.",
+  "maxLength": 2048,
+  "minLength": 1,
+  "title": "EventStreamEndpoint",
+  "type": "string"
+}

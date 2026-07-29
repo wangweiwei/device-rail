@@ -1,0 +1,13 @@
+{
+  "jsonrpc": "2.0",
+  "id": "subscribe-1",
+  "method": "events.subscribe",
+  "params": {
+    "sessionId": "33333333-3333-4333-8333-333333333333",
+    "afterCursor": {
+      "streamEpoch": "66666666-6666-4666-8666-666666666666",
+      "sessionId": "33333333-3333-4333-8333-333333333333",
+      "sequence": 4
+    }
+  }
+}

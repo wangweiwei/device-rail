@@ -1,0 +1,18 @@
+{
+  "protocolVersion": 2,
+  "requestId": "00000000-0000-4000-8000-000000000001",
+  "nodeId": "lab-a",
+  "nodeEpoch": 7,
+  "ok": true,
+  "result": {
+    "kind": "hello",
+    "nodeId": "lab-a",
+    "epoch": 7,
+    "maxFrameBytes": 1048576,
+    "capabilities": {
+      "uiSnapshotsV1": true,
+      "semanticActionsV1": true
+    }
+  },
+  "error": null
+}

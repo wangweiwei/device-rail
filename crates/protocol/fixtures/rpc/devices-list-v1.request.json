@@ -1,0 +1,5 @@
+{
+  "jsonrpc": "2.0",
+  "id": "devices-list-1",
+  "method": "devices.list"
+}

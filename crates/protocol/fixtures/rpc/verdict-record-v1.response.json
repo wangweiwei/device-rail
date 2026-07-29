@@ -1,0 +1,22 @@
+{
+  "jsonrpc": "2.0",
+  "id": "verdict-1",
+  "result": {
+    "event": {
+      "eventId": "66666666-6666-4666-8666-666666666666",
+      "sessionId": "33333333-3333-4333-8333-333333333333",
+      "sequence": 15,
+      "requestId": "verdict-1",
+      "deviceId": "ios-00008140",
+      "atMs": 1720000033000,
+      "payload": {
+        "type": "verdictRecorded",
+        "verdict": {
+          "status": "pass",
+          "summary": "The expected search result is present.",
+          "evidence": []
+        }
+      }
+    }
+  }
+}

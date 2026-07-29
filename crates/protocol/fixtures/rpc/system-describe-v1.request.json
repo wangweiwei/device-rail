@@ -1,0 +1,5 @@
+{
+  "jsonrpc": "2.0",
+  "id": "system-describe-1",
+  "method": "system.describe"
+}

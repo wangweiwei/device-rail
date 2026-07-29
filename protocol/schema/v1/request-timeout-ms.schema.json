@@ -1,0 +1,10 @@
+{
+  "$id": "urn:devicerail:schema:protocol:v1:request-timeout-ms",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "A positive timeout in milliseconds that is safe to represent as a JSON\nnumber in every supported client language.",
+  "format": "uint64",
+  "maximum": 9007199254740991,
+  "minimum": 1,
+  "title": "RequestTimeoutMs",
+  "type": "integer"
+}

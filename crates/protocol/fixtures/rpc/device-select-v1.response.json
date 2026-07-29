@@ -1,0 +1,15 @@
+{
+  "jsonrpc": "2.0",
+  "id": "device-select-1",
+  "result": {
+    "device": {
+      "id": "mock-device-1",
+      "name": "Mock Device",
+      "platform": {
+        "kind": "mock"
+      },
+      "osVersion": "1.0",
+      "connected": true
+    }
+  }
+}

@@ -1,0 +1,31 @@
+[package]
+name = "devicerail-playwright-remote"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish = false
+
+[features]
+default = []
+conformance = ["devicerail-core/conformance-json-schema"]
+
+[dependencies]
+async-trait.workspace = true
+base64.workspace = true
+devicerail-core = { path = "../core" }
+devicerail-protocol = { path = "../protocol" }
+hex.workspace = true
+png.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+sha2.workspace = true
+thiserror.workspace = true
+tokio.workspace = true
+uuid.workspace = true
+url.workspace = true
+
+[dev-dependencies]
+devicerail-core = { path = "../core", features = ["conformance-json-schema"] }
+devicerail-evidence-fs = { path = "../evidence-fs" }
+tempfile.workspace = true

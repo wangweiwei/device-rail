@@ -1,0 +1,10 @@
+{
+  "$id": "urn:devicerail:schema:protocol:v1:screenshot-omission-reason",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "enum": [
+    "policy",
+    "protectedAction"
+  ],
+  "title": "ScreenshotOmissionReason",
+  "type": "string"
+}

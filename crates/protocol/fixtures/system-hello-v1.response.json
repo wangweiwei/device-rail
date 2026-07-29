@@ -1,0 +1,35 @@
+{
+  "jsonrpc": "2.0",
+  "id": "hello-1",
+  "result": {
+    "connectionId": "00000000-0000-0000-0000-000000000000",
+    "protocol": {
+      "selected": {
+        "major": 1,
+        "minor": 5
+      }
+    },
+    "server": {
+      "name": "devicerail-daemon",
+      "version": "0.1.0"
+    },
+    "transport": {
+      "kind": "stdio",
+      "framing": "ndjson"
+    },
+    "features": {
+      "enabled": [
+        "action.protected.v1",
+        "device.routing.v1",
+        "device.semanticActions.v1",
+        "events.snapshot.v1",
+        "events.stream.v1",
+        "media.stream.v1",
+        "observation.uiSnapshot.v1",
+        "request.control.v1",
+        "session.export.page.v1",
+        "verdict.record.v1"
+      ]
+    }
+  }
+}

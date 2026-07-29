@@ -1,0 +1,24 @@
+{
+  "eventId": "44444444-4444-4444-8444-000000000010",
+  "sessionId": "33333333-3333-4333-8333-333333333333",
+  "sequence": 10,
+  "requestId": "request-timeout",
+  "deviceId": "android-emulator-5554",
+  "atMs": 1720000032400,
+  "payload": {
+    "type": "actionCompleted",
+    "callId": "22222222-2222-4222-8222-222222222225",
+    "outcome": {
+      "outcome": "timedOut",
+      "error": {
+        "code": "action_timeout",
+        "message": "The action exceeded its 30000 ms deadline",
+        "retryable": true,
+        "details": {
+          "callId": "22222222-2222-4222-8222-222222222225"
+        }
+      },
+      "timeoutMs": 30000
+    }
+  }
+}

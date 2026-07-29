@@ -1,0 +1,30 @@
+{
+  "$defs": {
+    "MediaStreamKind": {
+      "enum": [
+        "screenshot",
+        "video"
+      ],
+      "type": "string"
+    }
+  },
+  "$id": "urn:devicerail:schema:protocol:v1:media-stream-start-params",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Parameters accepted by `media.stream.start`.\n\nThe caller chooses only a lifetime-unique stream identifier and the logical\nstream kind. The daemon assigns the media type from its selected, leased\ndevice producer; viewport metadata may be absent. This control method never\naccepts frame bytes, Evidence references, or filesystem paths.",
+  "properties": {
+    "kind": {
+      "$ref": "#/$defs/MediaStreamKind"
+    },
+    "streamId": {
+      "format": "uuid",
+      "type": "string"
+    }
+  },
+  "required": [
+    "streamId",
+    "kind"
+  ],
+  "title": "MediaStreamStartParams",
+  "type": "object"
+}

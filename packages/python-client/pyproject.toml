@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "devicerail-client"
+version = "0.1.0"
+description = "Typed async stdio client generated from the DeviceRail wire protocol"
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+requires-python = ">=3.11"
+authors = [{ name = "DeviceRail contributors" }]
+keywords = [
+  "device-automation",
+  "mobile-testing",
+  "test-automation",
+  "json-rpc",
+  "asyncio",
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Framework :: AsyncIO",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Typing :: Typed",
+]
+dependencies = ["jsonschema>=4.23,<5"]
+
+[project.optional-dependencies]
+dev = ["build>=1.2,<2", "mypy>=1.14,<3", "setuptools>=68"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["devicerail*"]
+
+[tool.setuptools.package-data]
+devicerail = ["py.typed", "protocol/v1/_generated/schemas/*.json"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true

@@ -1,0 +1,139 @@
+{
+  "$defs": {
+    "ElementSelector": {
+      "additionalProperties": false,
+      "description": "Cross-channel selector. Native contexts use accessibility fields; web\ncontexts may additionally use CSS. Context selection never carries a stale\ndocument epoch; resolved node references always carry the full context.",
+      "properties": {
+        "context": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/UiContextSelector"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "css": {
+          "maxLength": 65536,
+          "minLength": 1,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "identifier": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "name": {
+          "maxLength": 65536,
+          "minLength": 1,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "role": {
+          "maxLength": 256,
+          "minLength": 1,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "text": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TextMatch"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "value": {
+          "maxLength": 65536,
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    },
+    "TextMatch": {
+      "additionalProperties": false,
+      "properties": {
+        "caseSensitive": {
+          "type": "boolean"
+        },
+        "mode": {
+          "$ref": "#/$defs/TextMatchMode",
+          "default": "exact"
+        },
+        "value": {
+          "maxLength": 65536,
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "type": "object"
+    },
+    "TextMatchMode": {
+      "enum": [
+        "exact",
+        "contains"
+      ],
+      "type": "string"
+    },
+    "UiContextKind": {
+      "enum": [
+        "native",
+        "web"
+      ],
+      "type": "string"
+    },
+    "UiContextSelector": {
+      "additionalProperties": false,
+      "description": "Selects a current context without pretending to own its document epoch.",
+      "properties": {
+        "contextId": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "contextKind": {
+          "$ref": "#/$defs/UiContextKind"
+        }
+      },
+      "required": [
+        "contextKind"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "urn:devicerail:schema:protocol:v1:find-element-arguments",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "selector": {
+      "$ref": "#/$defs/ElementSelector"
+    }
+  },
+  "required": [
+    "selector"
+  ],
+  "title": "FindElementArguments",
+  "type": "object"
+}

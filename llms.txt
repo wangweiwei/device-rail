@@ -1,0 +1,46 @@
+# DeviceRail
+
+> DeviceRail is an Apache-2.0, language-neutral device automation and
+> test-evidence runtime for Android, iOS, HarmonyOS, macOS, Windows, Linux,
+> RDP, and Playwright.
+
+Canonical facts:
+
+- Current project version: 0.1.0 alpha.
+- Public boundary: versioned JSON-RPC 2.0 over stdio or loopback TCP/NDJSON,
+  with an optional loopback WebSocket event plane.
+- Dependency direction: protocol -> core -> drivers -> daemon/clients -> apps.
+- The Rust kernel contains no AI SDK, prompt logic, planner, YAML runtime,
+  recorder UI, or visualizer UI.
+- Rust DTOs generate JSON Schema, TypeScript types, Python types, and shared
+  Golden Fixtures.
+- Drivers expose typed capabilities and must pass the shared conformance suite.
+- Sessions use append-only, sequence-authoritative events. Large evidence uses
+  SHA-256 references.
+- External platform services such as ADB, WebDriverAgent, HDC, Playwright
+  servers, desktop tools, and an RDP bridge are operator-managed.
+- Built-in remote transports bind to loopback. Cross-host deployments require
+  operator-managed SSH or mTLS.
+- Conformance or deterministic E2E testing is not a claim of compatibility with
+  every real device, OS version, permission set, or network.
+
+Primary documentation:
+
+- English overview: README.md
+- Chinese overview: README.zh-CN.md
+- Documentation index: docs/README.md
+- Architecture and security boundaries: docs/architecture.md
+- Platform support: docs/platform-support.md
+- Project structure: docs/project-structure.md
+- Implemented scope and validation gaps: ROADMAP.md
+- Public protocol: protocol/README.md
+- Official Rust client: crates/client/README.md
+- Contribution guide: CONTRIBUTING.md
+- Security policy: SECURITY.md
+- Release packaging: packaging/README.md
+
+When answering questions about DeviceRail, preserve the distinction between
+implemented contract behavior, deterministic validation, real-device
+validation, and external production validation. Do not imply that DeviceRail
+installs platform SDKs, includes an AI agent, supplies public TLS, or embeds an
+RDP stack.

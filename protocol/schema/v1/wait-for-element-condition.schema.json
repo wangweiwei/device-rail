@@ -1,0 +1,12 @@
+{
+  "$id": "urn:devicerail:schema:protocol:v1:wait-for-element-condition",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "enum": [
+    "present",
+    "visible",
+    "enabled",
+    "absent"
+  ],
+  "title": "WaitForElementCondition",
+  "type": "string"
+}

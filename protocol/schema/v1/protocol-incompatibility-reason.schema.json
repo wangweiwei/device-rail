@@ -1,0 +1,11 @@
+{
+  "$id": "urn:devicerail:schema:protocol:v1:protocol-incompatibility-reason",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "enum": [
+    "clientTooOld",
+    "serverTooOld",
+    "noCommonVersion"
+  ],
+  "title": "ProtocolIncompatibilityReason",
+  "type": "string"
+}

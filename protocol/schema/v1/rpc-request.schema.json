@@ -1,0 +1,69 @@
+{
+  "$defs": {
+    "JsonRpcVersion": {
+      "enum": [
+        "2.0"
+      ],
+      "type": "string"
+    },
+    "RequestTimeoutMs": {
+      "description": "A positive timeout in milliseconds that is safe to represent as a JSON\nnumber in every supported client language.",
+      "format": "uint64",
+      "maximum": 9007199254740991,
+      "minimum": 1,
+      "type": "integer"
+    },
+    "RpcIdSchema": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "format": "uint64",
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "type": "integer"
+        }
+      ]
+    },
+    "RpcParams": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "items": true,
+          "type": "array"
+        }
+      ]
+    }
+  },
+  "$id": "urn:devicerail:schema:protocol:v1:rpc-request",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "$ref": "#/$defs/RpcIdSchema"
+    },
+    "jsonrpc": {
+      "$ref": "#/$defs/JsonRpcVersion"
+    },
+    "method": {
+      "type": "string"
+    },
+    "params": {
+      "$ref": "#/$defs/RpcParams"
+    },
+    "timeoutMs": {
+      "$ref": "#/$defs/RequestTimeoutMs"
+    }
+  },
+  "required": [
+    "jsonrpc",
+    "id",
+    "method"
+  ],
+  "title": "RpcRequest",
+  "type": "object"
+}

@@ -1,0 +1,43 @@
+{
+  "$id": "urn:devicerail:schema:protocol:v1:manual-action-arguments",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "oneOf": [
+    {
+      "additionalProperties": false,
+      "description": "Arguments safe to persist in the recording document.",
+      "properties": {
+        "kind": {
+          "const": "captured",
+          "type": "string"
+        },
+        "value": true
+      },
+      "required": [
+        "kind",
+        "value"
+      ],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "description": "Complete arguments supplied by the replay host at execution time.",
+      "properties": {
+        "kind": {
+          "const": "protected",
+          "type": "string"
+        },
+        "secretRef": {
+          "maxLength": 128,
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "secretRef"
+      ],
+      "type": "object"
+    }
+  ],
+  "title": "ManualActionArguments"
+}

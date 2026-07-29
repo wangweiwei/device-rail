@@ -1,0 +1,116 @@
+{
+  "$defs": {
+    "FeatureSelection": {
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "enabled"
+      ],
+      "type": "object"
+    },
+    "PeerInfo": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "version"
+      ],
+      "type": "object"
+    },
+    "ProtocolSelection": {
+      "additionalProperties": false,
+      "properties": {
+        "selected": {
+          "$ref": "#/$defs/ProtocolVersion"
+        }
+      },
+      "required": [
+        "selected"
+      ],
+      "type": "object"
+    },
+    "ProtocolVersion": {
+      "additionalProperties": false,
+      "properties": {
+        "major": {
+          "format": "uint16",
+          "maximum": 65535,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "minor": {
+          "format": "uint16",
+          "maximum": 65535,
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "major",
+        "minor"
+      ],
+      "type": "object"
+    },
+    "TransportInfo": {
+      "additionalProperties": false,
+      "properties": {
+        "framing": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "framing"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "urn:devicerail:schema:protocol:v1:hello-result",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "connectionId": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "features": {
+      "$ref": "#/$defs/FeatureSelection"
+    },
+    "protocol": {
+      "$ref": "#/$defs/ProtocolSelection"
+    },
+    "server": {
+      "$ref": "#/$defs/PeerInfo"
+    },
+    "transport": {
+      "$ref": "#/$defs/TransportInfo"
+    }
+  },
+  "required": [
+    "connectionId",
+    "protocol",
+    "server",
+    "transport",
+    "features"
+  ],
+  "title": "HelloResult",
+  "type": "object"
+}

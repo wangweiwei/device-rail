@@ -1,0 +1,40 @@
+{
+  "$defs": {
+    "EventSequence": {
+      "description": "A one-based sequence number within one session.\n\nThe wire value is capped at JavaScript's maximum safe integer so generated\nclients can sort and resume event streams without losing precision.",
+      "format": "uint64",
+      "maximum": 9007199254740991,
+      "minimum": 1,
+      "type": "integer"
+    }
+  },
+  "$id": "urn:devicerail:schema:protocol:v1:media-stream-capture-params",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Parameters accepted by `media.stream.capture`.",
+  "properties": {
+    "durationMs": {
+      "format": "uint64",
+      "maximum": 9007199254740991,
+      "minimum": 0,
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "frameIndex": {
+      "$ref": "#/$defs/EventSequence",
+      "description": "Caller-declared one-based frame index. Retrying the same accepted index\nis idempotent; advancing it is the caller's acknowledgement boundary."
+    },
+    "streamId": {
+      "format": "uuid",
+      "type": "string"
+    }
+  },
+  "required": [
+    "streamId",
+    "frameIndex"
+  ],
+  "title": "MediaStreamCaptureParams",
+  "type": "object"
+}

@@ -1,0 +1,880 @@
+{
+  "documents": [
+    {
+      "file": "action-call.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:action-call",
+      "name": "ActionCall"
+    },
+    {
+      "file": "action-definition.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:action-definition",
+      "name": "ActionDefinition"
+    },
+    {
+      "file": "action-execution.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:action-execution",
+      "name": "ActionExecution"
+    },
+    {
+      "file": "action-outcome.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:action-outcome",
+      "name": "ActionOutcome"
+    },
+    {
+      "file": "action-protection.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:action-protection",
+      "name": "ActionProtection"
+    },
+    {
+      "file": "action-result.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:action-result",
+      "name": "ActionResult"
+    },
+    {
+      "file": "asset-ref.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:asset-ref",
+      "name": "AssetRef"
+    },
+    {
+      "file": "clear-element-arguments.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:clear-element-arguments",
+      "name": "ClearElementArguments"
+    },
+    {
+      "file": "clear-element-result.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:clear-element-result",
+      "name": "ClearElementResult"
+    },
+    {
+      "file": "coordinate-fallback-reason.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:coordinate-fallback-reason",
+      "name": "CoordinateFallbackReason"
+    },
+    {
+      "file": "device-capabilities-request.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:device-capabilities-request",
+      "name": "DeviceCapabilitiesRequest"
+    },
+    {
+      "file": "device-capabilities-response.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:device-capabilities-response",
+      "name": "DeviceCapabilitiesResponse"
+    },
+    {
+      "file": "device-capabilities-result.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:device-capabilities-result",
+      "name": "DeviceCapabilitiesResult"
+    },
+    {
+      "file": "device-connect-request.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:device-connect-request",
+      "name": "DeviceConnectRequest"
+    },
+    {
+      "file": "device-connect-response.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:device-connect-response",
+      "name": "DeviceConnectResponse"
+    },
+    {
+      "file": "device-connect-result.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:device-connect-result",
+      "name": "DeviceConnectResult"
+    },
+    {
+      "file": "device-disconnect-request.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:device-disconnect-request",
+      "name": "DeviceDisconnectRequest"
+    },
+    {
+      "file": "device-disconnect-response.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:device-disconnect-response",
+      "name": "DeviceDisconnectResponse"
+    },
+    {
+      "file": "device-disconnect-result.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:device-disconnect-result",
+      "name": "DeviceDisconnectResult"
+    },
+    {
+      "file": "device-execute-params.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:device-execute-params",
+      "name": "DeviceExecuteParams"
+    },
+    {
+      "file": "device-execute-request.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:device-execute-request",
+      "name": "DeviceExecuteRequest"
+    },
+    {
+      "file": "device-execute-response.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:device-execute-response",
+      "name": "DeviceExecuteResponse"
+    },
+    {
+      "file": "device-execute-result.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:device-execute-result",
+      "name": "DeviceExecuteResult"
+    },
+    {
+      "file": "device-id.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:device-id",
+      "name": "DeviceId"
+    },
+    {
+      "file": "device-info.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:device-info",
+      "name": "DeviceInfo"
+    },
+    {
+      "file": "device-observe-request.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:device-observe-request",
+      "name": "DeviceObserveRequest"
+    },
+    {
+      "file": "device-observe-response.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:device-observe-response",
+      "name": "DeviceObserveResponse"
+    },
+    {
+      "file": "device-observe-result.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:device-observe-result",
+      "name": "DeviceObserveResult"
+    },
+    {
+      "file": "device-select-params.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:device-select-params",
+      "name": "DeviceSelectParams"
+    },
+    {
+      "file": "device-select-request.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:device-select-request",
+      "name": "DeviceSelectRequest"
+    },
+    {
+      "file": "device-select-response.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:device-select-response",
+      "name": "DeviceSelectResponse"
+    },
+    {
+      "file": "device-select-result.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:device-select-result",
+      "name": "DeviceSelectResult"
+    },
+    {
+      "file": "devices-list-request.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:devices-list-request",
+      "name": "DevicesListRequest"
+    },
+    {
+      "file": "devices-list-response.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:devices-list-response",
+      "name": "DevicesListResponse"
+    },
+    {
+      "file": "devices-list-result.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:devices-list-result",
+      "name": "DevicesListResult"
+    },
+    {
+      "file": "element-selector.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:element-selector",
+      "name": "ElementSelector"
+    },
+    {
+      "file": "element-target.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:element-target",
+      "name": "ElementTarget"
+    },
+    {
+      "file": "error-info.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:error-info",
+      "name": "ErrorInfo"
+    },
+    {
+      "file": "event-id.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:event-id",
+      "name": "EventId"
+    },
+    {
+      "file": "event-sequence.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:event-sequence",
+      "name": "EventSequence"
+    },
+    {
+      "file": "event-stream-cursor.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:event-stream-cursor",
+      "name": "EventStreamCursor"
+    },
+    {
+      "file": "event-stream-endpoint.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:event-stream-endpoint",
+      "name": "EventStreamEndpoint"
+    },
+    {
+      "file": "event-stream-epoch.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:event-stream-epoch",
+      "name": "EventStreamEpoch"
+    },
+    {
+      "file": "event-stream-origin-policy.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:event-stream-origin-policy",
+      "name": "EventStreamOriginPolicy"
+    },
+    {
+      "file": "event-subscription-id.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:event-subscription-id",
+      "name": "EventSubscriptionId"
+    },
+    {
+      "file": "events-clear-request.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:events-clear-request",
+      "name": "EventsClearRequest"
+    },
+    {
+      "file": "events-clear-response.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:events-clear-response",
+      "name": "EventsClearResponse"
+    },
+    {
+      "file": "events-clear-result.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:events-clear-result",
+      "name": "EventsClearResult"
+    },
+    {
+      "file": "events-list-params.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:events-list-params",
+      "name": "EventsListParams"
+    },
+    {
+      "file": "events-list-request.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:events-list-request",
+      "name": "EventsListRequest"
+    },
+    {
+      "file": "events-list-response.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:events-list-response",
+      "name": "EventsListResponse"
+    },
+    {
+      "file": "events-list-result.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:events-list-result",
+      "name": "EventsListResult"
+    },
+    {
+      "file": "events-stream-event-notification.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:events-stream-event-notification",
+      "name": "EventsStreamEventNotification"
+    },
+    {
+      "file": "events-stream-event-params.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:events-stream-event-params",
+      "name": "EventsStreamEventParams"
+    },
+    {
+      "file": "events-stream-open-params.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:events-stream-open-params",
+      "name": "EventsStreamOpenParams"
+    },
+    {
+      "file": "events-stream-open-request.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:events-stream-open-request",
+      "name": "EventsStreamOpenRequest"
+    },
+    {
+      "file": "events-stream-open-response.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:events-stream-open-response",
+      "name": "EventsStreamOpenResponse"
+    },
+    {
+      "file": "events-stream-open-result.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:events-stream-open-result",
+      "name": "EventsStreamOpenResult"
+    },
+    {
+      "file": "events-stream-terminal-notification.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:events-stream-terminal-notification",
+      "name": "EventsStreamTerminalNotification"
+    },
+    {
+      "file": "events-stream-terminal-params.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:events-stream-terminal-params",
+      "name": "EventsStreamTerminalParams"
+    },
+    {
+      "file": "events-stream-termination.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:events-stream-termination",
+      "name": "EventsStreamTermination"
+    },
+    {
+      "file": "events-subscribe-params.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:events-subscribe-params",
+      "name": "EventsSubscribeParams"
+    },
+    {
+      "file": "events-subscribe-request.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:events-subscribe-request",
+      "name": "EventsSubscribeRequest"
+    },
+    {
+      "file": "events-subscribe-response.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:events-subscribe-response",
+      "name": "EventsSubscribeResponse"
+    },
+    {
+      "file": "events-subscribe-result.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:events-subscribe-result",
+      "name": "EventsSubscribeResult"
+    },
+    {
+      "file": "feature-offer.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:feature-offer",
+      "name": "FeatureOffer"
+    },
+    {
+      "file": "feature-selection.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:feature-selection",
+      "name": "FeatureSelection"
+    },
+    {
+      "file": "find-element-arguments.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:find-element-arguments",
+      "name": "FindElementArguments"
+    },
+    {
+      "file": "find-element-result.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:find-element-result",
+      "name": "FindElementResult"
+    },
+    {
+      "file": "hello-params.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:hello-params",
+      "name": "HelloParams"
+    },
+    {
+      "file": "hello-result.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:hello-result",
+      "name": "HelloResult"
+    },
+    {
+      "file": "json-rpc-version.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:json-rpc-version",
+      "name": "JsonRpcVersion"
+    },
+    {
+      "file": "manual-action-arguments.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:manual-action-arguments",
+      "name": "ManualActionArguments"
+    },
+    {
+      "file": "manual-action-step.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:manual-action-step",
+      "name": "ManualActionStep"
+    },
+    {
+      "file": "manual-recording.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:manual-recording",
+      "name": "ManualRecording"
+    },
+    {
+      "file": "media-frame.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:media-frame",
+      "name": "MediaFrame"
+    },
+    {
+      "file": "media-stream-capture-params.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:media-stream-capture-params",
+      "name": "MediaStreamCaptureParams"
+    },
+    {
+      "file": "media-stream-capture-request.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:media-stream-capture-request",
+      "name": "MediaStreamCaptureRequest"
+    },
+    {
+      "file": "media-stream-capture-response.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:media-stream-capture-response",
+      "name": "MediaStreamCaptureResponse"
+    },
+    {
+      "file": "media-stream-capture-result.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:media-stream-capture-result",
+      "name": "MediaStreamCaptureResult"
+    },
+    {
+      "file": "media-stream-end-params.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:media-stream-end-params",
+      "name": "MediaStreamEndParams"
+    },
+    {
+      "file": "media-stream-end-request.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:media-stream-end-request",
+      "name": "MediaStreamEndRequest"
+    },
+    {
+      "file": "media-stream-end-response.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:media-stream-end-response",
+      "name": "MediaStreamEndResponse"
+    },
+    {
+      "file": "media-stream-end-result.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:media-stream-end-result",
+      "name": "MediaStreamEndResult"
+    },
+    {
+      "file": "media-stream-id.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:media-stream-id",
+      "name": "MediaStreamId"
+    },
+    {
+      "file": "media-stream-info.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:media-stream-info",
+      "name": "MediaStreamInfo"
+    },
+    {
+      "file": "media-stream-kind.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:media-stream-kind",
+      "name": "MediaStreamKind"
+    },
+    {
+      "file": "media-stream-start-params.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:media-stream-start-params",
+      "name": "MediaStreamStartParams"
+    },
+    {
+      "file": "media-stream-start-request.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:media-stream-start-request",
+      "name": "MediaStreamStartRequest"
+    },
+    {
+      "file": "media-stream-start-response.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:media-stream-start-response",
+      "name": "MediaStreamStartResponse"
+    },
+    {
+      "file": "media-stream-start-result.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:media-stream-start-result",
+      "name": "MediaStreamStartResult"
+    },
+    {
+      "file": "observation.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:observation",
+      "name": "Observation"
+    },
+    {
+      "file": "peer-info.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:peer-info",
+      "name": "PeerInfo"
+    },
+    {
+      "file": "platform.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:platform",
+      "name": "Platform"
+    },
+    {
+      "file": "protocol-incompatibility-reason.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:protocol-incompatibility-reason",
+      "name": "ProtocolIncompatibilityReason"
+    },
+    {
+      "file": "protocol-offer.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:protocol-offer",
+      "name": "ProtocolOffer"
+    },
+    {
+      "file": "protocol-range.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:protocol-range",
+      "name": "ProtocolRange"
+    },
+    {
+      "file": "protocol-selection.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:protocol-selection",
+      "name": "ProtocolSelection"
+    },
+    {
+      "file": "protocol-version.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:protocol-version",
+      "name": "ProtocolVersion"
+    },
+    {
+      "file": "recorded-action-call.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:recorded-action-call",
+      "name": "RecordedActionCall"
+    },
+    {
+      "file": "request-cancel-params.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:request-cancel-params",
+      "name": "RequestCancelParams"
+    },
+    {
+      "file": "request-cancel-request.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:request-cancel-request",
+      "name": "RequestCancelRequest"
+    },
+    {
+      "file": "request-cancel-response.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:request-cancel-response",
+      "name": "RequestCancelResponse"
+    },
+    {
+      "file": "request-cancel-result.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:request-cancel-result",
+      "name": "RequestCancelResult"
+    },
+    {
+      "file": "request-cancel-status.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:request-cancel-status",
+      "name": "RequestCancelStatus"
+    },
+    {
+      "file": "request-timeout-ms.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:request-timeout-ms",
+      "name": "RequestTimeoutMs"
+    },
+    {
+      "file": "rpc-error.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:rpc-error",
+      "name": "RpcError"
+    },
+    {
+      "file": "rpc-id.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:rpc-id",
+      "name": "RpcId"
+    },
+    {
+      "file": "rpc-params.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:rpc-params",
+      "name": "RpcParams"
+    },
+    {
+      "file": "rpc-request.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:rpc-request",
+      "name": "RpcRequest"
+    },
+    {
+      "file": "rpc-response.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:rpc-response",
+      "name": "RpcResponse"
+    },
+    {
+      "file": "rpc-server-message.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:rpc-server-message",
+      "name": "RpcServerMessage"
+    },
+    {
+      "file": "rpc-server-notification.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:rpc-server-notification",
+      "name": "RpcServerNotification"
+    },
+    {
+      "file": "screenshot-omission-reason.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:screenshot-omission-reason",
+      "name": "ScreenshotOmissionReason"
+    },
+    {
+      "file": "session-current-request.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:session-current-request",
+      "name": "SessionCurrentRequest"
+    },
+    {
+      "file": "session-current-response.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:session-current-response",
+      "name": "SessionCurrentResponse"
+    },
+    {
+      "file": "session-current-result.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:session-current-result",
+      "name": "SessionCurrentResult"
+    },
+    {
+      "file": "session-end-params.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:session-end-params",
+      "name": "SessionEndParams"
+    },
+    {
+      "file": "session-end-request.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:session-end-request",
+      "name": "SessionEndRequest"
+    },
+    {
+      "file": "session-end-response.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:session-end-response",
+      "name": "SessionEndResponse"
+    },
+    {
+      "file": "session-end-result.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:session-end-result",
+      "name": "SessionEndResult"
+    },
+    {
+      "file": "session-export-params.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:session-export-params",
+      "name": "SessionExportParams"
+    },
+    {
+      "file": "session-export-request.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:session-export-request",
+      "name": "SessionExportRequest"
+    },
+    {
+      "file": "session-export-response.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:session-export-response",
+      "name": "SessionExportResponse"
+    },
+    {
+      "file": "session-export-result.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:session-export-result",
+      "name": "SessionExportResult"
+    },
+    {
+      "file": "session-export.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:session-export",
+      "name": "SessionExport"
+    },
+    {
+      "file": "session-id.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:session-id",
+      "name": "SessionId"
+    },
+    {
+      "file": "session-info.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:session-info",
+      "name": "SessionInfo"
+    },
+    {
+      "file": "session-outcome.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:session-outcome",
+      "name": "SessionOutcome"
+    },
+    {
+      "file": "session-start-request.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:session-start-request",
+      "name": "SessionStartRequest"
+    },
+    {
+      "file": "session-start-response.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:session-start-response",
+      "name": "SessionStartResponse"
+    },
+    {
+      "file": "session-start-result.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:session-start-result",
+      "name": "SessionStartResult"
+    },
+    {
+      "file": "session-state.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:session-state",
+      "name": "SessionState"
+    },
+    {
+      "file": "session-target-params.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:session-target-params",
+      "name": "SessionTargetParams"
+    },
+    {
+      "file": "sessions-list-request.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:sessions-list-request",
+      "name": "SessionsListRequest"
+    },
+    {
+      "file": "sessions-list-response.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:sessions-list-response",
+      "name": "SessionsListResponse"
+    },
+    {
+      "file": "sessions-list-result.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:sessions-list-result",
+      "name": "SessionsListResult"
+    },
+    {
+      "file": "set-element-value-arguments.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:set-element-value-arguments",
+      "name": "SetElementValueArguments"
+    },
+    {
+      "file": "set-element-value-result.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:set-element-value-result",
+      "name": "SetElementValueResult"
+    },
+    {
+      "file": "system-describe-request.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:system-describe-request",
+      "name": "SystemDescribeRequest"
+    },
+    {
+      "file": "system-describe-response.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:system-describe-response",
+      "name": "SystemDescribeResponse"
+    },
+    {
+      "file": "system-describe-result.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:system-describe-result",
+      "name": "SystemDescribeResult"
+    },
+    {
+      "file": "system-hello-request.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:system-hello-request",
+      "name": "SystemHelloRequest"
+    },
+    {
+      "file": "system-hello-response.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:system-hello-response",
+      "name": "SystemHelloResponse"
+    },
+    {
+      "file": "tap-element-arguments.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:tap-element-arguments",
+      "name": "TapElementArguments"
+    },
+    {
+      "file": "tap-element-result.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:tap-element-result",
+      "name": "TapElementResult"
+    },
+    {
+      "file": "test-event-payload.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:test-event-payload",
+      "name": "TestEventPayload"
+    },
+    {
+      "file": "test-event.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:test-event",
+      "name": "TestEvent"
+    },
+    {
+      "file": "text-match-mode.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:text-match-mode",
+      "name": "TextMatchMode"
+    },
+    {
+      "file": "text-match.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:text-match",
+      "name": "TextMatch"
+    },
+    {
+      "file": "transport-info.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:transport-info",
+      "name": "TransportInfo"
+    },
+    {
+      "file": "ui-context-kind.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:ui-context-kind",
+      "name": "UiContextKind"
+    },
+    {
+      "file": "ui-context-ref.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:ui-context-ref",
+      "name": "UiContextRef"
+    },
+    {
+      "file": "ui-context-selector.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:ui-context-selector",
+      "name": "UiContextSelector"
+    },
+    {
+      "file": "ui-node-ref.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:ui-node-ref",
+      "name": "UiNodeRef"
+    },
+    {
+      "file": "ui-node.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:ui-node",
+      "name": "UiNode"
+    },
+    {
+      "file": "ui-rect.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:ui-rect",
+      "name": "UiRect"
+    },
+    {
+      "file": "ui-snapshot-get-params.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:ui-snapshot-get-params",
+      "name": "UiSnapshotGetParams"
+    },
+    {
+      "file": "ui-snapshot-get-request.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:ui-snapshot-get-request",
+      "name": "UiSnapshotGetRequest"
+    },
+    {
+      "file": "ui-snapshot-get-response.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:ui-snapshot-get-response",
+      "name": "UiSnapshotGetResponse"
+    },
+    {
+      "file": "ui-snapshot-get-result.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:ui-snapshot-get-result",
+      "name": "UiSnapshotGetResult"
+    },
+    {
+      "file": "ui-snapshot-omission-reason.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:ui-snapshot-omission-reason",
+      "name": "UiSnapshotOmissionReason"
+    },
+    {
+      "file": "ui-snapshot-ref.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:ui-snapshot-ref",
+      "name": "UiSnapshotRef"
+    },
+    {
+      "file": "ui-snapshot.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:ui-snapshot",
+      "name": "UiSnapshot"
+    },
+    {
+      "file": "verdict-record-params.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:verdict-record-params",
+      "name": "VerdictRecordParams"
+    },
+    {
+      "file": "verdict-record-request.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:verdict-record-request",
+      "name": "VerdictRecordRequest"
+    },
+    {
+      "file": "verdict-record-response.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:verdict-record-response",
+      "name": "VerdictRecordResponse"
+    },
+    {
+      "file": "verdict-record-result.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:verdict-record-result",
+      "name": "VerdictRecordResult"
+    },
+    {
+      "file": "verdict-status.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:verdict-status",
+      "name": "VerdictStatus"
+    },
+    {
+      "file": "verdict.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:verdict",
+      "name": "Verdict"
+    },
+    {
+      "file": "viewport.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:viewport",
+      "name": "Viewport"
+    },
+    {
+      "file": "wait-for-element-arguments.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:wait-for-element-arguments",
+      "name": "WaitForElementArguments"
+    },
+    {
+      "file": "wait-for-element-condition.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:wait-for-element-condition",
+      "name": "WaitForElementCondition"
+    },
+    {
+      "file": "wait-for-element-result.schema.json",
+      "id": "urn:devicerail:schema:protocol:v1:wait-for-element-result",
+      "name": "WaitForElementResult"
+    }
+  ],
+  "draft": "https://json-schema.org/draft/2020-12/schema",
+  "protocolVersion": {
+    "major": 1,
+    "minor": 5
+  },
+  "schemaSetVersion": 1
+}

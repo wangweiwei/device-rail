@@ -1,0 +1,30 @@
+{
+  "protocolVersion": 2,
+  "requestId": "00000000-0000-4000-8000-000000000002",
+  "traceId": "10000000-0000-4000-8000-000000000002",
+  "nodeId": "lab-a",
+  "nodeEpoch": 7,
+  "timeoutMs": 30000,
+  "callId": "00000000-0000-4000-8000-000000000003",
+  "lease": {
+    "leaseId": "00000000-0000-4000-8000-000000000004",
+    "deviceKey": "phone-1",
+    "ownerId": "daemon-a",
+    "nodeEpoch": 7,
+    "expiresAtMs": 2000000001000
+  },
+  "operation": {
+    "method": "execute",
+    "deviceKey": "phone-1",
+    "call": {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "name": "inputSecret",
+      "arguments": {
+        "text": "fixture-secret-must-never-appear-in-debug"
+      }
+    },
+    "screenshotOmission": "protectedAction",
+    "uiSnapshotsEnabled": false,
+    "semanticActionsEnabled": false
+  }
+}

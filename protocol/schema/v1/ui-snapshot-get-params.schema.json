@@ -1,0 +1,17 @@
+{
+  "$id": "urn:devicerail:schema:protocol:v1:ui-snapshot-get-params",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Parameters accepted by `ui.snapshot.get`.\n\nThe active Session owns the Observation lookup; callers cannot name a\ndifferent Session or provide an arbitrary Evidence reference.",
+  "properties": {
+    "observationId": {
+      "format": "uuid",
+      "type": "string"
+    }
+  },
+  "required": [
+    "observationId"
+  ],
+  "title": "UiSnapshotGetParams",
+  "type": "object"
+}

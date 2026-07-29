@@ -1,0 +1,29 @@
+{
+  "$id": "urn:devicerail:schema:protocol:v1:viewport",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "height": {
+      "format": "uint32",
+      "maximum": 4294967295,
+      "minimum": 0,
+      "type": "integer"
+    },
+    "scaleFactor": {
+      "format": "double",
+      "type": "number"
+    },
+    "width": {
+      "format": "uint32",
+      "maximum": 4294967295,
+      "minimum": 0,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "width",
+    "height",
+    "scaleFactor"
+  ],
+  "title": "Viewport",
+  "type": "object"
+}

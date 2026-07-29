@@ -1,0 +1,38 @@
+{
+  "$defs": {
+    "ActionDefinition": {
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "inputSchema": true,
+        "name": {
+          "type": "string"
+        },
+        "protection": {
+          "$ref": "#/$defs/ActionProtection"
+        }
+      },
+      "required": [
+        "name",
+        "description",
+        "inputSchema"
+      ],
+      "type": "object"
+    },
+    "ActionProtection": {
+      "enum": [
+        "standard",
+        "protected"
+      ],
+      "type": "string"
+    }
+  },
+  "$id": "urn:devicerail:schema:protocol:v1:device-capabilities-result",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "items": {
+    "$ref": "#/$defs/ActionDefinition"
+  },
+  "title": "DeviceCapabilitiesResult",
+  "type": "array"
+}

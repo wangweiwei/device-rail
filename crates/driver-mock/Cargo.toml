@@ -1,0 +1,22 @@
+[package]
+name = "devicerail-driver-mock"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish = false
+
+[dependencies]
+async-trait.workspace = true
+devicerail-core = { path = "../core" }
+devicerail-protocol = { path = "../protocol" }
+serde_json.workspace = true
+tokio.workspace = true
+uuid.workspace = true
+
+[dev-dependencies]
+devicerail-core = { path = "../core", features = ["conformance-json-schema"] }
+devicerail-evidence-fs = { path = "../evidence-fs" }
+png.workspace = true
+tempfile.workspace = true
+tokio.workspace = true

@@ -1,0 +1,33 @@
+{
+  "$defs": {
+    "UiContextKind": {
+      "enum": [
+        "native",
+        "web"
+      ],
+      "type": "string"
+    }
+  },
+  "$id": "urn:devicerail:schema:protocol:v1:ui-context-selector",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Selects a current context without pretending to own its document epoch.",
+  "properties": {
+    "contextId": {
+      "maxLength": 4096,
+      "minLength": 1,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "contextKind": {
+      "$ref": "#/$defs/UiContextKind"
+    }
+  },
+  "required": [
+    "contextKind"
+  ],
+  "title": "UiContextSelector",
+  "type": "object"
+}

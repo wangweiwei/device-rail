@@ -1,0 +1,26 @@
+{
+  "jsonrpc": "2.0",
+  "id": "device-capabilities-1",
+  "result": [
+    {
+      "name": "tap",
+      "description": "Tap a point on the device screen",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "x": {
+            "type": "number"
+          },
+          "y": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "x",
+          "y"
+        ],
+        "additionalProperties": false
+      }
+    }
+  ]
+}

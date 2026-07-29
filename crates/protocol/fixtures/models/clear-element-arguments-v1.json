@@ -1,0 +1,17 @@
+{
+  "target": {
+    "kind": "selector",
+    "selector": {
+      "context": {
+        "contextKind": "native",
+        "contextId": "NATIVE_APP"
+      },
+      "role": "textField",
+      "name": null,
+      "value": null,
+      "identifier": "search-input",
+      "text": null,
+      "css": null
+    }
+  }
+}

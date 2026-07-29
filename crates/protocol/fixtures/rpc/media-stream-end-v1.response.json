@@ -1,0 +1,8 @@
+{
+  "jsonrpc": "2.0",
+  "id": "media-end-1",
+  "result": {
+    "streamId": "77777777-7777-4777-8777-777777777777",
+    "frameCount": 1
+  }
+}

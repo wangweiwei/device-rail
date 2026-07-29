@@ -1,0 +1,21 @@
+{
+  "eventId": "44444444-4444-4444-8444-000000000008",
+  "sessionId": "33333333-3333-4333-8333-333333333333",
+  "sequence": 8,
+  "requestId": "request-cancel",
+  "deviceId": "android-emulator-5554",
+  "atMs": 1720000002300,
+  "payload": {
+    "type": "actionCompleted",
+    "callId": "22222222-2222-4222-8222-222222222224",
+    "outcome": {
+      "outcome": "cancelled",
+      "error": {
+        "code": "action_cancelled",
+        "message": "The caller cancelled the action",
+        "retryable": false,
+        "details": null
+      }
+    }
+  }
+}

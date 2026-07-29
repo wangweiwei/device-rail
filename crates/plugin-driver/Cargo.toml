@@ -1,0 +1,35 @@
+[package]
+name = "devicerail-plugin-driver"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish = false
+
+[dependencies]
+async-trait.workspace = true
+base64.workspace = true
+devicerail-core = { path = "../core" }
+devicerail-protocol = { path = "../protocol" }
+jsonschema.workspace = true
+png.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+sha2.workspace = true
+thiserror.workspace = true
+tokio.workspace = true
+uuid.workspace = true
+
+[target.'cfg(unix)'.dependencies]
+libc.workspace = true
+
+[dev-dependencies]
+devicerail-core = { path = "../core", features = ["conformance-json-schema"] }
+devicerail-evidence-fs = { path = "../evidence-fs" }
+tempfile.workspace = true
+
+[[bin]]
+name = "devicerail-plugin-fixture"
+path = "src/bin/fixture.rs"
+test = false
+bench = false

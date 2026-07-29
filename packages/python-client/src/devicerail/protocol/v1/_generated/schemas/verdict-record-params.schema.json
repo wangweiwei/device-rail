@@ -1,0 +1,77 @@
+{
+  "$defs": {
+    "AssetRef": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "mediaType": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "uri": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "mediaType",
+        "uri"
+      ],
+      "type": "object"
+    },
+    "Verdict": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/AssetRef"
+          },
+          "maxItems": 64,
+          "type": "array"
+        },
+        "status": {
+          "$ref": "#/$defs/VerdictStatus"
+        },
+        "summary": {
+          "maxLength": 16384,
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "summary"
+      ],
+      "type": "object"
+    },
+    "VerdictStatus": {
+      "enum": [
+        "pass",
+        "fail",
+        "unknown"
+      ],
+      "type": "string"
+    }
+  },
+  "$id": "urn:devicerail:schema:protocol:v1:verdict-record-params",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Parameters accepted by `verdict.record`.\n\nDeviceRail persists this caller-supplied Verdict; it does not infer or\nupgrade the verdict status.",
+  "properties": {
+    "verdict": {
+      "$ref": "#/$defs/Verdict"
+    }
+  },
+  "required": [
+    "verdict"
+  ],
+  "title": "VerdictRecordParams",
+  "type": "object"
+}

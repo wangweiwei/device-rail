@@ -1,0 +1,37 @@
+{
+  "$defs": {
+    "SessionOutcome": {
+      "enum": [
+        "completed",
+        "failed",
+        "cancelled",
+        "shutdown"
+      ],
+      "type": "string"
+    }
+  },
+  "$id": "urn:devicerail:schema:protocol:v1:session-end-params",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Optional parameters accepted by `session.end`.",
+  "properties": {
+    "outcome": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/SessionOutcome"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "reason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "title": "SessionEndParams",
+  "type": "object"
+}

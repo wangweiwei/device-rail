@@ -1,0 +1,16 @@
+/* eslint-disable */
+/**
+ * Generated from the checked-in DeviceRail JSON Schema. DO NOT EDIT.
+ * Run `pnpm protocol:types:generate` from the repository root.
+ */
+
+export type ActionProtection = "standard" | "protected";
+export type DeviceCapabilitiesResult = ActionDefinition[];
+
+export interface ActionDefinition {
+  description: string;
+  inputSchema: unknown;
+  name: string;
+  protection?: ActionProtection;
+  [k: string]: unknown;
+}

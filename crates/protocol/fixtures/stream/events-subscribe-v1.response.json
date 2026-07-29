@@ -1,0 +1,14 @@
+{
+  "jsonrpc": "2.0",
+  "id": "subscribe-1",
+  "result": {
+    "subscriptionId": "77777777-7777-4777-8777-777777777777",
+    "sessionId": "33333333-3333-4333-8333-333333333333",
+    "replayThrough": {
+      "streamEpoch": "66666666-6666-4666-8666-666666666666",
+      "sessionId": "33333333-3333-4333-8333-333333333333",
+      "sequence": 8
+    },
+    "sessionState": "active"
+  }
+}

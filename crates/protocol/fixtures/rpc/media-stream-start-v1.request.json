@@ -1,0 +1,9 @@
+{
+  "jsonrpc": "2.0",
+  "id": "media-start-1",
+  "method": "media.stream.start",
+  "params": {
+    "streamId": "77777777-7777-4777-8777-777777777777",
+    "kind": "video"
+  }
+}
