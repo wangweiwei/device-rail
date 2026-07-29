@@ -173,3 +173,41 @@ pnpm packages:check
 python -m build --outdir packages/python-client/dist packages/python-client
 python packages/python-client/scripts/check_distribution.py packages/python-client/dist
 ```
+
+## Driving a release
+
+`scripts/release.mjs` performs the mechanical half of a release. It has three
+commands and no options.
+
+```bash
+node scripts/release.mjs prepare 0.3.1
+node scripts/release.mjs publish 0.3.1
+node scripts/release.mjs status 0.3.1
+```
+
+`prepare` refuses to start unless the working tree is clean, the tag is absent
+both locally and on the remote, the requested version is greater than the
+current one, and no registry already carries it. It then rewrites every version
+touchpoint — nine `package.json` files including the two private ones, the
+workspace `Cargo.toml`, both `devicerail-protocol` pins in
+`crates/client/Cargo.toml`, `pyproject.toml`, the Python `__version__` and the
+`default_hello` client version, and a new `CHANGELOG.md` section — refreshes
+`Cargo.lock` through `cargo metadata`, and finishes by running
+`check-release-version.mjs`. It leaves the result uncommitted so the diff can be
+read. `pnpm-lock.yaml` records no workspace versions and is deliberately left
+alone.
+
+Describe the release under the new `CHANGELOG.md` heading, run the gates above,
+and commit. `publish` then re-checks the same preconditions against the
+committed tree and pushes the annotated tag that starts `publish-packages.yml`.
+
+`status` reports what each registry actually holds for a version and, when
+something is missing, prints the exact dispatch command to republish only the
+missing ecosystems.
+
+Two touchpoints are outside `check-release-version.mjs`: the private
+`playwright-driver` and `live-visualizer` app manifests, whose versions it never
+inspects, and the second `devicerail-protocol` pin in
+`crates/client/Cargo.toml`, which its non-global regex cannot reach. The release
+script rewrites all of them, so drift only appears when a version is bumped by
+hand.
