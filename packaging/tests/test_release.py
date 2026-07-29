@@ -11,6 +11,7 @@ import subprocess
 import sys
 import tarfile
 import tempfile
+import tomllib
 import unittest
 from unittest import mock
 import zipfile
@@ -23,7 +24,10 @@ import devicerail_release as release  # noqa: E402
 
 
 class ReleasePackagingTests(unittest.TestCase):
-    version = "0.1.0"
+    # The packaging code cross-checks its cargo-metadata input against the real
+    # workspace manifests, so the fixture version must be the live one.
+    with (REPO_ROOT / "Cargo.toml").open("rb") as _cargo:
+        version = tomllib.load(_cargo)["workspace"]["package"]["version"]
 
     def setUp(self) -> None:
         self.temporary = tempfile.TemporaryDirectory(prefix="devicerail-release-test-")

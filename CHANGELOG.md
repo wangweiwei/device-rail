@@ -7,15 +7,13 @@ versions.
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-07-29
+
 ### Added
 
 - Bilingual open-source documentation and project navigation.
 - Apache-2.0 licensing and package metadata.
 - Contribution, security, conduct, support, and repository-maintenance guides.
-
-## [0.1.0] - 2026-07-14
-
-### Added
 
 - Versioned JSON-RPC device protocol, generated JSON Schema, and cross-language
   Golden Fixtures.
