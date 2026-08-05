@@ -16,7 +16,7 @@
     "test": "node scripts/clean.mjs .test-dist && tsc -p tsconfig.test.json && node scripts/run-tests.mjs"
   },
   "dependencies": {
-    "playwright-core": "1.62.0"
+    "playwright-core": "1.62.1"
   },
   "devDependencies": {
     "@types/node": "26.1.2",
