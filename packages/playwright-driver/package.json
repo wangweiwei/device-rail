@@ -1,6 +1,6 @@
 {
   "name": "@devicerail/playwright-driver",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "Private bounded Playwright bridge for the DeviceRail remote web driver",
   "license": "Apache-2.0",
   "keywords": ["device-automation", "browser-automation", "playwright", "testing"],

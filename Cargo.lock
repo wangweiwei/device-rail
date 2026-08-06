@@ -187,7 +187,7 @@ checksum = "a4ae5f15dda3c708c0ade84bfee31ccab44a3da4f88015ed22f63732abe300c8"
 
 [[package]]
 name = "devicerail-android-adb"
-version = "0.3.4"
+version = "0.3.5"
 dependencies = [
  "async-trait",
  "devicerail-core",
@@ -206,7 +206,7 @@ dependencies = [
 
 [[package]]
 name = "devicerail-bundle-cli"
-version = "0.3.4"
+version = "0.3.5"
 dependencies = [
  "devicerail-core",
  "devicerail-evidence-fs",
@@ -221,7 +221,7 @@ dependencies = [
 
 [[package]]
 name = "devicerail-client"
-version = "0.3.4"
+version = "0.3.5"
 dependencies = [
  "devicerail-protocol",
  "futures-util",
@@ -236,7 +236,7 @@ dependencies = [
 
 [[package]]
 name = "devicerail-core"
-version = "0.3.4"
+version = "0.3.5"
 dependencies = [
  "async-trait",
  "devicerail-protocol",
@@ -250,7 +250,7 @@ dependencies = [
 
 [[package]]
 name = "devicerail-daemon"
-version = "0.3.4"
+version = "0.3.5"
 dependencies = [
  "async-trait",
  "base64",
@@ -280,7 +280,7 @@ dependencies = [
 
 [[package]]
 name = "devicerail-desktop-driver"
-version = "0.3.4"
+version = "0.3.5"
 dependencies = [
  "async-trait",
  "devicerail-core",
@@ -298,7 +298,7 @@ dependencies = [
 
 [[package]]
 name = "devicerail-distributed-router"
-version = "0.3.4"
+version = "0.3.5"
 dependencies = [
  "async-trait",
  "base64",
@@ -322,7 +322,7 @@ dependencies = [
 
 [[package]]
 name = "devicerail-driver-mock"
-version = "0.3.4"
+version = "0.3.5"
 dependencies = [
  "async-trait",
  "devicerail-core",
@@ -337,7 +337,7 @@ dependencies = [
 
 [[package]]
 name = "devicerail-evidence-fs"
-version = "0.3.4"
+version = "0.3.5"
 dependencies = [
  "async-trait",
  "devicerail-core",
@@ -353,7 +353,7 @@ dependencies = [
 
 [[package]]
 name = "devicerail-harmony-hdc"
-version = "0.3.4"
+version = "0.3.5"
 dependencies = [
  "async-trait",
  "devicerail-core",
@@ -371,7 +371,7 @@ dependencies = [
 
 [[package]]
 name = "devicerail-ios-host"
-version = "0.3.4"
+version = "0.3.5"
 dependencies = [
  "async-trait",
  "fs2",
@@ -388,7 +388,7 @@ dependencies = [
 
 [[package]]
 name = "devicerail-ios-webdriver"
-version = "0.3.4"
+version = "0.3.5"
 dependencies = [
  "async-trait",
  "base64",
@@ -409,7 +409,7 @@ dependencies = [
 
 [[package]]
 name = "devicerail-manual-recording"
-version = "0.3.4"
+version = "0.3.5"
 dependencies = [
  "devicerail-protocol",
  "hex",
@@ -422,7 +422,7 @@ dependencies = [
 
 [[package]]
 name = "devicerail-playwright-remote"
-version = "0.3.4"
+version = "0.3.5"
 dependencies = [
  "async-trait",
  "base64",
@@ -443,7 +443,7 @@ dependencies = [
 
 [[package]]
 name = "devicerail-plugin-driver"
-version = "0.3.4"
+version = "0.3.5"
 dependencies = [
  "async-trait",
  "base64",
@@ -464,7 +464,7 @@ dependencies = [
 
 [[package]]
 name = "devicerail-protocol"
-version = "0.3.4"
+version = "0.3.5"
 dependencies = [
  "schemars",
  "serde",
@@ -474,7 +474,7 @@ dependencies = [
 
 [[package]]
 name = "devicerail-rdp-remote"
-version = "0.3.4"
+version = "0.3.5"
 dependencies = [
  "async-trait",
  "base64",
@@ -496,7 +496,7 @@ dependencies = [
 
 [[package]]
 name = "devicerail-remote-auth"
-version = "0.3.4"
+version = "0.3.5"
 dependencies = [
  "base64",
  "fs2",
@@ -515,7 +515,7 @@ dependencies = [
 
 [[package]]
 name = "devicerail-schema-gen"
-version = "0.3.4"
+version = "0.3.5"
 dependencies = [
  "devicerail-protocol",
  "jsonschema",
@@ -524,7 +524,7 @@ dependencies = [
 
 [[package]]
 name = "devicerail-session-bundle"
-version = "0.3.4"
+version = "0.3.5"
 dependencies = [
  "async-trait",
  "devicerail-core",
@@ -544,7 +544,7 @@ dependencies = [
 
 [[package]]
 name = "devicerail-visualizer"
-version = "0.3.4"
+version = "0.3.5"
 dependencies = [
  "devicerail-core",
  "devicerail-protocol",
@@ -562,7 +562,7 @@ dependencies = [
 
 [[package]]
 name = "devicerail-websocket-transport"
-version = "0.3.4"
+version = "0.3.5"
 dependencies = [
  "devicerail-core",
  "devicerail-protocol",

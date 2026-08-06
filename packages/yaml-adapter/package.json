@@ -1,6 +1,6 @@
 {
   "name": "@devicerail/yaml-adapter",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "Optional bounded YAML plan adapter for DeviceRail public RPC calls",
   "license": "Apache-2.0",
   "keywords": ["device-automation", "test-automation", "yaml", "workflow"],

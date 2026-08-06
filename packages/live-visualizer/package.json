@@ -1,6 +1,6 @@
 {
   "name": "@devicerail/live-visualizer",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "Bounded live session timeline model for DeviceRail test events",
   "license": "Apache-2.0",
   "keywords": ["device-automation", "test-reporting", "test-evidence", "visualization"],
