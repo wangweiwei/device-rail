@@ -1759,6 +1759,9 @@ mod tests {
         for stdout in [
             "Starting: Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] pkg=com.example }\nStatus: ok\nLaunchState: COLD\nActivity: com.example/.Main\nTotalTime: 11\nWaitTime: 12\nComplete\n",
             "Starting: Intent { act=android.intent.action.MAIN }\nStatus: ok\nActivity: com.example/.Main\nThisTime: 10\nTotalTime: 11\nWaitTime: 12\nComplete\n",
+            // The explicit-component form the resolve-then-start launch
+            // command produces (command.rs launch_shell_command).
+            "Starting: Intent { cmp=com.example/.Main }\nStatus: ok\nLaunchState: COLD\nActivity: com.example/.Main\nTotalTime: 11\nWaitTime: 12\nComplete\n",
             "Status: ok\nLaunchState: UNKNOWN (-1)\nWaitTime: 0\nComplete\n",
             "Warning: Activity not started, intent has been delivered to currently running top-most instance.\r\nStatus: ok\r\nComplete\r\n",
             "Warning: Activity not started, its current task has been brought to the front\nStatus: ok\nComplete\n",

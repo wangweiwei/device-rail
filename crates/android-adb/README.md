@@ -75,9 +75,13 @@ ordinary operations is unchanged.
 `launch` and `terminate` accept only 3–255 byte Android application ids with
 at least two dot-separated ASCII segments. Each segment begins with a letter
 and continues with letters, digits, or underscore, so package input cannot
-become a shell fragment. Launch uses a fixed current-user MAIN/LAUNCHER intent
-and accepts only AOSP's ordered `am start -W` fields through `Complete`,
-including the legacy `ThisTime` and current `LaunchState` forms. Only the two
+become a shell fragment. Launch resolves the package's current-user
+MAIN/LAUNCHER component on-device with `cmd package resolve-activity` and
+starts it explicitly through `am start -W -n`, so launcher activities that
+omit `android.intent.category.DEFAULT` still start; the remote line is fixed
+apart from the grammar-constrained package id. The wait output accepts only
+AOSP's ordered `am start -W` fields through `Complete`, including the legacy
+`ThisTime` and current `LaunchState` forms. Only the two
 documented already-running/top-task warnings are accepted; unknown non-empty
 lines and explicit failure output fail closed even when `Status: ok` is also
 present. Every other mutation requires empty stdout and permits only ADB

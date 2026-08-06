@@ -414,23 +414,30 @@ impl AdbOperation {
                 arguments.push(text.encoded().into());
             }
             Self::Launch(package) => {
-                push_args(
-                    arguments,
-                    &[
-                        "shell",
-                        "am",
-                        "start",
-                        "-W",
-                        "--user",
-                        "current",
-                        "-a",
-                        "android.intent.action.MAIN",
-                        "-c",
-                        "android.intent.category.LAUNCHER",
-                        "-p",
-                    ],
-                );
-                arguments.push(package.as_str().into());
+                // Resolve the launcher component on-device, then start it
+                // explicitly.
+                //
+                // The implicit form this replaced --
+                //   am start -W --user current -a android.intent.action.MAIN \
+                //            -c android.intent.category.LAUNCHER -p <package>
+                // -- only starts a target whose intent-filter also declares
+                // android.intent.category.DEFAULT. Declaring just
+                // MAIN + LAUNCHER is the conventional way to write a launcher
+                // activity, so the implicit form fails on a large class of
+                // ordinary apps while still working for the AOSP ones that do
+                // declare DEFAULT. `cmd package resolve-activity` uses the
+                // PackageManager query path, which has no such requirement.
+                //
+                // This stays a single adb invocation and keeps `am start -W`'s
+                // structured output, so validate_launch_result is unchanged;
+                // only the `Starting: Intent { ... }` line switches from
+                // `act=`/`pkg=` to `cmp=`, which is_aosp_starting_line accepts.
+                //
+                // AndroidPackageName::parse has already constrained the package
+                // to ^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)+$, so it
+                // cannot introduce shell metacharacters here.
+                push_args(arguments, &["shell"]);
+                arguments.push(launch_shell_command(package.as_str()).into());
             }
             Self::Terminate(package) => {
                 push_args(
@@ -530,6 +537,15 @@ impl fmt::Debug for AdbOperation {
 
 fn push_args(arguments: &mut Vec<OsString>, values: &[&str]) {
     arguments.extend(values.iter().map(OsString::from));
+}
+
+/// The on-device shell line that resolves `package`'s launcher component and
+/// starts it explicitly. Kept separate so the argv test can assert it verbatim.
+fn launch_shell_command(package: &str) -> String {
+    format!(
+        "am start -W --user current -n \
+         \"$(cmd package resolve-activity --brief --user current {package} | tail -1)\""
+    )
 }
 
 /// One typed adb invocation, optionally routed to exactly one serial.
@@ -1340,17 +1356,9 @@ mod tests {
                     "-s",
                     "emulator-5554",
                     "shell",
-                    "am",
-                    "start",
-                    "-W",
-                    "--user",
-                    "current",
-                    "-a",
-                    "android.intent.action.MAIN",
-                    "-c",
-                    "android.intent.category.LAUNCHER",
-                    "-p",
-                    "com.example.app",
+                    "am start -W --user current -n \
+                     \"$(cmd package resolve-activity --brief --user current \
+                     com.example.app | tail -1)\"",
                 ]),
             ),
             (
