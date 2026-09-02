@@ -29,7 +29,7 @@
     "build": "node scripts/clean-dist.mjs && tsc -p tsconfig.build.json && tsc -p tsconfig.package-exports.json"
   },
   "devDependencies": {
-    "json-schema-to-typescript": "15.0.4",
+    "json-schema-to-typescript": "16.0.0",
     "typescript": "7.0.2"
   }
 }
